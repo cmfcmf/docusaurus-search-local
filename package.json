@@ -2,9 +2,14 @@
   "name": "@cmfcmf/docusaurus-search-local",
   "version": "0.0.1",
   "description": "Local Search for Docusaurus",
-  "main": "src/index.js",
-  "author": "Christian Flach",
+  "keywords": ["docusaurus", "search", "plugin"],
   "license": "MIT",
+  "repository": "cmfcmf/docusaurus-search-local",
+  "main": "src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Christian Flach",
   "dependencies": {
     "autocomplete.js": "^0.37.0",
     "classnames": "^2.2.6",
@@ -16,8 +21,5 @@
   },
   "peerDependencies": {
     "@docusaurus/core": "^2.0.0"
-  },
-  "scripts": {
-    "publish": "yarn publish --access public"
   }
 }
