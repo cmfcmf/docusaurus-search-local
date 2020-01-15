@@ -7,7 +7,7 @@ import React, {useState, useRef, useCallback} from 'react';
 import classnames from 'classnames';
 import * as lunr from "lunr";
 
-// import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {useHistory} from '@docusaurus/router';
 
 import './input.css';
@@ -16,10 +16,10 @@ import './autocomplete.css';
 const Search = props => {
   const [indexState, setIndexState] = useState("empty");
   const searchBarRef = useRef(null);
-  // const {siteConfig = {}} = useDocusaurusContext();
-  // const {
-  //   baseUrl,
-  // } = siteConfig;
+  const {siteConfig = {}} = useDocusaurusContext();
+  const {
+    baseUrl,
+  } = siteConfig;
   const history = useHistory();
 
   const loadIndex = async () => {
@@ -75,7 +75,7 @@ const Search = props => {
     let indexPromise;
 
     if (process.env.NODE_ENV === "production") {
-      indexPromise = fetch('search-index.json')
+      indexPromise = fetch(`${baseUrl}search-index.json`)
         .then(content => content.json())
         .then(json => ({ documents: json.documents, index: lunr.Index.load(json.index) }));
     } else {
