@@ -1,6 +1,6 @@
 # Local Search for Docusaurus v2
 
-Local search for Docusaurus v2.
+Local search for Docusaurus **v2**.
 
 ## Installation
 
@@ -16,7 +16,7 @@ npm install @cmfcmf/docusaurus-search-local
 
 ## Usage
 
-Add it to the `plugins` array in `docusaurus.config.js`:
+Add this plugin to the `plugins` array in `docusaurus.config.js`:
 
 ```js
 module.exports = {
@@ -27,6 +27,12 @@ module.exports = {
   // ...
 }
 ```
+
+You can now use the search bar to search your documentation.
+
+**Important: Search only works for the statically built documentation (i.e., after you ran `yarn build` in your documentation folder).**
+
+**Search does **not** work in development (i.e., when running `yarn start`).**
 
 ## License
 

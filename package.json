@@ -16,5 +16,8 @@
   },
   "peerDependencies": {
     "@docusaurus/core": "^2.0.0"
+  },
+  "scripts": {
+    "publish": "yarn publish --access public"
   }
 }
