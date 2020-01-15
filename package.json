@@ -1,8 +1,12 @@
 {
   "name": "@cmfcmf/docusaurus-search-local",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Local Search for Docusaurus",
-  "keywords": ["docusaurus", "search", "plugin"],
+  "keywords": [
+    "docusaurus",
+    "search",
+    "plugin"
+  ],
   "license": "MIT",
   "repository": "cmfcmf/docusaurus-search-local",
   "main": "src/index.js",
