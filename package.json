@@ -1,0 +1,20 @@
+{
+  "name": "@cmfcmf/docusaurus-search-local",
+  "version": "0.0.1",
+  "description": "Local Search for Docusaurus",
+  "main": "src/index.js",
+  "author": "Christian Flach",
+  "license": "MIT",
+  "dependencies": {
+    "autocomplete.js": "^0.37.0",
+    "classnames": "^2.2.6",
+    "htmlparser2": "^4.0.0",
+    "lunr": "^2.3.8"
+  },
+  "engines": {
+    "node": ">=10.9.0"
+  },
+  "peerDependencies": {
+    "@docusaurus/core": "^2.0.0"
+  }
+}
