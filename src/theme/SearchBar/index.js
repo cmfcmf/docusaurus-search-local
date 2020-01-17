@@ -45,7 +45,7 @@ const Search = props => {
             source: (input, cb) => {
               const terms = input
                 .split(" ")
-                .map(each => each.trim())
+                .map(each => each.trim().toLowerCase())
                 .filter(each => each.length > 0);
               const results = index.query((query) => {
                 query.term(terms)
@@ -57,7 +57,9 @@ const Search = props => {
               suggestion: function(suggestion) {
                 const document = documents.find(document => document.sectionRoute === suggestion.ref);
                 return autoComplete.escapeHighlightedString(
-                  `${document.pageTitle} >> ${document.sectionTitle}`
+                  document.pageTitle === document.sectionTitle
+                    ? document.sectionTitle
+                    : `${document.pageTitle} >> ${document.sectionTitle}`
                 );
               },
               empty: () => {
