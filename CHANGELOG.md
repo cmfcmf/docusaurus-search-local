@@ -1,7 +1,7 @@
 # 0.0.4
 
 - FIX: Focus search bar after loading the index if it was previously focused.
-
+- FEAT: Introduce document ids to make index smaller
 
 # 0.0.3
 

@@ -23,7 +23,7 @@ function fetchIndex(baseUrl) {
     return Promise.resolve({
       documents: [],
       index: lunr(function () {
-        this.ref("route");
+        this.ref("id");
         this.field("title");
         this.field("content");
       })
@@ -74,15 +74,17 @@ const Search = props => {
               .split(" ")
               .map(each => each.trim().toLowerCase())
               .filter(each => each.length > 0);
-            const results = index.query((query) => {
-              query.term(terms)
-              query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING })
-            }).slice(0, 8);
+            const results = index
+              .query((query) => {
+                query.term(terms)
+                query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING })
+              })
+              .slice(0, 8)
+              .map(result => documents.find(document => document.id.toString() === result.ref));
             cb(results);
           },
           templates: {
-            suggestion: function(suggestion) {
-              const document = documents.find(document => document.sectionRoute === suggestion.ref);
+            suggestion: function(document) {
               return autoComplete.escapeHighlightedString(
                 document.pageTitle === document.sectionTitle
                   ? document.sectionTitle
@@ -95,8 +97,8 @@ const Search = props => {
           }
         }
       ]
-    ).on('autocomplete:selected', function(event, suggestion, dataset, context) {
-      history.push(suggestion.ref);
+    ).on('autocomplete:selected', function(event, document, dataset, context) {
+      history.push(document.sectionRoute);
     });
 
     if (focusAfterIndexLoaded.current) {

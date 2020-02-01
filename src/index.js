@@ -158,12 +158,15 @@ module.exports = function(context, options) {
         };
       });
 
+      // Give every index entry a unique id so that the index does not need to store long URLs.
+      let nextDocId = 1;
       const documents = (await Promise.all(data.map(async ({ file, route }) => {
         const html = await readFileAsync(file, { encoding: "utf8" });
 
         const { pageTitle, sections } = html2text(html);
 
         return sections.map(section => ({
+          id: nextDocId++,
           pageTitle,
           pageRoute: route,
           sectionRoute: route + section.hash,
@@ -173,12 +176,12 @@ module.exports = function(context, options) {
       }))).reduce((acc, val) => acc.concat(val), []); // .flat()
 
       const index = lunr(function () {
-        this.ref("route");
+        this.ref("id");
         this.field("title");
         this.field("content");
-        documents.forEach(function ({ sectionRoute, sectionTitle, sectionContent }) {
+        documents.forEach(function ({ id, sectionTitle, sectionContent }) {
           this.add({
-            route: sectionRoute,
+            id: id.toString(), // the ref must be a string
             title: sectionTitle,
             content: sectionContent
           });
@@ -188,7 +191,7 @@ module.exports = function(context, options) {
       await writeFileAsync(
         path.join(outDir, "search-index.json"),
         JSON.stringify({
-          documents: documents.map(({ pageTitle, sectionTitle, sectionRoute }) => ({ pageTitle, sectionTitle, sectionRoute })),
+          documents: documents.map(({ id, pageTitle, sectionTitle, sectionRoute }) => ({ id, pageTitle, sectionTitle, sectionRoute })),
           index
         }),
         { encoding: "utf8" }
