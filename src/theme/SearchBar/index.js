@@ -3,7 +3,7 @@
  * by Facebook, Inc., licensed under the MIT license.
  */
 
-import React, {useState, useRef, useCallback} from 'react';
+import React, {useRef} from 'react';
 import classnames from 'classnames';
 import * as lunr from "lunr";
 
@@ -13,109 +13,118 @@ import {useHistory} from '@docusaurus/router';
 import './input.css';
 import './autocomplete.css';
 
+function fetchIndex(baseUrl) {
+  if (process.env.NODE_ENV === "production") {
+    return fetch(`${baseUrl}search-index.json`)
+      .then(content => content.json())
+      .then(json => ({ documents: json.documents, index: lunr.Index.load(json.index) }));
+  } else {
+    // The index does not exist in development, therefore load a dummy index here.
+    return Promise.resolve({
+      documents: [],
+      index: lunr(function () {
+        this.ref("route");
+        this.field("title");
+        this.field("content");
+      })
+    });
+  }
+}
+
+async function fetchAutoCompleteJS() {
+  const autoComplete = await import("autocomplete.js");
+  autoComplete.noConflict();
+  return autoComplete.default;
+}
+
 const Search = props => {
-  const [indexState, setIndexState] = useState("empty");
+  const { isSearchBarExpanded, handleSearchBarToggle } = props;
+  const indexState = useRef("empty"); // empty, loaded, done
   const searchBarRef = useRef(null);
-  const {siteConfig = {}} = useDocusaurusContext();
-  const {
-    baseUrl,
-  } = siteConfig;
+  const { siteConfig: { baseUrl }} = useDocusaurusContext();
   const history = useHistory();
+  // Should the input be focused after the index is loaded?
+  const focusAfterIndexLoaded = useRef(false);
 
   const loadIndex = async () => {
-    if (indexState !== "empty") {
+    if (indexState.current !== "empty") {
+      // Do not load the index (again) if its already loaded or in the process of being loaded.
       return;
     }
-    setIndexState("loading");
-
-    const indexLoaded = (index, documents, autoComplete) => {
-      autoComplete.noConflict();
-
-      autoComplete.default(
-        searchBarRef.current,
-        {
-          hint: false,
-          autoselect: true,
-          cssClasses: {
-            root: "d-s-l-a"
-          }
-        },
-        [
-          {
-            source: (input, cb) => {
-              const terms = input
-                .split(" ")
-                .map(each => each.trim().toLowerCase())
-                .filter(each => each.length > 0);
-              const results = index.query((query) => {
-                query.term(terms)
-                query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING })
-              }).slice(0, 8);
-              cb(results);
-            },
-            templates: {
-              suggestion: function(suggestion) {
-                const document = documents.find(document => document.sectionRoute === suggestion.ref);
-                return autoComplete.escapeHighlightedString(
-                  document.pageTitle === document.sectionTitle
-                    ? document.sectionTitle
-                    : `${document.pageTitle} >> ${document.sectionTitle}`
-                );
-              },
-              empty: () => {
-                return "no results"
-              }
-            }
-          }
-        ]
-      ).on('autocomplete:selected', function(event, suggestion, dataset, context) {
-        history.push(suggestion.ref);
-      });
-      setIndexState("done");
-    }
-
-    let indexPromise;
-
-    if (process.env.NODE_ENV === "production") {
-      indexPromise = fetch(`${baseUrl}search-index.json`)
-        .then(content => content.json())
-        .then(json => ({ documents: json.documents, index: lunr.Index.load(json.index) }));
-    } else {
-      // The index does not exist in development, therefore load a dummy index here.
-      indexPromise = Promise.resolve({
-        documents: [],
-        index: lunr(function () {
-          this.ref("route");
-          this.field("title");
-          this.field("content");
-        })
-      });
-
-      // indexPromise = import("./search-index.json")
-      //   .then(data => data.default)
-      //   .then(json => ({ documents: json.documents, index: lunr.Index.load(json.index) }));
-    }
+    indexState.current = "loading";
 
     const [{ index, documents }, autoComplete] = await Promise.all([
-      indexPromise,
-      import("autocomplete.js"),
+      fetchIndex(baseUrl),
+      fetchAutoCompleteJS(),
     ]);
-    indexLoaded(index, documents, autoComplete);
-  };
 
-  const toggleSearchIconClick = useCallback(() => {
-    loadIndex();
+    autoComplete(
+      searchBarRef.current,
+      {
+        hint: false,
+        autoselect: true,
+        cssClasses: {
+          root: "d-s-l-a"
+        }
+      },
+      [
+        {
+          source: (input, cb) => {
+            const terms = input
+              .split(" ")
+              .map(each => each.trim().toLowerCase())
+              .filter(each => each.length > 0);
+            const results = index.query((query) => {
+              query.term(terms)
+              query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING })
+            }).slice(0, 8);
+            cb(results);
+          },
+          templates: {
+            suggestion: function(suggestion) {
+              const document = documents.find(document => document.sectionRoute === suggestion.ref);
+              return autoComplete.escapeHighlightedString(
+                document.pageTitle === document.sectionTitle
+                  ? document.sectionTitle
+                  : `${document.pageTitle} >> ${document.sectionTitle}`
+              );
+            },
+            empty: () => {
+              return "no results"
+            }
+          }
+        }
+      ]
+    ).on('autocomplete:selected', function(event, suggestion, dataset, context) {
+      history.push(suggestion.ref);
+    });
 
-    if (indexState === "done") {
+    if (focusAfterIndexLoaded.current) {
       searchBarRef.current.focus();
     }
+    indexState.current = "done";
+  };
 
-    props.handleSearchBarToggle(!props.isSearchBarExpanded);
-  }, [props.isSearchBarExpanded, indexState]);
+  const onInputFocus = () => {
+    focusAfterIndexLoaded.current = true;
+    loadIndex();
+  };
 
-  const handleSearchInputBlur = useCallback(() => {
-    props.handleSearchBarToggle(!props.isSearchBarExpanded);
-  }, [props.isSearchBarExpanded]);
+  const onInputBlur = () => {
+    handleSearchBarToggle(!isSearchBarExpanded);
+  };
+
+  const onInputMouseOver = () => {
+    loadIndex();
+  };
+
+  const onIconClick = async () => {
+    await loadIndex();
+
+    searchBarRef.current.focus();
+
+    handleSearchBarToggle(!isSearchBarExpanded);
+  };
 
   return (
     <div className="navbar__search" key="search-box">
@@ -123,10 +132,10 @@ const Search = props => {
         aria-label="expand searchbar"
         role="button"
         className={classnames('search-icon', {
-          'search-icon-hidden': props.isSearchBarExpanded,
+          'search-icon-hidden': isSearchBarExpanded,
         })}
-        onClick={toggleSearchIconClick}
-        onKeyDown={toggleSearchIconClick}
+        onClick={onIconClick}
+        onKeyDown={onIconClick}
         tabIndex={0}
       />
       <input
@@ -136,12 +145,12 @@ const Search = props => {
         aria-label="Search"
         className={classnames(
           'navbar__search-input',
-          {'search-bar-expanded': props.isSearchBarExpanded},
-          {'search-bar': !props.isSearchBarExpanded},
+          {'search-bar-expanded': isSearchBarExpanded},
+          {'search-bar': !isSearchBarExpanded},
         )}
-        onMouseOver={loadIndex}
-        onFocus={loadIndex}
-        onBlur={handleSearchInputBlur}
+        onMouseOver={onInputMouseOver}
+        onFocus={onInputFocus}
+        onBlur={onInputBlur}
         ref={searchBarRef}
       />
     </div>
