@@ -1,6 +1,6 @@
-# Local Search for Docusaurus v2
+# Offline / Local Search for Docusaurus v2
 
-Local search for Docusaurus **v2**.
+Offline / local search for Docusaurus **v2** that works behind your firewall.
 
 ## Installation
 
