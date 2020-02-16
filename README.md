@@ -2,6 +2,8 @@
 
 Offline / local search for Docusaurus **v2** that works behind your firewall.
 
+![Search in Action](docs/preview.gif)
+
 ## Installation
 
 ```bash
