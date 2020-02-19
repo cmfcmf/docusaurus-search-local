@@ -25,3 +25,9 @@
   font-weight: bold;
   font-style: normal;
 }
+html[data-theme='dark'] .d-s-l-a .aa-dropdown-menu {
+  background-color: #1e2125;
+}
+html[data-theme='dark'] .d-s-l-a .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: #3578e5;
+}

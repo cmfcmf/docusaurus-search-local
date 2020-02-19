@@ -1,3 +1,5 @@
+- FIX: Set different dropdown colors in dark theme.
+
 # 0.0.4
 
 - FIX: Focus search bar after loading the index if it was previously focused.
