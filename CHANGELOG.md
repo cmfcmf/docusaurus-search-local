@@ -1,3 +1,5 @@
+# 0.0.5
+
 - FIX: Set different dropdown colors in dark theme.
 
 # 0.0.4
