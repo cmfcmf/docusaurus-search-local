@@ -3,26 +3,29 @@
  * by Facebook, Inc., licensed under the MIT license.
  */
 
-import React, {useRef} from 'react';
-import classnames from 'classnames';
+import React, { useRef } from "react";
+import classnames from "classnames";
 import * as lunr from "lunr";
 
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {useHistory} from '@docusaurus/router';
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { useHistory } from "@docusaurus/router";
 
-import './input.css';
-import './autocomplete.css';
+import "./input.css";
+import "./autocomplete.css";
 
 function fetchIndex(baseUrl) {
   if (process.env.NODE_ENV === "production") {
     return fetch(`${baseUrl}search-index.json`)
       .then(content => content.json())
-      .then(json => ({ documents: json.documents, index: lunr.Index.load(json.index) }));
+      .then(json => ({
+        documents: json.documents,
+        index: lunr.Index.load(json.index)
+      }));
   } else {
     // The index does not exist in development, therefore load a dummy index here.
     return Promise.resolve({
       documents: [],
-      index: lunr(function () {
+      index: lunr(function() {
         this.ref("id");
         this.field("title");
         this.field("content");
@@ -41,7 +44,9 @@ const Search = props => {
   const { isSearchBarExpanded, handleSearchBarToggle } = props;
   const indexState = useRef("empty"); // empty, loaded, done
   const searchBarRef = useRef(null);
-  const { siteConfig: { baseUrl }} = useDocusaurusContext();
+  const {
+    siteConfig: { baseUrl }
+  } = useDocusaurusContext();
   const history = useHistory();
   // Should the input be focused after the index is loaded?
   const focusAfterIndexLoaded = useRef(false);
@@ -55,7 +60,7 @@ const Search = props => {
 
     const [{ index, documents }, autoComplete] = await Promise.all([
       fetchIndex(baseUrl),
-      fetchAutoCompleteJS(),
+      fetchAutoCompleteJS()
     ]);
 
     autoComplete(
@@ -75,12 +80,16 @@ const Search = props => {
               .map(each => each.trim().toLowerCase())
               .filter(each => each.length > 0);
             const results = index
-              .query((query) => {
-                query.term(terms)
-                query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING })
+              .query(query => {
+                query.term(terms);
+                query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING });
               })
               .slice(0, 8)
-              .map(result => documents.find(document => document.id.toString() === result.ref));
+              .map(result =>
+                documents.find(
+                  document => document.id.toString() === result.ref
+                )
+              );
             cb(results);
           },
           templates: {
@@ -92,12 +101,12 @@ const Search = props => {
               );
             },
             empty: () => {
-              return "no results"
+              return "no results";
             }
           }
         }
       ]
-    ).on('autocomplete:selected', function(event, document, dataset, context) {
+    ).on("autocomplete:selected", function(event, document, dataset, context) {
       history.push(document.sectionRoute);
     });
 
@@ -133,8 +142,8 @@ const Search = props => {
       <span
         aria-label="expand searchbar"
         role="button"
-        className={classnames('search-icon', {
-          'search-icon-hidden': isSearchBarExpanded,
+        className={classnames("search-icon", {
+          "search-icon-hidden": isSearchBarExpanded
         })}
         onClick={onIconClick}
         onKeyDown={onIconClick}
@@ -146,9 +155,9 @@ const Search = props => {
         placeholder="Search"
         aria-label="Search"
         className={classnames(
-          'navbar__search-input',
-          {'search-bar-expanded': isSearchBarExpanded},
-          {'search-bar': !isSearchBarExpanded},
+          "navbar__search-input",
+          { "search-bar-expanded": isSearchBarExpanded },
+          { "search-bar": !isSearchBarExpanded }
         )}
         onMouseOver={onInputMouseOver}
         onFocus={onInputFocus}

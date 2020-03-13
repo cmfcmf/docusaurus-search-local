@@ -134,9 +134,9 @@ function html2text(html) {
 
 module.exports = function(context, options) {
   return {
-    name: 'docusaurus-plugin',
+    name: "docusaurus-plugin",
     getThemePath() {
-      return path.resolve(__dirname, './theme');
+      return path.resolve(__dirname, "./theme");
     },
     async postBuild({ routesPaths = [], outDir, baseUrl }) {
       const data = routesPaths.map(route => {
@@ -160,42 +160,53 @@ module.exports = function(context, options) {
 
       // Give every index entry a unique id so that the index does not need to store long URLs.
       let nextDocId = 1;
-      const documents = (await Promise.all(data.map(async ({ file, route }) => {
-        const html = await readFileAsync(file, { encoding: "utf8" });
+      const documents = (
+        await Promise.all(
+          data.map(async ({ file, route }) => {
+            const html = await readFileAsync(file, { encoding: "utf8" });
 
-        const { pageTitle, sections } = html2text(html);
+            const { pageTitle, sections } = html2text(html);
 
-        return sections.map(section => ({
-          id: nextDocId++,
-          pageTitle,
-          pageRoute: route,
-          sectionRoute: route + section.hash,
-          sectionTitle: section.title,
-          sectionContent: section.content
-        }));
-      }))).reduce((acc, val) => acc.concat(val), []); // .flat()
+            return sections.map(section => ({
+              id: nextDocId++,
+              pageTitle,
+              pageRoute: route,
+              sectionRoute: route + section.hash,
+              sectionTitle: section.title,
+              sectionContent: section.content
+            }));
+          })
+        )
+      ).reduce((acc, val) => acc.concat(val), []); // .flat()
 
-      const index = lunr(function () {
+      const index = lunr(function() {
         this.ref("id");
         this.field("title");
         this.field("content");
-        documents.forEach(function ({ id, sectionTitle, sectionContent }) {
+        documents.forEach(function({ id, sectionTitle, sectionContent }) {
           this.add({
             id: id.toString(), // the ref must be a string
             title: sectionTitle,
             content: sectionContent
           });
-        }, this)
+        }, this);
       });
 
       await writeFileAsync(
         path.join(outDir, "search-index.json"),
         JSON.stringify({
-          documents: documents.map(({ id, pageTitle, sectionTitle, sectionRoute }) => ({ id, pageTitle, sectionTitle, sectionRoute })),
+          documents: documents.map(
+            ({ id, pageTitle, sectionTitle, sectionRoute }) => ({
+              id,
+              pageTitle,
+              sectionTitle,
+              sectionRoute
+            })
+          ),
           index
         }),
         { encoding: "utf8" }
       );
-    },
+    }
   };
 };
