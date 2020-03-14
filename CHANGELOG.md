@@ -1,3 +1,9 @@
+# 0.1.0
+
+- FIX: Navigation buttons are no longer included in indexed text (#4).
+- FEAT: New options to configure indexing.
+- BREAKING: Static pages are no longer indexed by default
+
 # 0.0.5
 
 - FIX: Set different dropdown colors in dark theme.

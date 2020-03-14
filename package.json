@@ -1,11 +1,13 @@
 {
   "name": "@cmfcmf/docusaurus-search-local",
   "version": "0.0.5",
-  "description": "Local Search for Docusaurus",
+  "description": "Local / Offline Search for Docusaurus",
   "keywords": [
     "docusaurus",
     "search",
-    "plugin"
+    "plugin",
+    "offline",
+    "local"
   ],
   "license": "MIT",
   "repository": "cmfcmf/docusaurus-search-local",
