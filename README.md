@@ -63,6 +63,10 @@ You can now use the search bar to search your documentation.
 
 **Search does **not** work in development (i.e., when running `yarn start`).**
 
+## CONTRIBUTING
+
+Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for further information.
+
 ## License
 
 MIT
