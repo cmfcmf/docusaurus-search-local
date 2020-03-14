@@ -24,7 +24,7 @@ npm install @cmfcmf/docusaurus-search-local
 
 ## Usage
 
-Add this plugin to the `plugins` array in `docusaurus.config.js`:
+Add this plugin to the `plugins` array in `docusaurus.config.js`.
 
 ```js
 module.exports = {
@@ -32,7 +32,28 @@ module.exports = {
   plugins: [
     '@cmfcmf/docusaurus-search-local'
   ],
+
+  // or, if you want to specify options:
+
   // ...
+  plugins: [
+    ['@cmfcmf/docusaurus-search-local', {
+      // Options here
+    }]
+  ],
+}
+```
+
+The following options are available (defaults are shown below):
+
+```js
+{
+  blogBasePath: '/blog', // must correspond to the base path configured for the blog plugin
+  docsBasePath: '/docs', // must correspond to the base path configured for the docs plugin
+  indexBlog: true, // whether to index blog pages
+  indexDocs: true, // whether to index docs pages
+  indexPages: false, // whether to index static pages
+  // /404.html is never indexed
 }
 ```
 

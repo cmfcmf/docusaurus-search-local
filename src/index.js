@@ -6,155 +6,70 @@ const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 
 const lunr = require("lunr");
-const htmlparser2 = require("htmlparser2");
+const { html2text } = require("./parse");
 
-function html2text(html) {
-  let pageTitle = "";
-  const sections = [];
-  let sectionTitle = "";
-  let sectionContent = "";
-  let hashLink = "";
-
-  let insideMain = false;
-  let insideArticle = false;
-  let insideHeader = false;
-  let insidePre = false;
-  let insideH1 = false;
-  let insideH2 = false;
-  let insideH3 = false;
-  let insideHashLink = false;
-  let insideTitle = false;
-  let insideSVG = false;
-
-  function sectionEnd() {
-    if (sections.length === 0) {
-      return;
-    }
-    sections[sections.length - 1].content = sectionContent.trim();
-    sectionContent = "";
-  }
-
-  function sectionStart() {
-    sections.push({
-      title: sectionTitle.trim(),
-      hash: hashLink
-    });
-    sectionTitle = "";
-  }
-
-  const parser = new htmlparser2.Parser(
-    {
-      onopentag(tagname, attributes) {
-        if (["h1", "h2", "h3"].includes(tagname)) {
-          sectionEnd();
-        }
-
-        if (tagname === "main") {
-          insideMain = true;
-        } else if (tagname === "article") {
-          insideArticle = true;
-        } else if (tagname === "pre") {
-          insidePre = true;
-        } else if (tagname === "header") {
-          insideHeader = true;
-        } else if (tagname === "h1") {
-          insideH1 = true;
-        } else if (tagname === "h2") {
-          insideH2 = true;
-        } else if (tagname === "h3") {
-          insideH3 = true;
-        } else if (tagname === "a" && attributes["class"] === "hash-link") {
-          insideHashLink = true;
-          hashLink = attributes["href"];
-        } else if (tagname === "title") {
-          insideTitle = true;
-        } else if (tagname === "svg") {
-          insideSVG = true;
-        }
-      },
-      ontext(text) {
-        if (insideSVG) {
-          return;
-        }
-        if (insideMain && !insideHashLink) {
-          if (text.length) {
-            if (insideH1 || insideH2 || insideH3) {
-              sectionTitle += text;
-            } else {
-              sectionContent += text;
-            }
-          }
-        } else if (insideTitle) {
-          pageTitle += text;
-        }
-      },
-      onclosetag(tagname) {
-        if (tagname === "main") {
-          insideMain = false;
-        } else if (tagname === "article") {
-          insideArticle = false;
-        } else if (tagname === "pre") {
-          insidePre = false;
-        } else if (tagname === "header") {
-          insideHeader = false;
-        } else if (tagname === "h1") {
-          insideH1 = false;
-        } else if (tagname === "h2") {
-          insideH2 = false;
-        } else if (tagname === "h3") {
-          insideH3 = false;
-        } else if (tagname === "a" && insideHashLink) {
-          insideHashLink = false;
-        } else if (tagname === "title") {
-          insideTitle = false;
-        } else if (tagname === "svg") {
-          insideSVG = false;
-        }
-
-        if (insideMain && ["h1", "h2", "h3"].includes(tagname)) {
-          if (insideArticle && insideHeader) {
-            pageTitle = sectionTitle.trim();
-          }
-          sectionStart();
-        } else if (!insidePre) {
-          sectionTitle += " ";
-          sectionContent += " ";
-        }
-      }
-    },
-    { decodeEntities: true, lowerCaseTags: true }
-  );
-  parser.write(html);
-  parser.end();
-
-  sectionEnd();
-
-  return { pageTitle, sections };
-}
+const flatMap = (array, mapper) => {
+  return array.reduce((acc, element) => {
+    return acc.concat(mapper(element));
+  }, []);
+};
 
 module.exports = function(context, options) {
+  const blogBasePath =
+    options.blogBasePath !== undefined ? options.blogBasePath : "/blog";
+  const docsBasePath =
+    options.docsBasePath !== undefined ? options.docsBasePath : "/docs";
+  const indexPages =
+    options.indexPages !== undefined ? options.indexPages : false;
+  const indexBlog = options.indexBlog !== undefined ? options.indexBlog : true;
+  const indexDocs = options.indexDocs !== undefined ? options.indexDocs : true;
+
+  if (!blogBasePath.startsWith("/")) {
+    throw new Error(
+      `blogBasePath must start with /, received: '${blogBasePath}'.`
+    );
+  }
+  if (!docsBasePath.startsWith("/")) {
+    throw new Error(
+      `docsBasePath must start with /, received: '${docsBasePath}'.`
+    );
+  }
+
   return {
     name: "docusaurus-plugin",
     getThemePath() {
       return path.resolve(__dirname, "./theme");
     },
-    async postBuild({ routesPaths = [], outDir, baseUrl }) {
-      const data = routesPaths.map(route => {
-        let file = route;
-        if (file.startsWith(baseUrl)) {
-          file = file.replace(baseUrl, "");
+    async postBuild({ routesPaths = [], outDir }) {
+      const data = flatMap(routesPaths, route => {
+        if (route === "/404.html") {
+          // Do not index error page.
+          return [];
         }
-        if (!file.endsWith(".html")) {
-          if (!file.endsWith("/")) {
-            file += "/";
+        if (indexBlog && route.startsWith(blogBasePath)) {
+          if (
+            route === blogBasePath ||
+            route.startsWith(`${blogBasePath}/tags/`) ||
+            route === `${blogBasePath}/tags`
+          ) {
+            // Do not index list of blog posts and tags filter pages
+            return [];
           }
-          file += "index.html";
+          return { route, type: "blog" };
         }
-        file = path.join(outDir, file);
-
+        if (indexDocs && route.startsWith(docsBasePath)) {
+          return { route, type: "docs" };
+        }
+        if (indexPages) {
+          return { route, type: "page" };
+        }
+        return [];
+      }).map(({ route, type }) => {
+        const file = path.join(outDir, route, "index.html");
         return {
           file,
-          route
+          route,
+          type
         };
       });
 
@@ -162,10 +77,10 @@ module.exports = function(context, options) {
       let nextDocId = 1;
       const documents = (
         await Promise.all(
-          data.map(async ({ file, route }) => {
+          data.map(async ({ file, route, type }) => {
             const html = await readFileAsync(file, { encoding: "utf8" });
 
-            const { pageTitle, sections } = html2text(html);
+            const { pageTitle, sections } = html2text(html, type);
 
             return sections.map(section => ({
               id: nextDocId++,

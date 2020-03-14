@@ -16,8 +16,8 @@
   "author": "Christian Flach",
   "dependencies": {
     "autocomplete.js": "^0.37.0",
+    "cheerio": "^1.0.0-rc.3",
     "classnames": "^2.2.6",
-    "htmlparser2": "^4.0.0",
     "lunr": "^2.3.8"
   },
   "peerDependencies": {
@@ -25,12 +25,14 @@
   },
   "devDependencies": {
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1"
   },
   "scripts": {
     "lint": "prettier --check src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}"
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "test": "jest"
   },
   "husky": {
     "hooks": {

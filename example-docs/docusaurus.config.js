@@ -15,7 +15,7 @@ module.exports = {
       },
       links: [
         {
-          to: 'docs/doc1',
+          to: 'docs/d-s-l-test',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
@@ -36,7 +36,7 @@ module.exports = {
           items: [
             {
               label: 'Style Guide',
-              to: 'docs/doc1',
+              to: 'docs/d-s-l-test',
             },
             {
               label: 'Second Doc',
@@ -82,10 +82,18 @@ module.exports = {
     [
       '@docusaurus/preset-classic',
       {
+        blog: {
+          feedOptions: {
+            type: 'all',
+            copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc.`,
+          },
+        },
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
             'https://github.com/facebook/docusaurus/edit/master/website/',
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -93,4 +101,7 @@ module.exports = {
       },
     ],
   ],
+  plugins: [
+    require('path').resolve(__dirname, '..'),
+  ]
 };
