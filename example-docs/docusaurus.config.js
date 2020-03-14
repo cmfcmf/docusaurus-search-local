@@ -102,6 +102,8 @@ module.exports = {
     ],
   ],
   plugins: [
-    require('path').resolve(__dirname, '..'),
+    [require('path').resolve(__dirname, '..'), {
+      // Options
+    }],
   ]
 };

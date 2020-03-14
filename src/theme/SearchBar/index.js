@@ -5,7 +5,7 @@
 
 import React, { useRef } from "react";
 import classnames from "classnames";
-import * as lunr from "lunr";
+import lunr from "../../client-lunr";
 
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { useHistory } from "@docusaurus/router";

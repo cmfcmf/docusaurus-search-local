@@ -20,7 +20,8 @@
     "autocomplete.js": "^0.37.0",
     "cheerio": "^1.0.0-rc.3",
     "classnames": "^2.2.6",
-    "lunr": "^2.3.8"
+    "lunr": "^2.3.8",
+    "lunr-languages": "^1.4.0"
   },
   "peerDependencies": {
     "@docusaurus/core": "^2.0.0"

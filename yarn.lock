@@ -2602,6 +2602,11 @@ lolex@^5.0.0:
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+lunr-languages@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/lunr-languages/-/lunr-languages-1.4.0.tgz#42abb12aa81447d1ece5aa35676adcdf40a3e8a8"
+  integrity sha512-YWfZDExJN/MJEVE/DbM4AuVRLsqeHi+q3wmECMsWjGIOkd5mr9DUNos7fv8f5do9VLRMYXIzFjn+N4+KPI9pQA==
+
 lunr@^2.3.8:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/lunr/-/lunr-2.3.8.tgz#a8b89c31f30b5a044b97d2d28e2da191b6ba2072"

@@ -1,7 +1,8 @@
 # 0.1.0
 
-- FIX: Navigation buttons are no longer included in indexed text (#4).
+- FEAT: Support for indexing other languages than English (#3)
 - FEAT: New options to configure indexing.
+- FIX: Navigation buttons are no longer included in indexed text (#4).
 - BREAKING: Static pages are no longer indexed by default
 
 # 0.0.5
