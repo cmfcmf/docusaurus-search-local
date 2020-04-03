@@ -71,6 +71,12 @@ The following languages are available:
 
     ar, da, de, en, es, fi, fr, hu, it, ja, nl, no, pt, ro, ru, sv, th, tr, vi
 
+### Debugging
+
+If building your documentation produces an error, you can build it in debug mode to figure out
+white page is causing it. To do so, simply set the `DEBUG` environment variable when building
+your documentation: `DEBUG=1 yarn build`.
+
 ## CONTRIBUTING
 
 Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for further information.

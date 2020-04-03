@@ -7,6 +7,7 @@ const writeFileAsync = util.promisify(fs.writeFile);
 
 const lunr = require("lunr");
 const { html2text } = require("./parse");
+const { logger } = require("./logger");
 
 const flatMap = (array, mapper) => {
   return array.reduce((acc, element) => {
@@ -75,6 +76,8 @@ module.exports = function(context, options) {
       return path.resolve(__dirname, "./theme");
     },
     async postBuild({ routesPaths = [], outDir, baseUrl }) {
+      logger.info("Gathering documents");
+
       const data = flatMap(routesPaths, url => {
         if (!url.startsWith(baseUrl)) {
           throw new Error(
@@ -113,13 +116,16 @@ module.exports = function(context, options) {
         };
       });
 
+      logger.info("Parsing documents");
+
       // Give every index entry a unique id so that the index does not need to store long URLs.
       let nextDocId = 1;
       const documents = (
         await Promise.all(
           data.map(async ({ file, url, type }) => {
+            logger.debug(`Parsing ${type} file ${file}`, { url });
             const html = await readFileAsync(file, { encoding: "utf8" });
-            const { pageTitle, sections } = html2text(html, type);
+            const { pageTitle, sections } = html2text(html, type, url);
 
             return sections.map(section => ({
               id: nextDocId++,
@@ -132,6 +138,8 @@ module.exports = function(context, options) {
           })
         )
       ).reduce((acc, val) => acc.concat(val), []); // .flat()
+
+      logger.info("Building index");
 
       const index = lunr(function() {
         if (language !== "en") {
@@ -153,6 +161,8 @@ module.exports = function(context, options) {
         }, this);
       });
 
+      logger.info("Writing index to disk");
+
       await writeFileAsync(
         path.join(outDir, "search-index.json"),
         JSON.stringify({
@@ -168,6 +178,8 @@ module.exports = function(context, options) {
         }),
         { encoding: "utf8" }
       );
+
+      logger.info("Index written to disk, success!");
     }
   };
 };

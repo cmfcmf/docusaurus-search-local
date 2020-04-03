@@ -1,3 +1,8 @@
+# 0.1.1 (unreleased)
+
+- FIX: Parsing of empty sections and pages
+- FIX: Parsing static pages was broken
+
 # 0.1.0
 
 - FEAT: Support for indexing other languages than English (#3)

@@ -1,6 +1,8 @@
-const htmlparser2 = require("htmlparser2");
 const cheerio = require("cheerio");
 
+const { logger } = require("./logger");
+
+// We insert whitespace after text from any of these tags
 const BLOCK_TAGS = [
   "address",
   "article",
@@ -61,11 +63,11 @@ function getText($, el) {
         .get()
     );
   } else {
-    throw new Error("Should not happen.");
+    throw new Error(`This should not be reached (debug: got type ${el.type})`);
   }
 }
 
-module.exports.html2text = function(html, type) {
+module.exports.html2text = function(html, type, url = "?") {
   const $ = cheerio.load(html);
   // Remove copy buttons from code boxes
   $("pre button").remove();
@@ -80,30 +82,41 @@ module.exports.html2text = function(html, type) {
     $("article")
       .find(HEADINGS)
       .each((_, heading) => {
-        const $sectionElements = $(heading).parents("header").length
-          ? $("article")
-              .children()
-              .not("header")
-              .children()
-              .first()
-              .nextUntil(HEADINGS)
-              .addBack()
-          : $(heading).nextUntil(HEADINGS);
+        const title = $(heading)
+          .contents()
+          .not("a[aria-hidden=true]")
+          .text();
+        const hash =
+          $(heading)
+            .find("a.hash-link")
+            .attr("href") || "";
 
-        const content = getText($, $sectionElements.get());
+        let $sectionElements;
+        if ($(heading).parents("header").length) {
+          // $(heading) is the page title
+
+          $firstElement = $("article")
+            .children() // div.markdown, header
+            .not("header") // div.markdown
+            .children() // h1, p, p, h2, ...
+            .first(); // h1 || p
+          if ($firstElement.filter(HEADINGS).length) {
+            // The first element is a header. This section is empty.
+            sections.push({ title, hash, content: "" });
+            return;
+          }
+          $sectionElements = $firstElement.nextUntil(HEADINGS).addBack();
+        } else {
+          $sectionElements = $(heading).nextUntil(HEADINGS);
+        }
+        const content = getText($, $sectionElements.get()).trim();
 
         sections.push({
           // Remove elements that are marked as aria-hidden.
           // This is mainly done to remove anchors like this:
           // <a aria-hidden="true" tabindex="-1" class="hash-link" href="#first-subheader" title="Direct link to heading">#</a>
-          title: $(heading)
-            .contents()
-            .not("a[aria-hidden=true]")
-            .text(),
-          hash:
-            $(heading)
-              .find("a.hash-link")
-              .attr("href") || "",
+          title,
+          hash,
           content
         });
       });
@@ -111,16 +124,26 @@ module.exports.html2text = function(html, type) {
     return { pageTitle, sections };
   } else if (type === "page") {
     $("a[aria-hidden=true]").remove();
-    const pageTitle = $("h1")
-      .first()
-      .text();
+    let $pageTitle = $("h1").first();
+    if (!$pageTitle.length) {
+      $pageTitle = $("title");
+    }
+
+    const pageTitle = $pageTitle.text();
+    const $main = $("main").first();
+    if (!$main.length) {
+      logger.warn(
+        "Page has no <main>, therefore no content was indexed for this page.",
+        { url }
+      );
+    }
     return {
       pageTitle,
       sections: [
         {
           title: pageTitle,
           hash: "",
-          content: getText($("main").first())
+          content: $main.length ? getText($, $main.get()).trim() : ""
         }
       ]
     };
