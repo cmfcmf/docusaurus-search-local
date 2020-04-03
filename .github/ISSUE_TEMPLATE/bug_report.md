@@ -1,22 +1,29 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help improve this plugin
 title: ''
 labels: bug
 assignees: ''
 
 ---
 
-**Describe the bug**
+### Bug description 
 <!-- A clear and concise description of what the bug is. -->
 
 
-**Environment**
+### Environment
 <!-- Please paste the output of the following commands: -->
 
-If you use Yarn: `yarn list --pattern '@docusaurus|@cmfcmf' --depth=0`
-If you use npm: `npm list '@docusaurus/core' '@cmfcmf/docusaurus-search-local'`
+#### Package Versions
+If you use Yarn: 
+`yarn list --pattern '@docusaurus|@cmfcmf' --depth=0`
+If you use npm: 
+`npm list '@docusaurus/core' '@cmfcmf/docusaurus-search-local'`
+
+#### Node Version
 `node -v`
 
-**Additional context**
+
+
+### Additional context
 <!-- Add any other context about the problem here. -->
