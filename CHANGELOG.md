@@ -1,7 +1,8 @@
-# 0.1.1 (unreleased)
+# 0.1.1
 
 - FIX: Parsing of empty sections and pages
 - FIX: Parsing static pages was broken
+- FEAT: Add logging
 
 # 0.1.0
 
