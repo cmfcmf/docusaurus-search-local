@@ -74,7 +74,7 @@ The following languages are available:
 ### Debugging
 
 If building your documentation produces an error, you can build it in debug mode to figure out
-white page is causing it. To do so, simply set the `DEBUG` environment variable when building
+which page is causing it. To do so, simply set the `DEBUG` environment variable when building
 your documentation: `DEBUG=1 yarn build`.
 
 ## CONTRIBUTING
