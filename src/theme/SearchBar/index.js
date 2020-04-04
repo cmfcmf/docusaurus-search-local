@@ -94,14 +94,19 @@ const Search = props => {
           },
           templates: {
             suggestion: function(document) {
-              return autoComplete.escapeHighlightedString(
-                document.pageTitle === document.sectionTitle
-                  ? document.sectionTitle
-                  : `${document.pageTitle} >> ${document.sectionTitle}`
-              );
+              const escape = autoComplete.escapeHighlightedString;
+              let result = `<span class="aa-suggestion-section">${escape(
+                document.sectionTitle
+              )}</span>`;
+              if (document.pageTitle !== document.sectionTitle) {
+                result = `<span class="aa-suggestion-page">${escape(
+                  document.pageTitle
+                )}</span>${result}`;
+              }
+              return result;
             },
             empty: () => {
-              return "no results";
+              return `<span class="aa-suggestion-empty"></span>`;
             }
           }
         }

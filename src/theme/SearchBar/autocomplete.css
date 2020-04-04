@@ -26,6 +26,14 @@
   font-weight: bold;
   font-style: normal;
 }
+.d-s-l-a .aa-suggestion-page::after {
+  content: "〉";
+  padding-left: 0.5rem;
+  font-size: 0.8rem;
+}
+.d-s-l-a .aa-dropdown-menu .aa-suggestion-empty::after {
+  content: "No results";
+}
 html[data-theme="dark"] .d-s-l-a .aa-dropdown-menu {
   background-color: #1e2125;
 }
