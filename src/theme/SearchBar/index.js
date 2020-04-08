@@ -95,13 +95,13 @@ const Search = props => {
           templates: {
             suggestion: function(document) {
               const escape = autoComplete.escapeHighlightedString;
-              let result = `<span class="aa-suggestion-section">${escape(
-                document.sectionTitle
+              let result = `<span class="aa-suggestion-page">${escape(
+                document.pageTitle
               )}</span>`;
               if (document.pageTitle !== document.sectionTitle) {
-                result = `<span class="aa-suggestion-page">${escape(
-                  document.pageTitle
-                )}</span>${result}`;
+                result = `${result}<span class="aa-suggestion-section">${escape(
+                  document.sectionTitle
+                )}</span>`;
               }
               return result;
             },
