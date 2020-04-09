@@ -1,3 +1,7 @@
+# 0.1.2
+
+- FEAT: Make search results easier to style, improve markup (#6)
+
 # 0.1.1
 
 - FIX: Parsing of empty sections and pages
