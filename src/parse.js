@@ -62,6 +62,8 @@ function getText($, el) {
         .contents()
         .get()
     );
+  } else if (el.type === "style" || el.type === "script") {
+    return "";
   } else {
     throw new Error(`This should not be reached (debug: got type ${el.type})`);
   }

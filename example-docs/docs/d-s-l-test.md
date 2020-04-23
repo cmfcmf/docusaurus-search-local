@@ -8,6 +8,17 @@ FIRST _**SEC**TION CONTENT_
 
 A link [to a video](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
 
+<style>
+  /* This style tag should be ignored and not break the build */
+  .foo {
+
+  }
+</style>
+<script>
+  /* This script tag should be ignored and not break the build */
+  console.log("Hello");
+</script>
+
 # FIRST HEADER
 
 FIRST HEADER CONTENT
