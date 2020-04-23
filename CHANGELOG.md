@@ -1,3 +1,7 @@
+# 0.1.3
+
+- FIX: `<style>` and `<script>` tags no longer break indexing (#7)
+
 # 0.1.2
 
 - FEAT: Make search results easier to style, improve markup (#6)
