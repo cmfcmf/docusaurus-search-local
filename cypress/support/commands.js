@@ -42,10 +42,10 @@ Cypress.Commands.add("clearViewport", () => {
   const sidebar = window.parent.document.getElementsByClassName(
     "reporter-wrap"
   )[0];
-  sidebar.setAttribute("style", "display: none;");
+  sidebar.setAttribute("style", "opacity: 0");
 
   const header = window.parent.document.querySelector(
     ".runner.container header"
   );
-  header.setAttribute("style", "display: none;");
+  header.setAttribute("style", "opacity: 0");
 });
