@@ -3,12 +3,13 @@
  * by Facebook, Inc., licensed under the MIT license.
  */
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
-import lunr from "../../client-lunr";
+import lunr, { blogBasePath, docsBasePath } from "../../generated";
+import Mark from "mark.js";
 
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { useHistory } from "@docusaurus/router";
+import { useHistory, useLocation } from "@docusaurus/router";
 
 import "./input.css";
 import "./autocomplete.css";
@@ -40,6 +41,27 @@ async function fetchAutoCompleteJS() {
   return autoComplete.default;
 }
 
+function getQueryParamter(name) {
+  let search = window.location.search;
+  if (search.indexOf("?") === 0) {
+    search = search.slice(1);
+  }
+  const prefix = `${name}=`;
+  for (const pair of search.split("&")) {
+    if (pair.startsWith(prefix)) {
+      return pair.substr(prefix.length);
+    }
+  }
+  return null;
+}
+
+function isDocsOrBlog(baseUrl) {
+  return (
+    window.location.pathname.startsWith(`${baseUrl}${docsBasePath}`) ||
+    window.location.pathname.startsWith(`${baseUrl}${blogBasePath}`)
+  );
+}
+
 const Search = props => {
   const { isSearchBarExpanded, handleSearchBarToggle } = props;
   const indexState = useRef("empty"); // empty, loaded, done
@@ -48,8 +70,44 @@ const Search = props => {
     siteConfig: { baseUrl }
   } = useDocusaurusContext();
   const history = useHistory();
+  const location = useLocation();
+
   // Should the input be focused after the index is loaded?
   const focusAfterIndexLoaded = useRef(false);
+
+  useEffect(() => {
+    let root;
+    // Make sure to also adjust parse.js if you change the top element here.
+    if (isDocsOrBlog(baseUrl)) {
+      root = document.getElementsByTagName("article")[0];
+    } else {
+      root = document.getElementsByTagName("main")[0];
+    }
+    if (!root) {
+      return;
+    }
+    const param = getQueryParamter("highlight");
+    if (!param) {
+      return;
+    }
+    const terms = param
+      // Split terms by "~" not preceded or followed by another "~"
+      .split(/(?<!~)~(?!~)/)
+      .filter(each => each.length > 0)
+      // Replace "~~" by a single "~" that it escaped
+      .map(each => each.replace(/~~/g, "~"));
+
+    if (terms.length === 0) {
+      return;
+    }
+
+    const mark = new Mark(root);
+    const options = {
+      ignoreJoiners: true
+    };
+    mark.mark(terms, options);
+    return () => mark.unmark(options);
+  }, [location, baseUrl]);
 
   const loadIndex = async () => {
     if (indexState.current !== "empty") {
@@ -85,15 +143,16 @@ const Search = props => {
                 query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING });
               })
               .slice(0, 8)
-              .map(result =>
-                documents.find(
+              .map(result => ({
+                document: documents.find(
                   document => document.id.toString() === result.ref
-                )
-              );
+                ),
+                terms
+              }));
             cb(results);
           },
           templates: {
-            suggestion: function(document) {
+            suggestion: function({ document }) {
               const escape = autoComplete.escapeHighlightedString;
               let result = `<span class="aa-suggestion-page">${escape(
                 document.pageTitle
@@ -111,8 +170,24 @@ const Search = props => {
           }
         }
       ]
-    ).on("autocomplete:selected", function(event, document, dataset, context) {
-      history.push(document.sectionRoute);
+    ).on("autocomplete:selected", function(
+      event,
+      { document, terms },
+      dataset,
+      context
+    ) {
+      const [path, hash] = document.sectionRoute.split("#");
+      let url = path;
+      url +=
+        "?highlight=" +
+        encodeURIComponent(
+          // Escape all "~" by "~~" and join terms by "~"
+          terms.map(term => term.replace(/~/g, "~~")).join("~")
+        );
+      if (hash) {
+        url += "#" + hash;
+      }
+      history.push(url);
     });
 
     if (focusAfterIndexLoaded.current) {

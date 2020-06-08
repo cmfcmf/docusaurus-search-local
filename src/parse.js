@@ -81,6 +81,8 @@ module.exports.html2text = function(html, type, url = "?") {
       .text();
 
     const sections = [];
+    // Make sure to also adjust the highlighting functionality in the client
+    // if you change the top element here.
     $("article")
       .find(HEADINGS)
       .each((_, heading) => {
@@ -132,6 +134,8 @@ module.exports.html2text = function(html, type, url = "?") {
     }
 
     const pageTitle = $pageTitle.text();
+    // Make sure to also adjust the highlighting functionality in the client
+    // if you change the top element here.
     const $main = $("main").first();
     if (!$main.length) {
       logger.warn(

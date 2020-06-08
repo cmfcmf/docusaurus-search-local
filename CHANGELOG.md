@@ -1,3 +1,7 @@
+# 0.2.0
+
+- FEAT: Highlight search results on the page using a new `highlight` query parameter
+
 # 0.1.3
 
 - FIX: `<style>` and `<script>` tags no longer break indexing (#7)
