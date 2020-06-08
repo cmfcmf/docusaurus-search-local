@@ -72,7 +72,7 @@ function getText($, el) {
 module.exports.html2text = function(html, type, url = "?") {
   const $ = cheerio.load(html);
   // Remove copy buttons from code boxes
-  $("pre button").remove();
+  $("div[class^=mdxCodeBlock_] button").remove();
 
   if (type === "docs" || type === "blog") {
     const HEADINGS = "h1, h2, h3";
