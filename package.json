@@ -36,14 +36,15 @@
     "@docusaurus/core": "^2.0.0"
   },
   "devDependencies": {
+    "cypress": "^4.7.0",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1"
   },
   "scripts": {
-    "lint": "prettier --check src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "lint": "prettier --check {src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "format": "prettier --write {src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
     "test": "jest"
   },
   "husky": {
@@ -52,7 +53,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+    "{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
       "prettier --write"
     ]
   },
