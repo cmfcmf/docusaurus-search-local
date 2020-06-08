@@ -30,14 +30,14 @@ Add this plugin to the `plugins` array in `docusaurus.config.js`.
 module.exports = {
   // ...
   plugins: [
-    '@cmfcmf/docusaurus-search-local'
+    require.resolve('@cmfcmf/docusaurus-search-local') // warning: Use '@cmfcmf/docusaurus-search-local' (without the require.resolve) if you use Docusaurus before v2.0.0-alpha.56
   ],
 
   // or, if you want to specify options:
 
   // ...
   plugins: [
-    ['@cmfcmf/docusaurus-search-local', {
+    [require.resolve('@cmfcmf/docusaurus-search-local'), { // warning: Use '@cmfcmf/docusaurus-search-local' (without the require.resolve) if you use Docusaurus before v2.0.0-alpha.56
       // Options here
     }]
   ],
