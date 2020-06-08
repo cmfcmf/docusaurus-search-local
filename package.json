@@ -12,6 +12,14 @@
   "license": "MIT",
   "repository": "cmfcmf/docusaurus-search-local",
   "main": "src/index.js",
+  "files": [
+    "/src",
+    "!/src/generated.js",
+    "!**/*.test.js",
+    "/CHANGELOG.md",
+    "/LICENSE",
+    "/README.md"
+  ],
   "publishConfig": {
     "access": "public"
   },
