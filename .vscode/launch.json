@@ -6,7 +6,7 @@
   "configurations": [
     {
       "type": "node",
-      "name": "vscode-jest-tests",
+      "name": "Tests",
       "request": "launch",
       "args": [
         "--runInBand"
@@ -16,6 +16,19 @@
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
       "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+    },
+    {
+      "type": "node",
+      "name": "Build example docs",
+      "request": "launch",
+      "args": [
+        "build"
+      ],
+      "cwd": "${workspaceFolder}/example-docs",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "program": "${workspaceFolder}/example-docs/node_modules/.bin/docusaurus"
     }
   ]
 }
