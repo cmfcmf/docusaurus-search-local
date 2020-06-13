@@ -3,19 +3,23 @@
  * by Facebook, Inc., licensed under the MIT license.
  */
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import classnames from "classnames";
 import lunr, { blogBasePath, docsBasePath } from "../../generated";
 import Mark from "mark.js";
 
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { useHistory, useLocation } from "@docusaurus/router";
+import useVersioning from "@theme/hooks/useVersioning";
 
 import "./input.css";
 import "./autocomplete.css";
+import { determineDocsVersionFromURL } from "./util";
+
+const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 
 function fetchIndex(baseUrl) {
-  if (process.env.NODE_ENV === "production") {
+  if (SEARCH_INDEX_AVAILABLE) {
     return fetch(`${baseUrl}search-index.json`)
       .then(content => content.json())
       .then(json => ({
@@ -41,8 +45,8 @@ async function fetchAutoCompleteJS() {
   return autoComplete.default;
 }
 
-function getQueryParamter(name) {
-  let search = window.location.search;
+function getQueryParamter(location, name) {
+  let search = location.search;
   if (search.indexOf("?") === 0) {
     search = search.slice(1);
   }
@@ -69,13 +73,39 @@ const Search = props => {
   const {
     siteConfig: { baseUrl }
   } = useDocusaurusContext();
+  const { versioningEnabled, versions, latestVersion } = useVersioning();
   const history = useHistory();
   const location = useLocation();
 
   // Should the input be focused after the index is loaded?
   const focusAfterIndexLoaded = useRef(false);
 
+  const [versionToSearch, setVersionToSearch] = useState(latestVersion);
+
+  // Update versionToSearch based on the URL
   useEffect(() => {
+    if (!versioningEnabled) {
+      return;
+    }
+    // We cannot simply query for the meta tag that specifies the version,
+    // because the tag is updated AFTER this effect runs and there is no
+    // hook/callback available that runs after the meta tag changes.
+    setVersionToSearch(
+      determineDocsVersionFromURL(
+        location.pathname,
+        baseUrl,
+        docsBasePath,
+        versions
+      )
+    );
+  }, [location, baseUrl, versions]);
+
+  // Highlight search results
+  useEffect(() => {
+    const param = getQueryParamter(location, "highlight");
+    if (!param) {
+      return;
+    }
     let root;
     // Make sure to also adjust parse.js if you change the top element here.
     if (isDocsOrBlog(baseUrl)) {
@@ -84,10 +114,6 @@ const Search = props => {
       root = document.getElementsByTagName("main")[0];
     }
     if (!root) {
-      return;
-    }
-    const param = getQueryParamter("highlight");
-    if (!param) {
       return;
     }
     const terms = param
@@ -139,33 +165,67 @@ const Search = props => {
               .filter(each => each.length > 0);
             const results = index
               .query(query => {
-                query.term(terms);
-                query.term(terms, { wildcard: lunr.Query.wildcard.TRAILING });
+                // Boost matches in title by 5
+                query.term(terms, { fields: ["title"], boost: 5 });
+                query.term(terms, {
+                  fields: ["title"],
+                  boost: 5,
+                  wildcard: lunr.Query.wildcard.TRAILING
+                });
+                // Boost matches in content by 1
+                query.term(terms, { fields: ["content"], boost: 1 });
+                query.term(terms, {
+                  fields: ["content"],
+                  boost: 1,
+                  wildcard: lunr.Query.wildcard.TRAILING
+                });
+
+                if (versioningEnabled) {
+                  query.term(versionToSearch, {
+                    fields: ["version"],
+                    boost: 0,
+                    presence: lunr.Query.presence.REQUIRED
+                  });
+                }
               })
+              // We need to remove results with a score of 0 that occur
+              // when the docs are versioned and just the version matches.
+              .filter(result => result.score > 0)
               .slice(0, 8)
               .map(result => ({
                 document: documents.find(
                   document => document.id.toString() === result.ref
                 ),
+                score: result.score,
                 terms
               }));
             cb(results);
           },
           templates: {
-            suggestion: function({ document }) {
+            suggestion: function({ document, score }) {
               const escape = autoComplete.escapeHighlightedString;
               let result = `<span class="aa-suggestion-page">${escape(
                 document.pageTitle
               )}</span>`;
               if (document.pageTitle !== document.sectionTitle) {
-                result = `${result}<span class="aa-suggestion-section">${escape(
+                result += `<span class="aa-suggestion-section">${escape(
                   document.sectionTitle
                 )}</span>`;
               }
+              // if (versioningEnabled && document.docVersion !== undefined) {
+              //   result += ` <span class="badge badge--secondary">${escape(
+              //     document.docVersion
+              //   )}</span>`;
+              // }
+              // result += " " + score;
               return result;
             },
             empty: () => {
-              return `<span class="aa-suggestion-empty"></span>`;
+              if (SEARCH_INDEX_AVAILABLE) {
+                return `<span class="aa-suggestion-empty"></span>`;
+              } else {
+                return `<span class="aa-suggestion-empty">The search index is only available when you run docusaurus build! </span>`;
+              }
             }
           }
         }
@@ -217,6 +277,11 @@ const Search = props => {
     handleSearchBarToggle(!isSearchBarExpanded);
   };
 
+  let placeholder = "Search";
+  if (versioningEnabled) {
+    placeholder += ` [${versionToSearch}]`;
+  }
+
   return (
     <div className="navbar__search" key="search-box">
       <span
@@ -232,7 +297,7 @@ const Search = props => {
       <input
         id="search_input_react"
         type="search"
-        placeholder="Search"
+        placeholder={placeholder}
         aria-label="Search"
         className={classnames(
           "navbar__search-input",

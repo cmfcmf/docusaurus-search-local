@@ -74,6 +74,19 @@ module.exports.html2text = function(html, type, url = "?") {
   // Remove copy buttons from code boxes
   $("div[class^=mdxCodeBlock_] button").remove();
 
+  if (type === "docs") {
+    // Remove version badges
+    $("span")
+      .filter(
+        (_, element) =>
+          $(element).hasClass("badge") &&
+          $(element)
+            .text()
+            .startsWith("Version:")
+      )
+      .remove();
+  }
+
   if (type === "docs" || type === "blog") {
     const HEADINGS = "h1, h2, h3";
     const pageTitle = $("article header h1")
@@ -156,4 +169,9 @@ module.exports.html2text = function(html, type, url = "?") {
   } else {
     throw new Error(`Cannot index files of unknown type ${type}!`);
   }
+};
+
+module.exports.getDocVersion = function(html) {
+  const $ = cheerio.load(html);
+  return $('meta[name="docsearch:version"]').attr("content");
 };

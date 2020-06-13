@@ -1,3 +1,13 @@
+# 0.3.0
+
+- FEAT: Support versioned documentation
+- BREAKING: Renamed options
+  - `blogBasePath` to `blogRouteBasePath`
+  - `docsBasePath` to `docsRouteBasePath`
+- FIX: Remove version badge from search index
+- FIX: Correct docs/blog/page detection logic for edge cases (e.g., `/docs-foo-bar` is no longer considered a documentation page)
+- FIX: Use correct plugin name
+
 # 0.2.0
 
 - FEAT: Highlight search results on the page using a new `highlight` query parameter
