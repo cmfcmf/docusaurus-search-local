@@ -1,0 +1,32 @@
+{
+  "version-1.0.0/someSidebar": [
+    {
+      "type": "category",
+      "label": "Docusaurus",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.0.0/d-s-l-test"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.0.0/d-s-l-test2"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.0.0/d-s-l-test3"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Features",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.0.0/mdx"
+        }
+      ]
+    }
+  ]
+}
