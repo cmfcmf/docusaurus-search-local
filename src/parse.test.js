@@ -19,20 +19,20 @@ describe("parser", () => {
         {
           title: "BLOG POST TITLE",
           content: "FIRST SECTION CONTENT FIRST SECTION CONTENT 2",
-          hash: ""
+          hash: "",
         },
         {
           title: "FIRST HEADER",
           content: "FIRST HEADER CONTENT FIRST HEADER CONTENT 2",
-          hash: "#first-header"
+          hash: "#first-header",
         },
         {
           title: "FIRST SUBHEADER",
           content:
             'FIRST SUBHEADER CONTENT #include <stdio.h>   int main(int argc, char** argv) {   printf("Hello World"); }',
-          hash: "#first-subheader"
-        }
-      ]
+          hash: "#first-subheader",
+        },
+      ],
     });
   });
 
@@ -50,34 +50,34 @@ describe("parser", () => {
           {
             title: "DOC TITLE",
             content: "FIRST SECTION CONTENT A link to a video.",
-            hash: ""
+            hash: "",
           },
           {
             title: "FIRST HEADER",
             content: "FIRST HEADER CONTENT",
-            hash: "#first-header"
+            hash: "#first-header",
           },
           {
             title: "FIRST SUBHEADER",
             content: "LIST ITEM 1 LIST ITEM 2",
-            hash: "#first-subheader"
+            hash: "#first-subheader",
           },
           {
             title: "SECOND SUBHEADER",
             content: "COL 1 COL 2 A1 B1 A2 B2",
-            hash: "#second-subheader"
+            hash: "#second-subheader",
           },
           {
             content: "BLOCKQUOTE CONTENT",
             hash: "#blockquotes",
-            title: "Blockquotes"
+            title: "Blockquotes",
           },
           {
             content: "This is a note",
             hash: "#first-sub-sub-header",
-            title: "FIRST SUB SUB HEADER"
-          }
-        ]
+            title: "FIRST SUB SUB HEADER",
+          },
+        ],
       });
     });
 
@@ -90,7 +90,7 @@ describe("parser", () => {
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
         pageTitle: "DOC TITLE",
-        sections: [{ content: "", hash: "", title: "DOC TITLE" }]
+        sections: [{ content: "", hash: "", title: "DOC TITLE" }],
       });
     });
 
@@ -107,19 +107,19 @@ describe("parser", () => {
           {
             title: "DOC TITLE",
             content: "",
-            hash: ""
+            hash: "",
           },
           {
             title: "FIRST HEADER",
             content: "",
-            hash: "#first-header"
+            hash: "#first-header",
           },
           {
             title: "SECOND HEADER",
             content: "",
-            hash: "#second-header"
-          }
-        ]
+            hash: "#second-header",
+          },
+        ],
       });
     });
   });
@@ -134,9 +134,9 @@ describe("parser", () => {
           {
             title: "H1",
             hash: "",
-            content: ""
-          }
-        ]
+            content: "",
+          },
+        ],
       });
     });
     it("falls back to <title> if not <h1> is found", () => {
@@ -147,9 +147,9 @@ describe("parser", () => {
           {
             title: "TITLE",
             hash: "",
-            content: ""
-          }
-        ]
+            content: "",
+          },
+        ],
       });
     });
     it("works on an empty page", () => {
@@ -160,9 +160,9 @@ describe("parser", () => {
           {
             title: "",
             hash: "",
-            content: ""
-          }
-        ]
+            content: "",
+          },
+        ],
       });
     });
     it("parses content in <main>", () => {
@@ -174,9 +174,9 @@ describe("parser", () => {
           {
             title: "H1",
             hash: "",
-            content: "this is content"
-          }
-        ]
+            content: "this is content",
+          },
+        ],
       });
     });
   });

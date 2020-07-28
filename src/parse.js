@@ -40,13 +40,13 @@ const BLOCK_TAGS = [
   "video",
   // Not strictly block tags, but still.
   "td",
-  "th"
+  "th",
 ];
 
 function getText($, el) {
   if (Array.isArray(el)) {
     let content = "";
-    el.forEach(el => {
+    el.forEach((el) => {
       content += getText($, el);
       if (el.type === "tag" && BLOCK_TAGS.includes(el.name)) {
         content += " ";
@@ -56,12 +56,7 @@ function getText($, el) {
   } else if (el.type === "text") {
     return el.data.replace(/\n/g, " ");
   } else if (el.type === "tag") {
-    return getText(
-      $,
-      $(el)
-        .contents()
-        .get()
-    );
+    return getText($, $(el).contents().get());
   } else if (el.type === "style" || el.type === "script") {
     return "";
   } else {
@@ -69,7 +64,7 @@ function getText($, el) {
   }
 }
 
-module.exports.html2text = function(html, type, url = "?") {
+module.exports.html2text = function (html, type, url = "?") {
   const $ = cheerio.load(html);
   // Remove copy buttons from code boxes
   $("div[class^=mdxCodeBlock_] button").remove();
@@ -80,18 +75,14 @@ module.exports.html2text = function(html, type, url = "?") {
       .filter(
         (_, element) =>
           $(element).hasClass("badge") &&
-          $(element)
-            .text()
-            .startsWith("Version:")
+          $(element).text().startsWith("Version:")
       )
       .remove();
   }
 
   if (type === "docs" || type === "blog") {
     const HEADINGS = "h1, h2, h3";
-    const pageTitle = $("article header h1")
-      .first()
-      .text();
+    const pageTitle = $("article header h1").first().text();
 
     const sections = [];
     // Make sure to also adjust the highlighting functionality in the client
@@ -99,14 +90,8 @@ module.exports.html2text = function(html, type, url = "?") {
     $("article")
       .find(HEADINGS)
       .each((_, heading) => {
-        const title = $(heading)
-          .contents()
-          .not("a[aria-hidden=true]")
-          .text();
-        const hash =
-          $(heading)
-            .find("a.hash-link")
-            .attr("href") || "";
+        const title = $(heading).contents().not("a[aria-hidden=true]").text();
+        const hash = $(heading).find("a.hash-link").attr("href") || "";
 
         let $sectionElements;
         if ($(heading).parents("header").length) {
@@ -134,7 +119,7 @@ module.exports.html2text = function(html, type, url = "?") {
           // <a aria-hidden="true" tabindex="-1" class="hash-link" href="#first-subheader" title="Direct link to heading">#</a>
           title,
           hash,
-          content
+          content,
         });
       });
 
@@ -162,16 +147,16 @@ module.exports.html2text = function(html, type, url = "?") {
         {
           title: pageTitle,
           hash: "",
-          content: $main.length ? getText($, $main.get()).trim() : ""
-        }
-      ]
+          content: $main.length ? getText($, $main.get()).trim() : "",
+        },
+      ],
     };
   } else {
     throw new Error(`Cannot index files of unknown type ${type}!`);
   }
 };
 
-module.exports.getDocVersion = function(html) {
+module.exports.getDocVersion = function (html) {
   const $ = cheerio.load(html);
   return $('meta[name="docsearch:version"]').attr("content");
 };

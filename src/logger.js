@@ -15,6 +15,6 @@ module.exports = {
     info: (msg, options = {}) =>
       console.info(`${prefix("INFO")}${msg}${suffix(options)}`),
     debug: (msg, options = {}) =>
-      DEBUG && console.debug(`${prefix("DEBUG")}${msg}${suffix(options)}`)
-  }
+      DEBUG && console.debug(`${prefix("DEBUG")}${msg}${suffix(options)}`),
+  },
 };
