@@ -4,9 +4,11 @@
 - BREAKING: Renamed options
   - `blogBasePath` to `blogRouteBasePath`
   - `docsBasePath` to `docsRouteBasePath`
+- BREAKING: Now requires Docusaurus v2.0.0-alpha.59
 - FIX: Remove version badge from search index
 - FIX: Correct docs/blog/page detection logic for edge cases (e.g., `/docs-foo-bar` is no longer considered a documentation page)
 - FIX: Use correct plugin name
+- FIX: Japanese and Thai search should now work correctly (#12)
 
 # 0.2.0
 

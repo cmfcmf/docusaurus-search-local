@@ -5,7 +5,7 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import clsx from "clsx";
-import lunr, { blogBasePath, docsBasePath } from "../../generated";
+import lunr, { blogBasePath, docsBasePath, tokenize } from "../../generated";
 import Mark from "mark.js";
 
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -159,10 +159,7 @@ const Search = (props) => {
       [
         {
           source: (input, cb) => {
-            const terms = input
-              .split(" ")
-              .map((each) => each.trim().toLowerCase())
-              .filter((each) => each.length > 0);
+            const terms = tokenize(input);
             const results = index
               .query((query) => {
                 // Boost matches in title by 5
