@@ -13,7 +13,11 @@ module.exports = {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
       },
-      links: [
+      items: [
+        {
+          type: 'docsVersionDropdown',
+          position: 'left',
+        },
         {
           to: 'docs/d-s-l-test',
           activeBasePath: 'docs',

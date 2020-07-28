@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useEffect, useState } from "react";
-import classnames from "classnames";
+import clsx from "clsx";
 import lunr, { blogBasePath, docsBasePath } from "../../generated";
 import Mark from "mark.js";
 
@@ -21,20 +21,20 @@ const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 function fetchIndex(baseUrl) {
   if (SEARCH_INDEX_AVAILABLE) {
     return fetch(`${baseUrl}search-index.json`)
-      .then(content => content.json())
-      .then(json => ({
+      .then((content) => content.json())
+      .then((json) => ({
         documents: json.documents,
-        index: lunr.Index.load(json.index)
+        index: lunr.Index.load(json.index),
       }));
   } else {
     // The index does not exist in development, therefore load a dummy index here.
     return Promise.resolve({
       documents: [],
-      index: lunr(function() {
+      index: lunr(function () {
         this.ref("id");
         this.field("title");
         this.field("content");
-      })
+      }),
     });
   }
 }
@@ -66,12 +66,12 @@ function isDocsOrBlog(baseUrl) {
   );
 }
 
-const Search = props => {
+const Search = (props) => {
   const { isSearchBarExpanded, handleSearchBarToggle } = props;
   const indexState = useRef("empty"); // empty, loaded, done
   const searchBarRef = useRef(null);
   const {
-    siteConfig: { baseUrl }
+    siteConfig: { baseUrl },
   } = useDocusaurusContext();
   const { versioningEnabled, versions, latestVersion } = useVersioning();
   const history = useHistory();
@@ -119,9 +119,9 @@ const Search = props => {
     const terms = param
       // Split terms by "~" not preceded or followed by another "~"
       .split(/(?<!~)~(?!~)/)
-      .filter(each => each.length > 0)
+      .filter((each) => each.length > 0)
       // Replace "~~" by a single "~" that it escaped
-      .map(each => each.replace(/~~/g, "~"));
+      .map((each) => each.replace(/~~/g, "~"));
 
     if (terms.length === 0) {
       return;
@@ -129,7 +129,7 @@ const Search = props => {
 
     const mark = new Mark(root);
     const options = {
-      ignoreJoiners: true
+      ignoreJoiners: true,
     };
     mark.mark(terms, options);
     return () => mark.unmark(options);
@@ -144,7 +144,7 @@ const Search = props => {
 
     const [{ index, documents }, autoComplete] = await Promise.all([
       fetchIndex(baseUrl),
-      fetchAutoCompleteJS()
+      fetchAutoCompleteJS(),
     ]);
 
     autoComplete(
@@ -153,56 +153,56 @@ const Search = props => {
         hint: false,
         autoselect: true,
         cssClasses: {
-          root: "d-s-l-a"
-        }
+          root: "d-s-l-a",
+        },
       },
       [
         {
           source: (input, cb) => {
             const terms = input
               .split(" ")
-              .map(each => each.trim().toLowerCase())
-              .filter(each => each.length > 0);
+              .map((each) => each.trim().toLowerCase())
+              .filter((each) => each.length > 0);
             const results = index
-              .query(query => {
+              .query((query) => {
                 // Boost matches in title by 5
                 query.term(terms, { fields: ["title"], boost: 5 });
                 query.term(terms, {
                   fields: ["title"],
                   boost: 5,
-                  wildcard: lunr.Query.wildcard.TRAILING
+                  wildcard: lunr.Query.wildcard.TRAILING,
                 });
                 // Boost matches in content by 1
                 query.term(terms, { fields: ["content"], boost: 1 });
                 query.term(terms, {
                   fields: ["content"],
                   boost: 1,
-                  wildcard: lunr.Query.wildcard.TRAILING
+                  wildcard: lunr.Query.wildcard.TRAILING,
                 });
 
                 if (versioningEnabled) {
                   query.term(versionToSearch, {
                     fields: ["version"],
                     boost: 0,
-                    presence: lunr.Query.presence.REQUIRED
+                    presence: lunr.Query.presence.REQUIRED,
                   });
                 }
               })
               // We need to remove results with a score of 0 that occur
               // when the docs are versioned and just the version matches.
-              .filter(result => result.score > 0)
+              .filter((result) => result.score > 0)
               .slice(0, 8)
-              .map(result => ({
+              .map((result) => ({
                 document: documents.find(
-                  document => document.id.toString() === result.ref
+                  (document) => document.id.toString() === result.ref
                 ),
                 score: result.score,
-                terms
+                terms,
               }));
             cb(results);
           },
           templates: {
-            suggestion: function({ document, score }) {
+            suggestion: function ({ document, score }) {
               const escape = autoComplete.escapeHighlightedString;
               let result = `<span class="aa-suggestion-page">${escape(
                 document.pageTitle
@@ -226,11 +226,11 @@ const Search = props => {
               } else {
                 return `<span class="aa-suggestion-empty">The search index is only available when you run docusaurus build! </span>`;
               }
-            }
-          }
-        }
+            },
+          },
+        },
       ]
-    ).on("autocomplete:selected", function(
+    ).on("autocomplete:selected", function (
       event,
       { document, terms },
       dataset,
@@ -242,7 +242,7 @@ const Search = props => {
         "?highlight=" +
         encodeURIComponent(
           // Escape all "~" by "~~" and join terms by "~"
-          terms.map(term => term.replace(/~/g, "~~")).join("~")
+          terms.map((term) => term.replace(/~/g, "~~")).join("~")
         );
       if (hash) {
         url += "#" + hash;
@@ -287,8 +287,8 @@ const Search = props => {
       <span
         aria-label="expand searchbar"
         role="button"
-        className={classnames("search-icon", {
-          "search-icon-hidden": isSearchBarExpanded
+        className={clsx("search-icon", {
+          "search-icon-hidden": isSearchBarExpanded,
         })}
         onClick={onIconClick}
         onKeyDown={onIconClick}
@@ -299,7 +299,7 @@ const Search = props => {
         type="search"
         placeholder={placeholder}
         aria-label="Search"
-        className={classnames(
+        className={clsx(
           "navbar__search-input",
           { "search-bar-expanded": isSearchBarExpanded },
           { "search-bar": !isSearchBarExpanded }
