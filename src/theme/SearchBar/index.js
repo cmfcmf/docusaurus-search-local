@@ -93,22 +93,26 @@ function splitBySingleTildes(str) {
 
 const Search = (props) => {
   const { isSearchBarExpanded, handleSearchBarToggle } = props;
+
   const indexState = useRef("empty"); // empty, loaded, done
   const searchBarRef = useRef(null);
+
+  // Should the input be focused after the index is loaded?
+  const focusAfterIndexLoaded = useRef(false);
+
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
-  const versions = useVersions();
-  const activeVersion = useActiveVersion();
-  const latestVersion = useLatestVersion();
 
   const history = useHistory();
   const location = useLocation();
 
-  const versionToSearch = activeVersion ?? latestVersion;
+  const versions = useVersions();
+  const activeVersion = useActiveVersion();
+  const latestVersion = useLatestVersion();
 
-  // Should the input be focused after the index is loaded?
-  const focusAfterIndexLoaded = useRef(false);
+  const versionToSearch =
+    versions.length <= 1 ? undefined : activeVersion ?? latestVersion;
 
   // Highlight search results
   useEffect(() => {
@@ -185,7 +189,7 @@ const Search = (props) => {
                   wildcard: lunr.Query.wildcard.TRAILING,
                 });
 
-                if (versions.length > 0) {
+                if (versionToSearch) {
                   query.term(versionToSearch.name, {
                     fields: ["version"],
                     boost: 0,
@@ -217,7 +221,7 @@ const Search = (props) => {
                   document.sectionTitle
                 )}</span>`;
               }
-              // if (versions.length > 0 && document.docVersion !== undefined) {
+              // if (versionToSearch && document.docVersion !== undefined) {
               //   result += ` <span class="badge badge--secondary">${escape(
               //     document.docVersion
               //   )}</span>`;
@@ -283,7 +287,7 @@ const Search = (props) => {
   };
 
   let placeholder = "Search";
-  if (versions.length > 0) {
+  if (versionToSearch) {
     placeholder += ` [${versionToSearch.label}]`;
   }
 
