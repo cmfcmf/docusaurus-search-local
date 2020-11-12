@@ -3,18 +3,21 @@
  * by Facebook, Inc., licensed under the MIT license.
  */
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import clsx from "clsx";
 import lunr, { blogBasePath, docsBasePath, tokenize } from "../../generated";
 import Mark from "mark.js";
 
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { useHistory, useLocation } from "@docusaurus/router";
-import useVersioning from "@theme/hooks/useVersioning";
+import {
+  useVersions,
+  useLatestVersion,
+  useActiveVersion,
+} from "@theme/hooks/useDocs";
 
 import "./input.css";
 import "./autocomplete.css";
-import { determineDocsVersionFromURL } from "./util";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 
@@ -95,32 +98,17 @@ const Search = (props) => {
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
-  const { versioningEnabled, versions, latestVersion } = useVersioning();
+  const versions = useVersions();
+  const activeVersion = useActiveVersion();
+  const latestVersion = useLatestVersion();
+
   const history = useHistory();
   const location = useLocation();
 
+  const versionToSearch = activeVersion ?? latestVersion;
+
   // Should the input be focused after the index is loaded?
   const focusAfterIndexLoaded = useRef(false);
-
-  const [versionToSearch, setVersionToSearch] = useState(latestVersion);
-
-  // Update versionToSearch based on the URL
-  useEffect(() => {
-    if (!versioningEnabled) {
-      return;
-    }
-    // We cannot simply query for the meta tag that specifies the version,
-    // because the tag is updated AFTER this effect runs and there is no
-    // hook/callback available that runs after the meta tag changes.
-    setVersionToSearch(
-      determineDocsVersionFromURL(
-        location.pathname,
-        baseUrl,
-        docsBasePath,
-        versions
-      )
-    );
-  }, [location, baseUrl, versions]);
 
   // Highlight search results
   useEffect(() => {
@@ -197,8 +185,8 @@ const Search = (props) => {
                   wildcard: lunr.Query.wildcard.TRAILING,
                 });
 
-                if (versioningEnabled) {
-                  query.term(versionToSearch, {
+                if (versions.length > 0) {
+                  query.term(versionToSearch.name, {
                     fields: ["version"],
                     boost: 0,
                     presence: lunr.Query.presence.REQUIRED,
@@ -229,7 +217,7 @@ const Search = (props) => {
                   document.sectionTitle
                 )}</span>`;
               }
-              // if (versioningEnabled && document.docVersion !== undefined) {
+              // if (versions.length > 0 && document.docVersion !== undefined) {
               //   result += ` <span class="badge badge--secondary">${escape(
               //     document.docVersion
               //   )}</span>`;
@@ -295,8 +283,8 @@ const Search = (props) => {
   };
 
   let placeholder = "Search";
-  if (versioningEnabled) {
-    placeholder += ` [${versionToSearch}]`;
+  if (versions.length > 0) {
+    placeholder += ` [${versionToSearch.label}]`;
   }
 
   return (

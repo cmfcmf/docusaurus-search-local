@@ -158,5 +158,5 @@ module.exports.html2text = function (html, type, url = "?") {
 
 module.exports.getDocVersion = function (html) {
   const $ = cheerio.load(html);
-  return $('meta[name="docsearch:version"]').attr("content");
+  return $('meta[name="docusaurus_version"]').attr("content");
 };

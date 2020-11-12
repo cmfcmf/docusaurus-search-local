@@ -1,3 +1,8 @@
+# 0.4.0
+
+- BREAKING: Now requires Docusaurus v2.0.0-alpha66
+- FEAT: Upgrade to new version APIs from v2.0.0-alpha66
+
 # 0.3.1
 
 - FIX: Search did not work in Safari (#18)
