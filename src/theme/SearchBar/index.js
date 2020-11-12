@@ -66,6 +66,28 @@ function isDocsOrBlog(baseUrl) {
   );
 }
 
+function splitBySingleTildes(str) {
+  // We cannot use lookbehind, since it is not supported in Safari
+  // https://caniuse.com/js-regexp-lookbehind
+  // return str.split(/(?<!~)~(?!~)/);
+
+  const result = [];
+  let current = "";
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    const nextChar = i < str.length - 1 ? str[i + 1] : "";
+    const prevChar = i > 0 ? str[i - 1] : "";
+    if (char === "~" && nextChar !== "~" && prevChar !== "~") {
+      result.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
 const Search = (props) => {
   const { isSearchBarExpanded, handleSearchBarToggle } = props;
   const indexState = useRef("empty"); // empty, loaded, done
@@ -116,9 +138,7 @@ const Search = (props) => {
     if (!root) {
       return;
     }
-    const terms = param
-      // Split terms by "~" not preceded or followed by another "~"
-      .split(/(?<!~)~(?!~)/)
+    const terms = splitBySingleTildes(param) // Split terms by "~" not preceded or followed by another "~"
       .filter((each) => each.length > 0)
       // Replace "~~" by a single "~" that it escaped
       .map((each) => each.replace(/~~/g, "~"));

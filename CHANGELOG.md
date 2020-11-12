@@ -1,3 +1,7 @@
+# 0.3.1
+
+- FIX: Search did not work in Safari (#18)
+
 # 0.3.0
 
 - FEAT: Support versioned documentation
