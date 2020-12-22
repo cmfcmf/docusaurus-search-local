@@ -36,6 +36,8 @@ module.exports = function (context, options) {
     options.indexPages !== undefined ? options.indexPages : false;
   const indexBlog = options.indexBlog !== undefined ? options.indexBlog : true;
   const indexDocs = options.indexDocs !== undefined ? options.indexDocs : true;
+  const docsOnlyMode =
+    options.docsOnlyMode !== undefined ? options.docsOnlyMode : false;
   let language = options.language !== undefined ? options.language : "en";
 
   if (Array.isArray(language) && language.length === 1) {
@@ -155,6 +157,10 @@ export const tokenize = (input) => input
         if (route === "404.html") {
           // Do not index error page.
           return [];
+        }
+        if (indexDocs && docsOnlyMode) {
+          // Always index when docsOnlyMode is active
+          return { route, url, type: "docs" };
         }
         if (indexBlog && urlMatchesPrefix(route, blogBasePath)) {
           if (
