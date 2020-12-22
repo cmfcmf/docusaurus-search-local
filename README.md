@@ -62,7 +62,7 @@ The following options are available (defaults are shown below):
   indexPages: false, // whether to index static pages
   // /404.html is never indexed
   language: "en", // language of your documentation, see next section
-  docsOnlyMode: false // set this to true if you use docs onyl mode
+  docsOnlyMode: false // set this to true if you use docs only mode
 }
 ```
 
