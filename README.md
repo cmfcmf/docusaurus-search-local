@@ -62,6 +62,15 @@ The following options are available (defaults are shown below):
   // (see https://v2.docusaurus.io/docs/2.0.0-alpha.70/docs-introduction#docs-only-mode)
   docsRouteBasePath: '/docs',
 
+  // Whether to also index the titles of the parent categories in the sidebar of a doc page.
+  // 0 disables this feature.
+  // 1 indexes the direct parent category in the sidebar of a doc page
+  // 2 indexes up to two nested parent categories of a doc page
+  // 3...
+  //
+  // Do _not_ use Infinity, the value must be a JSON-serializable integer.
+  indexDocSidebarParentCategories: 0,
+
   // whether to index blog pages
   indexBlog: true,
   // must start with "/" and correspond to the routeBasePath configured for the blog plugin

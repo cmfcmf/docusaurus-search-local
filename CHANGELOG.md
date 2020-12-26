@@ -5,6 +5,7 @@
 - FIX: Use same tokenizer that was used for indexing documents to tokenize the content of the search box
 - FEAT: Allow to specify a different separator for the tokenizer (#20)
 - FEAT: Find blog posts and static pages regardless of the currently selected documentation version (#19)
+- FEAT: For docs, optionally also index the titles of parent categories in the sidebar (#17)
 
 # 0.4.0
 

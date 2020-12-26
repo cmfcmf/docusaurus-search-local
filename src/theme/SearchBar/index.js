@@ -5,7 +5,12 @@
 
 import React, { useRef, useEffect } from "react";
 import clsx from "clsx";
-import lunr, { blogBasePath, docsBasePath, tokenize } from "../../generated";
+import lunr, {
+  blogBasePath,
+  docsBasePath,
+  tokenize,
+  indexDocSidebarParentCategories,
+} from "../../generated";
 import Mark from "mark.js";
 
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -188,6 +193,18 @@ const Search = (props) => {
                   boost: 1,
                   wildcard: lunr.Query.wildcard.TRAILING,
                 });
+
+                if (indexDocSidebarParentCategories) {
+                  query.term(terms, {
+                    fields: ["sidebarParentCategories"],
+                    boost: 2,
+                  });
+                  query.term(terms, {
+                    fields: ["sidebarParentCategories"],
+                    boost: 2,
+                    wildcard: lunr.Query.wildcard.TRAILING,
+                  });
+                }
 
                 if (versionToSearch) {
                   // We want to search all documents with version = versionToSearch OR version = undefined

@@ -45,6 +45,7 @@ describe("parser", () => {
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["Docusaurus"],
         pageTitle: "DOC TITLE",
         sections: [
           {
@@ -89,8 +90,29 @@ describe("parser", () => {
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["Docusaurus"],
         pageTitle: "DOC TITLE",
         sections: [{ content: "", hash: "", title: "DOC TITLE" }],
+      });
+    });
+
+    it("parses nested sidebar categories", async () => {
+      const htmlPath = path.join(
+        __dirname,
+        "..",
+        "example-docs/build/docs/next/nested_sidebar_doc/index.html"
+      );
+      const html = await readFileAsync(htmlPath, "utf-8");
+      expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["SidebarParent", "SidebarChild"],
+        pageTitle: "NestedSidebarDoc",
+        sections: [
+          {
+            content: "私は電車が好きです。",
+            hash: "",
+            title: "NestedSidebarDoc",
+          },
+        ],
       });
     });
 
@@ -102,6 +124,7 @@ describe("parser", () => {
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["Docusaurus"],
         pageTitle: "DOC TITLE",
         sections: [
           {

@@ -92,6 +92,12 @@ module.exports.html2text = function (html, type, url = "?") {
       .each((_, heading) => {
         const title = $(heading)
           .contents()
+          // Remove elements that are marked as aria-hidden and the hash-link.
+          // This is mainly done to remove anchors like these:
+          //
+          // <a aria-hidden="true" tabindex="-1" class="hash-link" href="#first-subheader" title="Direct link to heading">#</a>
+          // <a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_prK2" id="first-header"></a>
+          // <a class="hash-link" href="#first-header" title="Direct link to heading">#</a>
           .not("a[aria-hidden=true], a.hash-link")
           .text();
         const hash = $(heading).find("a.hash-link").attr("href") || "";
@@ -117,16 +123,20 @@ module.exports.html2text = function (html, type, url = "?") {
         const content = getText($, $sectionElements.get()).trim();
 
         sections.push({
-          // Remove elements that are marked as aria-hidden.
-          // This is mainly done to remove anchors like this:
-          // <a aria-hidden="true" tabindex="-1" class="hash-link" href="#first-subheader" title="Direct link to heading">#</a>
           title,
           hash,
           content,
         });
       });
 
-    return { pageTitle, sections };
+    const docSidebarParentCategories =
+      type === "docs"
+        ? $("*[class^=docSidebarContainer_] .menu__link--active:not(.active)")
+            .map((_, element) => $(element).text())
+            .get()
+        : undefined;
+
+    return { pageTitle, sections, docSidebarParentCategories };
   } else if (type === "page") {
     $("a[aria-hidden=true]").remove();
     let $pageTitle = $("h1").first();

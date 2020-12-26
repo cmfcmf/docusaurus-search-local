@@ -38,6 +38,16 @@ module.exports = function (context, options) {
   const indexDocs = options.indexDocs !== undefined ? options.indexDocs : true;
   let language = options.language !== undefined ? options.language : "en";
 
+  const indexDocSidebarParentCategories =
+    options.indexDocSidebarParentCategories !== undefined
+      ? options.indexDocSidebarParentCategories
+      : 0;
+  if (typeof indexDocSidebarParentCategories !== "number") {
+    throw new Error(
+      "indexDocSidebarParentCategories must be a number, set to 0 to disable."
+    );
+  }
+
   const lunrSettings = options.lunr !== undefined ? options.lunr : {};
   const lunrTokenizerSeparator = lunrSettings.tokenizerSeparator;
 
@@ -149,6 +159,9 @@ export const tokenize = (input) => lunr.tokenizer(input)
   generated += `export default lunr;\n`;
   generated += `export const docsBasePath = ${JSON.stringify(docsBasePath)};\n`;
   generated += `export const blogBasePath = ${JSON.stringify(blogBasePath)};\n`;
+  generated += `export const indexDocSidebarParentCategories = ${JSON.stringify(
+    indexDocSidebarParentCategories
+  )};\n`;
 
   const generatedPath = path.join(__dirname, "generated.js");
   fs.writeFileSync(generatedPath, generated);
@@ -207,7 +220,11 @@ export const tokenize = (input) => lunr.tokenizer(input)
           data.map(async ({ file, url, type }) => {
             logger.debug(`Parsing ${type} file ${file}`, { url });
             const html = await readFileAsync(file, { encoding: "utf8" });
-            const { pageTitle, sections } = html2text(html, type, url);
+            const {
+              pageTitle,
+              sections,
+              docSidebarParentCategories,
+            } = html2text(html, type, url);
             const docVersion = getDocVersion(html);
 
             return sections.map((section) => ({
@@ -218,6 +235,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
               sectionTitle: section.title,
               sectionContent: section.content,
               docVersion,
+              docSidebarParentCategories,
             }));
           })
         )
@@ -239,18 +257,32 @@ export const tokenize = (input) => lunr.tokenizer(input)
         if (useDocVersioning) {
           this.field("version");
         }
+        if (indexDocSidebarParentCategories > 0) {
+          this.field("sidebarParentCategories");
+        }
         documents.forEach(function ({
           id,
           sectionTitle,
           sectionContent,
           docVersion,
+          docSidebarParentCategories,
         }) {
-          this.add({
+          const doc = {
             id: id.toString(), // the ref must be a string
             title: sectionTitle,
             content: sectionContent,
             version: docVersion, // undefined for pages and blog
-          });
+          };
+          if (
+            indexDocSidebarParentCategories > 0 &&
+            docSidebarParentCategories
+          ) {
+            doc.sidebarParentCategories = docSidebarParentCategories
+              .reverse()
+              .slice(0, indexDocSidebarParentCategories)
+              .join(" ");
+          }
+          this.add(doc);
         },
         this);
       });
