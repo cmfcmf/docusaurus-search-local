@@ -90,7 +90,10 @@ module.exports.html2text = function (html, type, url = "?") {
     $("article")
       .find(HEADINGS)
       .each((_, heading) => {
-        const title = $(heading).contents().not("a[aria-hidden=true]").text();
+        const title = $(heading)
+          .contents()
+          .not("a[aria-hidden=true], a.hash-link")
+          .text();
         const hash = $(heading).find("a.hash-link").attr("href") || "";
 
         let $sectionElements;
