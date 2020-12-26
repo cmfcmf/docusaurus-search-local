@@ -1,6 +1,7 @@
 # 0.4.1
 
 - FIX: Correctly handle "/" as docsRouteBasePath and blogRouteBasePath
+- FEAT: Find blog posts and static pages regardless of the currently selected documentation version (#19)
 
 # 0.4.0
 

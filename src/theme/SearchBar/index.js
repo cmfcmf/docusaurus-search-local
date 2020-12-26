@@ -190,10 +190,21 @@ const Search = (props) => {
                 });
 
                 if (versionToSearch) {
-                  query.term(versionToSearch.name, {
-                    fields: ["version"],
-                    boost: 0,
-                    presence: lunr.Query.presence.REQUIRED,
+                  // We want to search all documents with version = versionToSearch OR version = undefined
+                  // (blog posts and static pages have an undefined version)
+                  //
+                  // Since lunr.js does not allow OR queries, we instead prohibit all versions
+                  // except versionToSearch and undefined.
+                  //
+                  // https://github.com/cmfcmf/docusaurus-search-local/issues/19
+                  versions.forEach((version) => {
+                    if (version.name !== versionToSearch.name) {
+                      query.term(version.name, {
+                        fields: ["version"],
+                        boost: 0,
+                        presence: lunr.Query.presence.PROHIBITED,
+                      });
+                    }
                   });
                 }
               })

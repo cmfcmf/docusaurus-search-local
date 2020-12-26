@@ -229,18 +229,12 @@ export const tokenize = (input) => input
           sectionContent,
           docVersion,
         }) {
-          const indexDoc = {
+          this.add({
             id: id.toString(), // the ref must be a string
             title: sectionTitle,
             content: sectionContent,
-          };
-          if (useDocVersioning) {
-            // Default to the latest version if the page has no docVersion.
-            // This will make blog posts and pages searchable when searching
-            // for the latest doc version.
-            indexDoc.version = docVersion ? docVersion : docVersions[0];
-          }
-          this.add(indexDoc);
+            version: docVersion, // undefined for pages and blog
+          });
         },
         this);
       });
