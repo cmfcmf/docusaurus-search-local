@@ -20,7 +20,7 @@ function urlMatchesPrefix(url, prefix) {
   if (prefix.endsWith("/")) {
     throw new Error(`prefix must not end with a /. This is a bug.`);
   }
-  return url === prefix || url.startsWith(`${prefix}/`);
+  return prefix === "" || url === prefix || url.startsWith(`${prefix}/`);
 }
 
 module.exports = function (context, options) {

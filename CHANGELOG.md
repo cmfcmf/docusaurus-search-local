@@ -1,3 +1,7 @@
+# 0.4.1
+
+- FIX: Correctly handle "/" as docsRouteBasePath and blogRouteBasePath
+
 # 0.4.0
 
 - BREAKING: Now requires Docusaurus v2.0.0-alpha66

@@ -55,13 +55,26 @@ The following options are available (defaults are shown below):
 
 ```js
 {
-  blogRouteBasePath: '/blog', // must correspond to the base route path configured for the blog plugin
-  docsRouteBasePath: '/docs', // must correspond to the base route path configured for the docs plugin
-  indexBlog: true, // whether to index blog pages
-  indexDocs: true, // whether to index docs pages
-  indexPages: false, // whether to index static pages
+  // whether to index docs pages
+  indexDocs: true,
+  // must start with "/" and correspond to the routeBasePath configured for the docs plugin
+  // use "/" if you use docs-only-mode
+  // (see https://v2.docusaurus.io/docs/2.0.0-alpha.70/docs-introduction#docs-only-mode)
+  docsRouteBasePath: '/docs',
+
+  // whether to index blog pages
+  indexBlog: true,
+  // must start with "/" and correspond to the routeBasePath configured for the blog plugin
+  // use "/" if you use blog-only-mode
+  // (see https://v2.docusaurus.io/docs/2.0.0-alpha.70/blog#blog-only-mode)
+  blogRouteBasePath: '/blog',
+
+  // whether to index static pages
   // /404.html is never indexed
-  language: "en" // language of your documentation, see next section
+  indexPages: false,
+
+  // language of your documentation, see next section
+  language: "en"
 }
 ```
 
