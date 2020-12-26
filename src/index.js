@@ -38,6 +38,13 @@ module.exports = function (context, options) {
   const indexDocs = options.indexDocs !== undefined ? options.indexDocs : true;
   let language = options.language !== undefined ? options.language : "en";
 
+  const lunrSettings = options.lunr !== undefined ? options.lunr : {};
+  const lunrTokenizerSeparator = lunrSettings.tokenizerSeparator;
+
+  if (lunrTokenizerSeparator) {
+    lunr.tokenizer.separator = lunrTokenizerSeparator;
+  }
+
   if (Array.isArray(language) && language.length === 1) {
     language = language[0];
   }
@@ -120,15 +127,24 @@ module.exports = function (context, options) {
     }
   }
   if (language === "ja" || language === "th") {
+    if (lunrTokenizerSeparator) {
+      throw new Error(
+        "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th' languages."
+      );
+    }
     generated += `\
-export const tokenize = (input) => lunr['${language}'].tokenizer(input)
+export const tokenize = (input) => lunr[${JSON.stringify(
+      language
+    )}].tokenizer(input)
   .map(token => token.str);\n`;
   } else {
+    if (lunrTokenizerSeparator) {
+      generated += `\
+lunr.tokenizer.separator = ${lunrTokenizerSeparator.toString()};\n`;
+    }
     generated += `\
-export const tokenize = (input) => input
-  .split(" ")
-  .map((each) => each.trim().toLowerCase())
-  .filter((each) => each.length > 0);\n`;
+export const tokenize = (input) => lunr.tokenizer(input)
+  .map(token => token.str);\n`;
   }
   generated += `export default lunr;\n`;
   generated += `export const docsBasePath = ${JSON.stringify(docsBasePath)};\n`;

@@ -74,7 +74,18 @@ The following options are available (defaults are shown below):
   indexPages: false,
 
   // language of your documentation, see next section
-  language: "en"
+  language: "en",
+
+  // lunr.js-specific settings
+  lunr: {
+    // When indexing your documents, their content is split into "tokens".
+    // Text entered into the search box is also tokenized.
+    // This setting configures the separator used to determine where to split the text into tokens.
+    // By default, it splits the text at whitespace and dashes.
+    //
+    // Note: Does not work for "ja" and "th" languages, since these use a different tokenizer.
+    tokenizerSeparator: /[\s\-]+/
+  }
 }
 ```
 

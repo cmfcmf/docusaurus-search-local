@@ -1,7 +1,9 @@
-# 0.4.1
+# 0.5.0
 
-- FIX: Correctly handle "/" as docsRouteBasePath and blogRouteBasePath
-- FIX: Exclude hash link "#" from HTML headings
+- FIX: Correctly handle "/" as docsRouteBasePath and blogRouteBasePath (#21)
+- FIX: Exclude hash link "#" from HTML headings when indexing
+- FIX: Use same tokenizer that was used for indexing documents to tokenize the content of the search box
+- FEAT: Allow to specify a different separator for the tokenizer (#20)
 - FEAT: Find blog posts and static pages regardless of the currently selected documentation version (#19)
 
 # 0.4.0
