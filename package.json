@@ -14,8 +14,6 @@
   "main": "src/index.js",
   "files": [
     "/src",
-    "!/src/generated.js",
-    "!**/*.test.js",
     "/CHANGELOG.md",
     "/LICENSE",
     "/README.md"
