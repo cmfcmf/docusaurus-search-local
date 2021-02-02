@@ -267,25 +267,23 @@ const Search = (props) => {
           },
         },
       ]
-    ).on("autocomplete:selected", function (
-      event,
-      { document, terms },
-      dataset,
-      context
-    ) {
-      const [path, hash] = document.sectionRoute.split("#");
-      let url = path;
-      url +=
-        "?highlight=" +
-        encodeURIComponent(
-          // Escape all "~" by "~~" and join terms by "~"
-          terms.map((term) => term.replace(/~/g, "~~")).join("~")
-        );
-      if (hash) {
-        url += "#" + hash;
+    ).on(
+      "autocomplete:selected",
+      function (event, { document, terms }, dataset, context) {
+        const [path, hash] = document.sectionRoute.split("#");
+        let url = path;
+        url +=
+          "?highlight=" +
+          encodeURIComponent(
+            // Escape all "~" by "~~" and join terms by "~"
+            terms.map((term) => term.replace(/~/g, "~~")).join("~")
+          );
+        if (hash) {
+          url += "#" + hash;
+        }
+        history.push(url);
       }
-      history.push(url);
-    });
+    );
 
     if (focusAfterIndexLoaded.current) {
       searchBarRef.current.focus();

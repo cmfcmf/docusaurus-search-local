@@ -24,7 +24,7 @@
   "author": "Christian Flach",
   "dependencies": {
     "autocomplete.js": "^0.38.0",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.5",
     "clsx": "^1.1.1",
     "lunr": "^2.3.9",
     "lunr-languages": "^1.4.0",
@@ -34,11 +34,11 @@
     "@docusaurus/core": "^2.0.0"
   },
   "devDependencies": {
-    "cypress": "^4.11.0",
-    "husky": "^4.3.0",
+    "cypress": "^6.4.0",
+    "husky": "^4.3.8",
     "jest": "^26.6.3",
-    "lint-staged": "^10.5.1",
-    "prettier": "^2.1.2"
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "lint": "prettier --check {src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
