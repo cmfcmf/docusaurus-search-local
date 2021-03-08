@@ -26,6 +26,12 @@ import "./autocomplete.css";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 
+function getSearchPlaceholder(customFields){
+  return customFields.localSearch &&
+      customFields.localSearch.searchPlaceholder ||
+      "Search";
+}
+
 function fetchIndex(baseUrl) {
   if (SEARCH_INDEX_AVAILABLE) {
     return fetch(`${baseUrl}search-index.json`)
@@ -107,6 +113,7 @@ const Search = (props) => {
 
   const {
     siteConfig: { baseUrl },
+    customFields,
   } = useDocusaurusContext();
 
   const history = useHistory();
@@ -312,7 +319,7 @@ const Search = (props) => {
     handleSearchBarToggle(!isSearchBarExpanded);
   };
 
-  let placeholder = "Search";
+  let placeholder = getSearchPlaceholder(customFields);
   if (versionToSearch) {
     placeholder += ` [${versionToSearch.label}]`;
   }
