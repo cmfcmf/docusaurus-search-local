@@ -115,7 +115,7 @@ The following languages are available:
 
 Documentation versions created with the official Docusaurus docs plugin are supported.
 The search bar defaults to the latest version (not `next`, but the latest version defined in `versions.json`) when not on a documentation page (e.g., when looking at a blog post or a static page).
-If the user visits a documentation page, the version is extracted from the URL and search will only search documentatio of that version.
+If the user visits a documentation page, the version is extracted from the page and search will only search the documentation of that version.
 The searchbar placeholder text always reflects the currently detected documentation version.
 
 ### Debugging
