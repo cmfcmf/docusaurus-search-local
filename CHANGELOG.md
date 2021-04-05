@@ -1,3 +1,10 @@
+# 0.6.0
+
+- BREAKING: Now requires Docusaurus v2.0.0-alpha72
+- FEAT: Use i18n system for translation of the searchbar itself, translate to German and English
+  - BREAKING: To specfiy a non-default placeholder if no results are found, overwrite the `cmfcmf/d-s-l.searchBar.noResults` translation key instead of `.d-s-l-a .aa-dropdown-menu .aa-suggestion-empty::after { content: "No results"; }`
+
+
 # 0.5.0
 
 - FIX: Correctly handle "/" as docsRouteBasePath and blogRouteBasePath (#21)

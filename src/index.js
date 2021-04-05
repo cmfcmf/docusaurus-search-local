@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const util = require("util");
+const { readDefaultCodeTranslationMessages } = require("@docusaurus/utils");
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -170,6 +171,12 @@ export const tokenize = (input) => lunr.tokenizer(input)
     name: "@cmfcmf/docusaurus-search-local",
     getThemePath() {
       return path.resolve(__dirname, "./theme");
+    },
+    getDefaultCodeTranslationMessages: () => {
+      return readDefaultCodeTranslationMessages({
+        dirPath: path.resolve(__dirname, "..", "codeTranslations"),
+        locale: context.i18n.currentLocale,
+      });
     },
     async postBuild({ routesPaths = [], outDir, baseUrl }) {
       logger.info("Gathering documents");

@@ -20,6 +20,7 @@ import {
   useLatestVersion,
   useActiveVersion,
 } from "@theme/hooks/useDocs";
+import { translate } from "@docusaurus/Translate";
 
 import "./input.css";
 import "./autocomplete.css";
@@ -258,9 +259,16 @@ const Search = (props) => {
               return result;
             },
             empty: () => {
+              const escape = autoComplete.escapeHighlightedString;
               if (SEARCH_INDEX_AVAILABLE) {
-                return `<span class="aa-suggestion-empty"></span>`;
+                return `<span class="aa-suggestion-empty">${escape(
+                  translate({
+                    message: "cmfcmf/d-s-l.searchBar.noResults",
+                    description: "message shown if no results are found",
+                  })
+                )}</span>`;
               } else {
+                // No need to translate this message, since its only shown in development.
                 return `<span class="aa-suggestion-empty">The search index is only available when you run docusaurus build! </span>`;
               }
             },
@@ -320,7 +328,11 @@ const Search = (props) => {
   return (
     <div className="navbar__search" key="search-box">
       <span
-        aria-label="expand searchbar"
+        aria-label={translate({
+          message: "cmfcmf/d-s-l.searchBarExpandBtn.label",
+          description:
+            "(aria-)label of the button that can be used to expand the searchbar",
+        })}
         role="button"
         className={clsx("search-icon", {
           "search-icon-hidden": isSearchBarExpanded,
@@ -332,8 +344,14 @@ const Search = (props) => {
       <input
         id="search_input_react"
         type="search"
-        placeholder={placeholder}
-        aria-label="Search"
+        placeholder={translate({
+          message: "cmfcmf/d-s-l.searchBar.placeholder",
+          description: "Placeholder shown in the searchbar if it is empty",
+        })}
+        aria-label={translate({
+          message: "cmfcmf/d-s-l.searchBar.label",
+          description: "(aria-)label of the searchbar",
+        })}
         className={clsx(
           "navbar__search-input",
           { "search-bar-expanded": isSearchBarExpanded },

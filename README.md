@@ -9,6 +9,7 @@
 Offline / local search for Docusaurus **v2** that works behind your firewall.
 
 Feature Highlights:
+
 - Supports multiple documentation versions
 - Supports documentation written in languages other than English
 - Highlights search results
@@ -117,6 +118,16 @@ Documentation versions created with the official Docusaurus docs plugin are supp
 The search bar defaults to the latest version (not `next`, but the latest version defined in `versions.json`) when not on a documentation page (e.g., when looking at a blog post or a static page).
 If the user visits a documentation page, the version is extracted from the page and search will only search the documentation of that version.
 The searchbar placeholder text always reflects the currently detected documentation version.
+
+### Internationalization
+
+This plugin supports documentation using [Docusaurus i18n](https://docusaurus.io/docs/i18n/introduction) out of the box.
+
+However, the text used for the searchbox itself (e.g., the `Search...` placeholder) is currently only translated in German and English.
+Please contribute additional translations by creating a new translation file in the [codeTranslations](codeTranslations) subfolder and submitting a PR.
+
+You can also adjust translations by modifiying the translations in `<yourfolder>/i18n/<locale>/code.json` that start with `cmfcmf/d-s-l.`.
+Read more at: https://docusaurus.io/docs/i18n/tutorial#translate-json-files
 
 ### Debugging
 
