@@ -6,6 +6,18 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'facebook', // Usually your GitHub org/user name.
   projectName: 'docusaurus', // Usually your repo name.
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'de'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+      },
+      de: {
+        label: 'Deutsch',
+      },
+    },
+  },
   themeConfig: {
     navbar: {
       title: 'My Site',
@@ -16,6 +28,10 @@ module.exports = {
       items: [
         {
           type: 'docsVersionDropdown',
+          position: 'left',
+        },
+        {
+          type: 'localeDropdown',
           position: 'left',
         },
         {

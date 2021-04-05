@@ -67,7 +67,7 @@ function getText($, el) {
 module.exports.html2text = function (html, type, url = "?") {
   const $ = cheerio.load(html);
   // Remove copy buttons from code boxes
-  $("div[class^=mdxCodeBlock_] button").remove();
+  $("div[class^=codeBlockContent_] button").remove();
 
   if (type === "docs") {
     // Remove version badges
