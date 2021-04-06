@@ -5,7 +5,7 @@
   --aa-text-color: var(--ifm-font-color-base);
   --aa-background-color: var(--ifm-background-surface-color);
 
-  --aa-muted-color: var(--ifm-color-secondary-darkest);
+  /* --aa-muted-color: var(--ifm-color-secondary-darkest); */
 }
 
 body.dark,

@@ -139,7 +139,7 @@ const SearchBar = () => {
         },
       },
       // always open a modal window
-      //detachedMediaQuery: "",
+      detachedMediaQuery: "",
       // preselect the first search result
       defaultActiveItemId: 0,
 
