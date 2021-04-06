@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+yarn build
 yarn test
 ./scripts/update-gif.sh
 echo ""

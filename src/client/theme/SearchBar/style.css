@@ -1,0 +1,26 @@
+:root {
+  --aa-font-size: var(--ifm-font-size-base);
+
+  --aa-primary-color: var(--ifm-color-primary);
+  --aa-text-color: var(--ifm-font-color-base);
+  --aa-background-color: var(--ifm-background-surface-color);
+
+  --aa-muted-color: var(--ifm-color-secondary-darkest);
+}
+
+body.dark,
+body[data-theme="dark"] {
+  --aa-primary-color: var(--ifm-color-primary);
+  --aa-text-color: var(--ifm-font-color-base);
+  --aa-muted-color: var(--ifm-color-secondary-darkest);
+}
+
+body.dark,
+body[data-theme="dark"] .aa-DetachedOverlay {
+  --aa-muted-color: rgba(47, 55, 69, 0.7);
+}
+
+.aa-DetachedSearchButton {
+  transition: all var(--ifm-transition-fast)
+    var(--ifm-transition-timing-default);
+}

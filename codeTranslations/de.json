@@ -1,6 +1,5 @@
 {
-  "cmfcmf/d-s-l.searchBarExpandBtn.label": "Suchfeld anzeigen",
-  "cmfcmf/d-s-l.searchBar.placeholder": "Suchen...",
-  "cmfcmf/d-s-l.searchBar.label": "Suchfeld",
-  "cmfcmf/d-s-l.searchBar.noResults": "Keine Suchergebnissse gefunden"
+  "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion": "Suchen...",
+  "cmfcmf/d-s-l.searchBar.placeholderWithVersion": "Suchen... [{version}]",
+  "cmfcmf/d-s-l.searchBar.noResults": "Keine Suchergebnissse gefunden."
 }
