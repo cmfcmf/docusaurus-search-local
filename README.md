@@ -1,4 +1,4 @@
-# Offline / Local Search for Docusaurus v2
+# Offline / Local Search for Docusaurus v2-alpha73+
 
 ![Version](https://img.shields.io/npm/v/@cmfcmf/docusaurus-search-local?style=flat-square)
 ![License](https://img.shields.io/npm/l/@cmfcmf/docusaurus-search-local?style=flat-square)
@@ -6,7 +6,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/cmfcmf/docusaurus-search-local?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/cmfcmf/docusaurus-search-local?style=flat-square)
 
-Offline / local search for Docusaurus **v2** that works behind your firewall.
+Offline / local search for Docusaurus **v2-alpha73+** that works behind your firewall.
 
 Feature Highlights:
 
@@ -85,6 +85,11 @@ The following options are available (defaults are shown below):
 
   // language of your documentation, see next section
   language: "en",
+
+  // setting this to "none" will prevent the default CSS to be included. The default CSS
+  // comes from autocomplete-theme-classic, which you can read more about here:
+  // https://autocomplete.algolia.com/docs/autocomplete-theme-classic
+  style: undefined,
 
   // lunr.js-specific settings
   lunr: {

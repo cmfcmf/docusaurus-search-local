@@ -1,11 +1,10 @@
 import React, { useRef, useEffect, createElement, Fragment } from "react";
 import { render } from "react-dom";
 import { autocomplete, AutocompleteApi } from "@algolia/autocomplete-js";
-import lunr from "lunr";
+import type lunr from "lunr";
 import Head from "@docusaurus/Head";
 import { interpolate } from "@docusaurus/Interpolate";
 import { translate } from "@docusaurus/Translate";
-// @ts-expect-error
 import { useHistory } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import {
@@ -14,17 +13,12 @@ import {
   useActiveVersion,
 } from "@theme/hooks/useDocs";
 import useThemeContext from "@theme/hooks/useThemeContext";
-
 import {
   mylunr,
   indexDocSidebarParentCategories,
   tokenize,
 } from "./generatedWrapper";
 import { HighlightSearchResults } from "./HighlightSearchResults";
-
-// CSS
-require("@algolia/autocomplete-theme-classic");
-require("./style.css");
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 
@@ -75,7 +69,7 @@ const SearchBar = () => {
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
-  const history = useHistory();
+  const history = useHistory<{ cmfcmfhighlight?: string[] }>();
 
   const versions: { name: string; label: string }[] = useVersions();
   const activeVersion:
@@ -124,8 +118,12 @@ const SearchBar = () => {
   const autocompleteApi = useRef<AutocompleteApi<MyItem> | null>(null);
 
   useEffect(() => {
+    if (!autocompleteRef.current) {
+      return;
+    }
+
     autocompleteApi.current = autocomplete<MyItem>({
-      container: autocompleteRef.current!,
+      container: autocompleteRef.current,
       placeholder,
       // Use React instead of Preact
       renderer: { createElement, Fragment },
@@ -320,14 +318,15 @@ const SearchBar = () => {
     <>
       <Head>
         {/*
-      Needed by the autocomplete to display dark mode
-      https://autocomplete.algolia.com/docs/autocomplete-theme-classic#dark-mode
+          Needed by the autocomplete for dark mode support
+          https://autocomplete.algolia.com/docs/autocomplete-theme-classic#dark-mode
         */}
         <body data-theme={isDarkTheme ? "dark" : "light"} />
       </Head>
       <HighlightSearchResults />
-      <div className="navbar__search" key="search-box">
-        <div ref={autocompleteRef}></div>
+      <div className="dsla-search-wrapper">
+        <div className="dsla-search-field" ref={autocompleteRef}></div>
+        {/*<button className="dsla-search-button"></button>*/}
       </div>
     </>
   );

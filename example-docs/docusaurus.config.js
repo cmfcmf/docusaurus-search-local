@@ -23,7 +23,7 @@ module.exports = {
   },
   themeConfig: {
     navbar: {
-      title: 'My Site',
+      title: 'My Site With a Much Longer Name',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',

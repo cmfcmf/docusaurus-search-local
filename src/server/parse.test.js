@@ -76,7 +76,7 @@ describe("parser", () => {
             title: "Blockquotes",
           },
           {
-            content: "This is a note",
+            content: "note  This is a note",
             hash: "#first-sub-sub-header",
             title: "FIRST SUB SUB HEADER",
           },
