@@ -1,6 +1,6 @@
 {
   "name": "@cmfcmf/docusaurus-search-local",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Local / Offline Search for Docusaurus",
   "keywords": [
     "docusaurus",
