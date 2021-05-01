@@ -24,8 +24,8 @@
   },
   "author": "Christian Flach",
   "dependencies": {
-    "@algolia/autocomplete-js": "^1.0.0-alpha.46",
-    "@algolia/autocomplete-theme-classic": "^1.0.0-alpha.46",
+    "@algolia/autocomplete-js": "^1.0.0-alpha.48",
+    "@algolia/autocomplete-theme-classic": "^1.0.0-alpha.48",
     "cheerio": "^1.0.0-rc.5",
     "clsx": "^1.1.1",
     "lunr": "^2.3.9",
