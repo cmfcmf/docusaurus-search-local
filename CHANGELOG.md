@@ -1,3 +1,7 @@
+# 0.6.1
+
+- FIX: Add missing codeTranslations folder to release package
+
 # 0.6.0
 
 - BREAKING: Now requires Docusaurus v2.0.0-alpha73

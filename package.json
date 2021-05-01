@@ -14,6 +14,7 @@
   "main": "lib/server/index.js",
   "files": [
     "/src",
+    "/codeTranslations",
     "/lib",
     "/CHANGELOG.md",
     "/LICENSE",
@@ -81,11 +82,6 @@
     "format": "prettier --write {src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
     "test": "jest",
     "prepare": "husky install"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
