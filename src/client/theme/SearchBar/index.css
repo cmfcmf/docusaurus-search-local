@@ -1,0 +1,8 @@
+.dsla-search-wrapper {
+  margin-left: var(--aa-spacing);
+}
+
+body.dark,
+body[data-theme="dark"] {
+  --aa-muted-color-alpha: 1;
+}

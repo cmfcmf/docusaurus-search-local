@@ -1,3 +1,11 @@
+# 0.6.0
+
+- BREAKING: Now requires Docusaurus v2.0.0-alpha73
+- BREAKING: Update autocomplete.js to v1-alpha, which features an all-new design and renamed class names (#32).
+- FEAT: Use i18n system for translation of the searchbar itself, translate to German and English (#29)
+  - BREAKING: To specfiy a non-default placeholder if no results are found, overwrite the newly introduced translation keys instead of `.d-s-l-a .aa-dropdown-menu .aa-suggestion-empty::after { content: "No results"; }`
+- FEAT: Yellow result higlighting no longer adds a parameter to the URL and vanishes on refresh (#28)
+
 # 0.5.0
 
 - FIX: Correctly handle "/" as docsRouteBasePath and blogRouteBasePath (#21)

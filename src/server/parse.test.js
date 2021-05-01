@@ -10,6 +10,7 @@ describe("parser", () => {
     const htmlPath = path.join(
       __dirname,
       "..",
+      "..",
       "example-docs/build/blog/d-s-l-test/index.html"
     );
     const html = await readFileAsync(htmlPath, "utf-8");
@@ -40,6 +41,7 @@ describe("parser", () => {
     it("parses normal pages", async () => {
       const htmlPath = path.join(
         __dirname,
+        "..",
         "..",
         "example-docs/build/docs/d-s-l-test/index.html"
       );
@@ -74,7 +76,7 @@ describe("parser", () => {
             title: "Blockquotes",
           },
           {
-            content: "This is a note",
+            content: "note  This is a note",
             hash: "#first-sub-sub-header",
             title: "FIRST SUB SUB HEADER",
           },
@@ -85,6 +87,7 @@ describe("parser", () => {
     it("parses empty page", async () => {
       const htmlPath = path.join(
         __dirname,
+        "..",
         "..",
         "example-docs/build/docs/d-s-l-test2/index.html"
       );
@@ -99,6 +102,7 @@ describe("parser", () => {
     it("parses nested sidebar categories", async () => {
       const htmlPath = path.join(
         __dirname,
+        "..",
         "..",
         "example-docs/build/docs/next/nested_sidebar_doc/index.html"
       );
@@ -119,6 +123,7 @@ describe("parser", () => {
     it("parses page with first header directly after title", async () => {
       const htmlPath = path.join(
         __dirname,
+        "..",
         "..",
         "example-docs/build/docs/d-s-l-test3/index.html"
       );

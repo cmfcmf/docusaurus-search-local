@@ -43,4 +43,8 @@ FIRST HEADER CONTENT
 
 ### FIRST SUB SUB HEADER
 
-:::note This is a note
+:::note
+
+This is a note
+
+:::

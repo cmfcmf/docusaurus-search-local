@@ -1,6 +1,5 @@
-const cheerio = require("cheerio");
-
-const { logger } = require("./logger");
+import cheerio from "cheerio";
+import logger from "./logger";
 
 // We insert whitespace after text from any of these tags
 const BLOCK_TAGS = [
@@ -43,7 +42,7 @@ const BLOCK_TAGS = [
   "th",
 ];
 
-function getText($, el) {
+function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
   if (Array.isArray(el)) {
     let content = "";
     el.forEach((el) => {
@@ -64,10 +63,14 @@ function getText($, el) {
   }
 }
 
-module.exports.html2text = function (html, type, url = "?") {
+export function html2text(
+  html: string,
+  type: "docs" | "blog" | "page",
+  url: string = "?"
+) {
   const $ = cheerio.load(html);
   // Remove copy buttons from code boxes
-  $("div[class^=mdxCodeBlock_] button").remove();
+  $("div[class^=codeBlockContent_] button").remove();
 
   if (type === "docs") {
     // Remove version badges
@@ -84,7 +87,11 @@ module.exports.html2text = function (html, type, url = "?") {
     const HEADINGS = "h1, h2, h3";
     const pageTitle = $("article header h1").first().text();
 
-    const sections = [];
+    const sections: Array<{
+      title: string;
+      hash: string;
+      content: string;
+    }> = [];
     // Make sure to also adjust the highlighting functionality in the client
     // if you change the top element here.
     $("article")
@@ -106,7 +113,7 @@ module.exports.html2text = function (html, type, url = "?") {
         if ($(heading).parents("header").length) {
           // $(heading) is the page title
 
-          $firstElement = $("article")
+          const $firstElement = $("article")
             .children() // div.markdown, header
             .not("header") // div.markdown
             .children() // h1, p, p, h2, ...
@@ -167,9 +174,9 @@ module.exports.html2text = function (html, type, url = "?") {
   } else {
     throw new Error(`Cannot index files of unknown type ${type}!`);
   }
-};
+}
 
-module.exports.getDocVersion = function (html) {
+export function getDocVersion(html: string) {
   const $ = cheerio.load(html);
   return $('meta[name="docusaurus_version"]').attr("content");
-};
+}

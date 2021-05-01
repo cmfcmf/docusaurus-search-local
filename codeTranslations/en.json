@@ -1,0 +1,5 @@
+{
+  "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion": "Search...",
+  "cmfcmf/d-s-l.searchBar.placeholderWithVersion": "Search... [{version}]",
+  "cmfcmf/d-s-l.searchBar.noResults": "No results found."
+}
