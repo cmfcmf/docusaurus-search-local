@@ -5,6 +5,7 @@
 - FEAT: Use i18n system for translation of the searchbar itself, translate to German and English (#29)
   - BREAKING: To specfiy a non-default placeholder if no results are found, overwrite the newly introduced translation keys instead of `.d-s-l-a .aa-dropdown-menu .aa-suggestion-empty::after { content: "No results"; }`
 - FEAT: Yellow result higlighting no longer adds a parameter to the URL and vanishes on refresh (#28)
+- FIX: Support for language th
 
 # 0.5.0
 

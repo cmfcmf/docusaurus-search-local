@@ -135,6 +135,11 @@ export default function cmfcmfDocusaurusSearchLocal(
     if (code === "ja") {
       require("lunr-languages/tinyseg")(lunr);
       generated += `require("lunr-languages/tinyseg")(lunr);\n`;
+    } else if (code === "th") {
+      // @ts-expect-error see
+      // https://github.com/MihaiValentin/lunr-languages/blob/a62fec97fb1a62bb4581c9b69a5ddedf62f8f62f/test/VersionsAndLanguagesTest.js#L110-L112
+      lunr.wordcut = require("lunr-languages/wordcut");
+      generated += `lunr.wordcut = require("lunr-languages/wordcut");\n`;
     }
     require(`lunr-languages/lunr.${code}`)(lunr);
     generated += `require("lunr-languages/lunr.${code}")(lunr);\n`;
@@ -167,7 +172,7 @@ export default function cmfcmfDocusaurusSearchLocal(
 export const tokenize = (input) => lunr[${JSON.stringify(
       language
     )}].tokenizer(input)
-  .map(token => token.str);\n`;
+  .map(token => token${language === "th" ? "" : ".str"});\n`;
   } else {
     if (lunrTokenizerSeparator) {
       generated += `\
