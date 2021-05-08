@@ -18,6 +18,11 @@ Feature Highlights:
 
 ![Search in Action](docs/preview.gif)
 
+> Note: We use the open source [algolia/autocomplete](https://github.com/algolia/autocomplete) library for the searchbox.
+> This library is just used as the frontend, and,
+> unlike the default Docusaurus search experience ([algolia/docsearch](https://docsearch.algolia.com/)),
+> **does not connect to any Algolia or third-party servers**.
+
 ## Installation
 
 ```bash

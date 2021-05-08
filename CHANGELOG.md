@@ -1,3 +1,8 @@
+# 0.6.2
+
+- FEAT: Italian translations
+- FIX: missing peer dependency warnings
+
 # 0.6.1
 
 - FIX: Add missing codeTranslations folder to release package
