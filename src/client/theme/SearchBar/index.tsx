@@ -72,23 +72,22 @@ const SearchBar = () => {
   const history = useHistory<{ cmfcmfhighlight?: string[] }>();
 
   const versions: { name: string; label: string }[] = useVersions();
-  const activeVersion:
-    | { name: string; label: string }
-    | undefined = useActiveVersion();
-  const latestVersion:
-    | { name: string; label: string }
-    | undefined = useLatestVersion();
+  const activeVersion: { name: string; label: string } | undefined =
+    useActiveVersion();
+  const latestVersion: { name: string; label: string } | undefined =
+    useLatestVersion();
   const versionToSearch =
     versions.length <= 1 ? undefined : activeVersion ?? latestVersion;
 
-  const index = useRef<
-    | null
-    | "loading"
-    | {
-        documents: MyDocument[];
-        index: lunr.Index;
-      }
-  >(null);
+  const index =
+    useRef<
+      | null
+      | "loading"
+      | {
+          documents: MyDocument[];
+          index: lunr.Index;
+        }
+    >(null);
 
   const getIndex = async () => {
     if (index.current !== null && index.current !== "loading") {

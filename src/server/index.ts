@@ -267,11 +267,8 @@ export const tokenize = (input) => lunr.tokenizer(input)
           data.map(async ({ file, url, type }) => {
             logger.debug(`Parsing ${type} file ${file}`, { url });
             const html = await readFileAsync(file, { encoding: "utf8" });
-            const {
-              pageTitle,
-              sections,
-              docSidebarParentCategories,
-            } = html2text(html, type, url);
+            const { pageTitle, sections, docSidebarParentCategories } =
+              html2text(html, type, url);
             const docVersion = getDocVersion(html);
 
             return sections.map((section) => ({
