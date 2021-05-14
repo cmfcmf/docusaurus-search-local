@@ -36,16 +36,16 @@
     "mark.js": "^8.11.1"
   },
   "peerDependencies": {
-    "@docusaurus/core": "^2.0.0"
+    "@docusaurus/core": "^v2.0.0-beta.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.13.16",
     "@babel/preset-env": "^7.14.1",
-    "@docusaurus/core": "^2.0.0-alpha.73",
-    "@docusaurus/module-type-aliases": "^2.0.0-alpha.73",
-    "@docusaurus/types": "^2.0.0-alpha.73",
-    "@docusaurus/utils": "^2.0.0-alpha.73",
+    "@docusaurus/core": "^v2.0.0-beta.0",
+    "@docusaurus/module-type-aliases": "^v2.0.0-beta.0",
+    "@docusaurus/types": "^v2.0.0-beta.0",
+    "@docusaurus/utils": "^v2.0.0-beta.0",
     "@types/jest": "^26.0.22",
     "@types/lunr": "^2.3.3",
     "@types/mark.js": "^8.11.5",
@@ -55,7 +55,6 @@
     "@types/react-loadable": "^5.5.5",
     "@types/react-router-config": "^5.0.2",
     "@types/react-router-dom": "^5.1.7",
-    "@types/webpack-merge": "^4",
     "babel-jest": "^26.6.3",
     "concurrently": "^6.1.0",
     "copyfiles": "^2.4.1",

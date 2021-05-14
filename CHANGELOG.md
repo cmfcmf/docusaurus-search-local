@@ -1,7 +1,8 @@
 # 0.6.2
 
 - FEAT: Italian translations
-- FIX: missing peer dependency warnings
+- FIX: Missing peer dependency warnings
+- FIX: Correct Docusaurus peer dependency version (#36)
 
 # 0.6.1
 
