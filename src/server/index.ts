@@ -58,7 +58,8 @@ const languageSchema = Joi.string().valid(
   "sv",
   "th",
   "tr",
-  "vi"
+  "vi",
+  "zh"
 );
 
 const basePathSchema = Joi.string().pattern(/^\//);
@@ -191,10 +192,10 @@ export default function cmfcmfDocusaurusSearchLocal(
       generated += handleLangCode(language);
     }
   }
-  if (language === "ja" || language === "th") {
+  if (language === "ja" || language === "th" || language === "zh") {
     if (lunrTokenizerSeparator) {
       throw new Error(
-        "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th' languages."
+        "The lunr.tokenizerSeparator option is not supported for 'ja', 'th', and 'zh'."
       );
     }
     generated += `\

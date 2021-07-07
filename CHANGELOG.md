@@ -1,3 +1,7 @@
+# 0.6.4
+
+- FIX: Re-add support for Chinese (`zh`)
+
 # 0.6.3
 
 - FIX: Correctly handle [trailingSlash config option](https://docusaurus.io/docs/docusaurus.config.js/#trailing-slash) (#52)

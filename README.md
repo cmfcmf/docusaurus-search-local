@@ -120,7 +120,9 @@ You can now use the search bar to search your documentation.
 Use the `language` option if your documentation is not written in English. You can either specify a single language or an array of multiple languages.
 The following languages are available:
 
-    ar, da, de, en, es, fi, fr, hi, hu, it, ja, nl, no, pt, ro, ru, sv, th, tr, vi
+    ar, da, de, en, es, fi, fr, hi, hu, it, ja, nl, no, pt, ro, ru, sv, th, tr, vi, zh
+
+**Important: For Chinese language support (`zh`), you also have to install the `nodejieba` npm package at `^2.5.0`.**
 
 ### Documentation Versions
 
