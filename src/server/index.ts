@@ -135,7 +135,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     if (code === "ja") {
       require("lunr-languages/tinyseg")(lunr);
       generated += `require("lunr-languages/tinyseg")(lunr);\n`;
-    } else if (code === "th") {
+    } else if (code === "th" || code === "hi") {
       // @ts-expect-error see
       // https://github.com/MihaiValentin/lunr-languages/blob/a62fec97fb1a62bb4581c9b69a5ddedf62f8f62f/test/VersionsAndLanguagesTest.js#L110-L112
       lunr.wordcut = require("lunr-languages/wordcut");
@@ -162,7 +162,7 @@ export default function cmfcmfDocusaurusSearchLocal(
       generated += handleLangCode(language);
     }
   }
-  if (language === "ja" || language === "th") {
+  if (language === "ja" || language === "th" || language === "zh") {
     if (lunrTokenizerSeparator) {
       throw new Error(
         "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th' languages."
