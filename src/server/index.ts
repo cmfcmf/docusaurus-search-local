@@ -135,7 +135,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     if (code === "ja") {
       require("lunr-languages/tinyseg")(lunr);
       generated += `require("lunr-languages/tinyseg")(lunr);\n`;
-    } else if (code === "th") {
+    } else if (code === "th" || code === "hi") {
       // @ts-expect-error see
       // https://github.com/MihaiValentin/lunr-languages/blob/a62fec97fb1a62bb4581c9b69a5ddedf62f8f62f/test/VersionsAndLanguagesTest.js#L110-L112
       lunr.wordcut = require("lunr-languages/wordcut");
