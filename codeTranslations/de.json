@@ -1,5 +1,8 @@
 {
   "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion": "Suchen...",
   "cmfcmf/d-s-l.searchBar.placeholderWithVersion": "Suchen... [{version}]",
-  "cmfcmf/d-s-l.searchBar.noResults": "Keine Suchergebnissse gefunden."
+  "cmfcmf/d-s-l.searchBar.noResults": "Keine Suchergebnissse gefunden.",
+  "cmfcmf/d-s-l.searchBar.clearButtonTitle": "Leeren",
+  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "Abbrechen",
+  "cmfcmf/d-s-l.searchBar.submitButtonTitle": "Suchen"
 }

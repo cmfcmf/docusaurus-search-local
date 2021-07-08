@@ -27,8 +27,8 @@
   "dependencies": {
     "@algolia/autocomplete-js": "^1.0.1",
     "@algolia/autocomplete-theme-classic": "^1.0.1",
-    "@algolia/client-search": "^4.9.1",
-    "algoliasearch": "^4.9.1",
+    "@algolia/client-search": "^4.10.3",
+    "algoliasearch": "^4.10.3",
     "cheerio": "^1.0.0-rc.9",
     "clsx": "^1.1.1",
     "lunr": "^2.3.9",
@@ -42,6 +42,7 @@
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.13.16",
     "@babel/preset-env": "^7.14.1",
+    "@babel/preset-typescript": "^7.14.5",
     "@docusaurus/core": "^v2.0.0-beta.0",
     "@docusaurus/module-type-aliases": "^v2.0.0-beta.0",
     "@docusaurus/types": "^v2.0.0-beta.0",

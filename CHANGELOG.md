@@ -1,3 +1,9 @@
+# 0.6.3
+
+- FEAT: Fully localized autocomplete (currently in German, English, Italian, Brazilian Portuguese, and Chinese).
+- FEAT: Update autocomplete to 1.2.0
+
+
 # 0.6.2
 
 - FEAT: Italian translations

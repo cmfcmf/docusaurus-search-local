@@ -79,15 +79,14 @@ const SearchBar = () => {
   const versionToSearch =
     versions.length <= 1 ? undefined : activeVersion ?? latestVersion;
 
-  const index =
-    useRef<
-      | null
-      | "loading"
-      | {
-          documents: MyDocument[];
-          index: lunr.Index;
-        }
-    >(null);
+  const index = useRef<
+    | null
+    | "loading"
+    | {
+        documents: MyDocument[];
+        index: lunr.Index;
+      }
+  >(null);
 
   const getIndex = async () => {
     if (index.current !== null && index.current !== "loading") {
@@ -139,6 +138,21 @@ const SearchBar = () => {
       detachedMediaQuery: "",
       // preselect the first search result
       defaultActiveItemId: 0,
+
+      translations: {
+        clearButtonTitle: translate({
+          message: "cmfcmf/d-s-l.searchBar.clearButtonTitle",
+          description: "Title of the button to clear the current search input",
+        }),
+        detachedCancelButtonText: translate({
+          message: "cmfcmf/d-s-l.searchBar.detachedCancelButtonText",
+          description: "Text of the button to close the detached search window",
+        }),
+        submitButtonTitle: translate({
+          message: "cmfcmf/d-s-l.searchBar.submitButtonTitle",
+          description: "Title of the button to submit a new search",
+        }),
+      },
 
       getSources({ query: input }) {
         return [
