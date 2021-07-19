@@ -33,7 +33,7 @@ type MyOptions = {
   language: string | string[];
   indexDocSidebarParentCategories: number;
   lunr: {
-    tokenizerSeparator: string;
+    tokenizerSeparator?: string;
   };
   style?: "none";
 };
@@ -85,9 +85,7 @@ const optionsSchema = Joi.object({
   style: Joi.string().valid("none"),
 
   lunr: Joi.object({
-    tokenizerSeparator: Joi.object()
-      .regex()
-      .default(/[\s\-]+/),
+    tokenizerSeparator: Joi.object().regex(),
   }).default(),
 });
 
@@ -104,11 +102,13 @@ export default function cmfcmfDocusaurusSearchLocal(
     indexDocs,
     indexPages,
     style,
+    lunr: { tokenizerSeparator: lunrTokenizerSeparator },
   } = options;
-  const lunrTokenizerSeparator = options.lunr.tokenizerSeparator;
 
-  // @ts-expect-error
-  lunr.tokenizer.separator = lunrTokenizerSeparator;
+  if (lunrTokenizerSeparator) {
+    // @ts-expect-error
+    lunr.tokenizer.separator = lunrTokenizerSeparator;
+  }
 
   if (Array.isArray(language) && language.length === 1) {
     language = language[0];

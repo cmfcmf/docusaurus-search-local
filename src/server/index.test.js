@@ -18,7 +18,7 @@ const DEFAULT_OPTIONS = {
   language: "en",
   style: undefined,
   lunr: {
-    tokenizerSeparator: /[\s\-]+/,
+    tokenizerSeparator: undefined,
   },
 };
 
