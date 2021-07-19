@@ -5,6 +5,10 @@ const { html2text } = require("./parse");
 
 const readFileAsync = util.promisify(fs.readFile);
 
+beforeEach(() => {
+  jest.spyOn(console, "warn").mockImplementation(() => {});
+});
+
 describe("parser", () => {
   it("parses blog pages", async () => {
     const htmlPath = path.join(
@@ -15,6 +19,7 @@ describe("parser", () => {
     );
     const html = await readFileAsync(htmlPath, "utf-8");
     expect(html2text(html, "blog")).toEqual({
+      docSidebarParentCategories: undefined,
       pageTitle: "BLOG POST TITLE",
       sections: [
         {
@@ -25,12 +30,12 @@ describe("parser", () => {
         {
           title: "FIRST HEADER",
           content: "FIRST HEADER CONTENT FIRST HEADER CONTENT 2",
-          hash: "#first-header",
+          hash: "", // no hashes are assigned to h1 headers
         },
         {
           title: "FIRST SUBHEADER",
           content:
-            'FIRST SUBHEADER CONTENT #include <stdio.h>   int main(int argc, char** argv) {   printf("Hello World"); }',
+            'FIRST SUBHEADER CONTENT                                         #include <stdio.h>   int main(int argc, char** argv) {   printf("Hello World"); }',
           hash: "#first-subheader",
         },
       ],
@@ -58,7 +63,7 @@ describe("parser", () => {
           {
             title: "FIRST HEADER",
             content: "FIRST HEADER CONTENT",
-            hash: "#first-header",
+            hash: "", // no hashes are assigned to h1 headers
           },
           {
             title: "FIRST SUBHEADER",

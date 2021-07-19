@@ -47,7 +47,12 @@ function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
     let content = "";
     el.forEach((el) => {
       content += getText($, el);
-      if (el.type === "tag" && BLOCK_TAGS.includes(el.name)) {
+      if (
+        el.type === "tag" &&
+        (BLOCK_TAGS.includes(el.name) ||
+          // for lines in code blocks
+          (el.name === "span" && $(el).attr("class") === "token-line"))
+      ) {
         content += " ";
       }
     });
@@ -110,7 +115,7 @@ export function html2text(
         const hash = $(heading).find("a.hash-link").attr("href") || "";
 
         let $sectionElements;
-        if ($(heading).parents("header").length) {
+        if ($(heading).parents(".markdown").length === 0) {
           // $(heading) is the page title
 
           const $firstElement = $("article")
@@ -123,9 +128,21 @@ export function html2text(
             sections.push({ title, hash, content: "" });
             return;
           }
-          $sectionElements = $firstElement.nextUntil(HEADINGS).addBack();
+          $sectionElements = $firstElement
+            .nextUntil(`${HEADINGS}, header`)
+            .addBack();
         } else {
-          $sectionElements = $(heading).nextUntil(HEADINGS);
+          // If the users uses a h1 tag as part of the markdown, Docusaurus will generate a header
+          // around it for some reason, which we need to ignore.
+          //
+          // <header>
+          //   <h1 class="h1Heading_27L5">FIRST HEADER</h1>
+          // </header>
+
+          const root = $(heading).parent("header").length
+            ? $(heading).parent()
+            : $(heading);
+          $sectionElements = root.nextUntil(`${HEADINGS}, header`);
         }
         const content = getText($, $sectionElements.get()).trim();
 
