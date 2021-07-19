@@ -2,8 +2,13 @@ import fs from "fs";
 import path from "path";
 import util from "util";
 import { readDefaultCodeTranslationMessages } from "@docusaurus/utils";
-import { LoadContext, Plugin } from "@docusaurus/types";
+import {
+  LoadContext,
+  OptionValidationContext,
+  Plugin,
+} from "@docusaurus/types";
 import lunr from "lunr";
+import { Joi } from "@docusaurus/utils-validation";
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -20,71 +25,95 @@ function urlMatchesPrefix(url: string, prefix: string) {
 }
 
 type MyOptions = {
-  blogRouteBasePath?: string;
-  docsRouteBasePath?: string;
-  indexPages?: boolean;
-  indexBlog?: boolean;
-  indexDocs?: boolean;
-  language?: string | string[];
-  indexDocSidebarParentCategories?: number;
-  lunr?: {
-    tokenizerSeparator?: string;
+  blogRouteBasePath: string;
+  docsRouteBasePath: string;
+  indexPages: boolean;
+  indexBlog: boolean;
+  indexDocs: boolean;
+  language: string | string[];
+  indexDocSidebarParentCategories: number;
+  lunr: {
+    tokenizerSeparator: string;
   };
   style?: "none";
 };
+
+const languageSchema = Joi.string().valid(
+  "ar",
+  "da",
+  "de",
+  "en",
+  "es",
+  "fi",
+  "fr",
+  "hi",
+  "hu",
+  "it",
+  "ja",
+  "nl",
+  "no",
+  "pt",
+  "ro",
+  "ru",
+  "sv",
+  "th",
+  "tr",
+  "vi"
+);
+
+const basePathSchema = Joi.string().pattern(/^\//);
+
+const optionsSchema = Joi.object({
+  indexDocs: Joi.boolean().default(true),
+  docsRouteBasePath: basePathSchema.default("/docs"),
+  indexDocSidebarParentCategories: Joi.number()
+    .integer()
+    .min(0)
+    .max(Number.MAX_SAFE_INTEGER)
+    .default(0),
+
+  indexBlog: Joi.boolean().default(true),
+  blogRouteBasePath: basePathSchema.default("/blog"),
+
+  indexPages: Joi.boolean().default(false),
+
+  language: Joi.alternatives(
+    languageSchema,
+    Joi.array().items(languageSchema)
+  ).default("en"),
+
+  style: Joi.string().valid("none"),
+
+  lunr: Joi.object({
+    tokenizerSeparator: Joi.object()
+      .regex()
+      .default(/[\s\-]+/),
+  }).default(),
+});
 
 export default function cmfcmfDocusaurusSearchLocal(
   context: LoadContext,
   options: MyOptions
 ): Plugin<unknown> {
-  let blogBasePath =
-    options.blogRouteBasePath !== undefined
-      ? options.blogRouteBasePath
-      : "/blog";
-  let docsBasePath =
-    options.docsRouteBasePath !== undefined
-      ? options.docsRouteBasePath
-      : "/docs";
-  const indexPages =
-    options.indexPages !== undefined ? options.indexPages : false;
-  const indexBlog = options.indexBlog !== undefined ? options.indexBlog : true;
-  const indexDocs = options.indexDocs !== undefined ? options.indexDocs : true;
-  let language = options.language !== undefined ? options.language : "en";
+  let {
+    language,
+    blogRouteBasePath: blogBasePath,
+    docsRouteBasePath: docsBasePath,
+    indexDocSidebarParentCategories,
+    indexBlog,
+    indexDocs,
+    indexPages,
+    style,
+  } = options;
+  const lunrTokenizerSeparator = options.lunr.tokenizerSeparator;
 
-  const indexDocSidebarParentCategories =
-    options.indexDocSidebarParentCategories !== undefined
-      ? options.indexDocSidebarParentCategories
-      : 0;
-  if (typeof indexDocSidebarParentCategories !== "number") {
-    throw new Error(
-      "indexDocSidebarParentCategories must be a number, set to 0 to disable."
-    );
-  }
-
-  const lunrSettings = options.lunr !== undefined ? options.lunr : {};
-  const lunrTokenizerSeparator = lunrSettings.tokenizerSeparator;
-
-  if (lunrTokenizerSeparator !== undefined) {
-    // @ts-expect-error
-    lunr.tokenizer.separator = lunrTokenizerSeparator;
-  }
-
-  const style = options.style;
+  // @ts-expect-error
+  lunr.tokenizer.separator = lunrTokenizerSeparator;
 
   if (Array.isArray(language) && language.length === 1) {
     language = language[0];
   }
 
-  if (!blogBasePath.startsWith("/")) {
-    throw new Error(
-      `blogBasePath must start with /, received: '${blogBasePath}'.`
-    );
-  }
-  if (!docsBasePath.startsWith("/")) {
-    throw new Error(
-      `docsBasePath must start with /, received: '${docsBasePath}'.`
-    );
-  }
   blogBasePath = blogBasePath.substr(1);
   docsBasePath = docsBasePath.substr(1);
 
@@ -358,4 +387,11 @@ export const tokenize = (input) => lunr.tokenizer(input)
       logger.info("Index written to disk, success!");
     },
   };
+}
+
+export function validateOptions({
+  options,
+  validate,
+}: OptionValidationContext<MyOptions>) {
+  return validate(optionsSchema, options);
 }

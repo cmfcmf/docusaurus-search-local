@@ -3,6 +3,7 @@
 - FEAT: Fully localized autocomplete (currently in German, English, Italian, Brazilian Portuguese, and Chinese).
 - FEAT: Update autocomplete to 1.2.0
 - FEAT: Support Hindi for search indexing (`hi`)
+- FEAT: Validate plugin options (#46)
 
 # 0.6.2
 
