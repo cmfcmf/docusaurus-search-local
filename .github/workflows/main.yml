@@ -11,7 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 15.x]
+        node-version: [12.x, 14.x, 15.x, 16.x]
+        docusaurus-version:
+          - "v2.0.0-beta.0"
+          - "v2.0.0-beta.1"
+          - "v2.0.0-beta.2"
 
     steps:
     - uses: actions/checkout@v2
@@ -19,12 +23,24 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - uses: actions/cache@v2
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
     - run: yarn install --frozen-lockfile
     - run: yarn lint
-    - run: yarn build:server
+    - run: yarn build:server || true # temporarily here due to https://github.com/facebook/docusaurus/pull/5124
     - run: yarn build:client
 
     - run: yarn --cwd example-docs install
+    - run: yarn --cwd example-docs add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
     - run: yarn --cwd example-docs build
 
     - run: yarn test
