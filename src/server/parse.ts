@@ -42,11 +42,11 @@ const BLOCK_TAGS = [
   "th",
 ];
 
-function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
+function _getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
   if (Array.isArray(el)) {
     let content = "";
     el.forEach((el) => {
-      content += getText($, el);
+      content += _getText($, el);
       if (
         el.type === "tag" &&
         (BLOCK_TAGS.includes(el.name) ||
@@ -60,12 +60,16 @@ function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
   } else if (el.type === "text") {
     return el.data.replace(/\n/g, " ");
   } else if (el.type === "tag") {
-    return getText($, $(el).contents().get());
+    return _getText($, $(el).contents().get());
   } else if (el.type === "style" || el.type === "script") {
     return "";
   } else {
     throw new Error(`This should not be reached (debug: got type ${el.type})`);
   }
+}
+
+function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
+  return _getText($, el).replace(/\s+/g, " ").trim();
 }
 
 export function html2text(
@@ -144,7 +148,7 @@ export function html2text(
             : $(heading);
           $sectionElements = root.nextUntil(`${HEADINGS}, header`);
         }
-        const content = getText($, $sectionElements.get()).trim();
+        const content = getText($, $sectionElements.get());
 
         sections.push({
           title,
@@ -184,7 +188,7 @@ export function html2text(
         {
           title: pageTitle,
           hash: "",
-          content: $main.length ? getText($, $main.get()).trim() : "",
+          content: $main.length ? getText($, $main.get()) : "",
         },
       ],
     };

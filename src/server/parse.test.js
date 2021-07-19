@@ -35,7 +35,7 @@ describe("parser", () => {
         {
           title: "FIRST SUBHEADER",
           content:
-            'FIRST SUBHEADER CONTENT                                         #include <stdio.h>   int main(int argc, char** argv) {   printf("Hello World"); }',
+            'FIRST SUBHEADER CONTENT #include <stdio.h> int main(int argc, char** argv) { printf("Hello World"); }',
           hash: "#first-subheader",
         },
       ],
@@ -81,7 +81,7 @@ describe("parser", () => {
             title: "Blockquotes",
           },
           {
-            content: "note  This is a note",
+            content: "note This is a note",
             hash: "#first-sub-sub-header",
             title: "FIRST SUB SUB HEADER",
           },
