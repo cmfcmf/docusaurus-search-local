@@ -245,7 +245,12 @@ export const tokenize = (input) => lunr.tokenizer(input)
         dirPath: path.resolve(__dirname, "..", "..", "codeTranslations"),
         locale: context.i18n.currentLocale,
       }),
-    async postBuild({ routesPaths = [], outDir, baseUrl }) {
+    async postBuild({
+      routesPaths = [],
+      outDir,
+      baseUrl,
+      siteConfig: { trailingSlash },
+    }) {
       logger.info("Gathering documents");
 
       const data = routesPaths
@@ -279,7 +284,10 @@ export const tokenize = (input) => lunr.tokenizer(input)
           return [];
         })
         .map(({ route, url, type }) => {
-          const file = path.join(outDir, route, "index.html");
+          const file =
+            trailingSlash === false
+              ? path.join(outDir, `${route}.html`)
+              : path.join(outDir, route, "index.html");
           return {
             file,
             url,
