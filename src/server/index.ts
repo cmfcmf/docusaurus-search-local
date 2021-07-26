@@ -58,7 +58,8 @@ const languageSchema = Joi.string().valid(
   "sv",
   "th",
   "tr",
-  "vi"
+  "vi",
+  "zh"
 );
 
 const basePathSchema = Joi.string().pattern(/^\//);
@@ -191,10 +192,20 @@ export default function cmfcmfDocusaurusSearchLocal(
       generated += handleLangCode(language);
     }
   }
-  if (language === "ja" || language === "th") {
+  if (language === "zh") {
+    // nodejieba does not run in the browser, so we need to use a custom tokenizer here.
+    // FIXME: We should look into compiling nodejieba to WebAssembly and use that instead.
+    generated += `\
+export const tokenize = (input) => input.trim().toLowerCase()
+  .split(${(lunrTokenizerSeparator
+    ? lunrTokenizerSeparator
+    : /[\s\-]+/
+  ).toString()})
+  .filter(each => !!each);\n`;
+  } else if (language === "ja" || language === "th") {
     if (lunrTokenizerSeparator) {
       throw new Error(
-        "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th' languages."
+        "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th'"
       );
     }
     generated += `\
