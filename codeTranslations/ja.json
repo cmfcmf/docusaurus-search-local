@@ -1,0 +1,8 @@
+{
+  "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion": "検索...",
+  "cmfcmf/d-s-l.searchBar.placeholderWithVersion": "検索... [{version}]",
+  "cmfcmf/d-s-l.searchBar.noResults": "該当する結果はありません。",
+  "cmfcmf/d-s-l.searchBar.clearButtonTitle": "Clear",
+  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "Cancel",
+  "cmfcmf/d-s-l.searchBar.submitButtonTitle": "Submit"
+}
