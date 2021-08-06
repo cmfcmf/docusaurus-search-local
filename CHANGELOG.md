@@ -1,3 +1,7 @@
+# 0.6.5
+
+- Add additional translations of autocomplete (Spanish, French, Japanese, and Portugese) (#56)
+
 # 0.6.4
 
 - FIX: Re-add support for Chinese (`zh`)
