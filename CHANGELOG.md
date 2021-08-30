@@ -1,6 +1,10 @@
+# 0.6.6
+
+- FEAT: Support Docusaurus v2.0.0-beta5
+
 # 0.6.5
 
-- Add additional translations of autocomplete (Spanish, French, Japanese, and Portugese) (#56)
+- FEAT: Add additional translations of autocomplete (Spanish, French, Japanese, and Portugese) (#56)
 
 # 0.6.4
 
