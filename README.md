@@ -93,7 +93,7 @@ The following options are available (defaults are shown below):
 
   // setting this to "none" will prevent the default CSS to be included. The default CSS
   // comes from autocomplete-theme-classic, which you can read more about here:
-  // https://autocomplete.algolia.com/docs/autocomplete-theme-classic
+  // https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-theme-classic/
   style: undefined,
 
   // lunr.js-specific settings
