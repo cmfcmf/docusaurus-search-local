@@ -13,13 +13,12 @@ jobs:
       matrix:
         node-version: [12.x, 14.x, 15.x, 16.x]
         docusaurus-version:
-          # - "v2.0.0-beta.0"
-          - "v2.0.0-beta.1"
           - "v2.0.0-beta.2"
           - "v2.0.0-beta.3"
           - "v2.0.0-beta.4"
           - "v2.0.0-beta.5"
           - "v2.0.0-beta.6"
+          - "v2.0.0-beta.7"
 
     steps:
     - uses: actions/checkout@v2
