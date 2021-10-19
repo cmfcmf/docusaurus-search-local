@@ -1,0 +1,8 @@
+{
+  "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion": "Cari...",
+  "cmfcmf/d-s-l.searchBar.placeholderWithVersion": "Cari... [{version}]",
+  "cmfcmf/d-s-l.searchBar.noResults": "Hasil tidak ditemukan.",
+  "cmfcmf/d-s-l.searchBar.clearButtonTitle": "Hapus",
+  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "Batal",
+  "cmfcmf/d-s-l.searchBar.submitButtonTitle": "Kirim"
+}
