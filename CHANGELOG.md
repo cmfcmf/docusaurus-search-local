@@ -1,3 +1,7 @@
+# 0.6.7
+
+- FEAT: Add support for Bahasa Indonesia (`id`)
+
 # 0.6.6
 
 - FEAT: Support Docusaurus v2.0.0-beta5

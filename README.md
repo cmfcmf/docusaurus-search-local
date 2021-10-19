@@ -135,7 +135,7 @@ The searchbar placeholder text always reflects the currently detected documentat
 
 This plugin supports documentation using [Docusaurus i18n](https://docusaurus.io/docs/i18n/introduction) out of the box.
 
-However, the text used for the searchbox itself (e.g., the `Search...` placeholder) is currently only translated in German, English, Italian, Portuguese, Brazilian Portuguese, French, Spanish, Japanese, and Chinese.
+However, the text used for the searchbox itself (e.g., the `Search...` placeholder) is currently only translated in German, English, Italian, Portuguese, Brazilian Portuguese, French, Spanish, Japanese, Chinese, and Bahasa Indonesia.
 Please contribute additional translations by creating a new translation file in the [codeTranslations](codeTranslations) subfolder and submitting a PR.
 
 You can also adjust translations by modifiying the translations in `<yourfolder>/i18n/<locale>/code.json` that start with `cmfcmf/d-s-l.`.
