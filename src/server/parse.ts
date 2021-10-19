@@ -64,7 +64,10 @@ function _getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
   } else if (["style", "script", "comment"].includes(el.type)) {
     return "";
   } else {
-    throw new Error(`This should not be reached (debug: got type ${el.type})`);
+    logger.warn(
+      `Received an unknown element while extracting content from HTML files. This should never happen. Please open an issue at https://github.com/cmfcmf/docusaurus-search-local/issues if you see this message (debug: got type ${el.type}).`
+    );
+    return "";
   }
 }
 
