@@ -61,7 +61,7 @@ function _getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
     return el.data.replace(/\n/g, " ");
   } else if (el.type === "tag") {
     return _getText($, $(el).contents().get());
-  } else if (el.type === "style" || el.type === "script") {
+  } else if (el.type === "style" || el.type === "script" || el.type === "comment") {
     return "";
   } else {
     throw new Error(`This should not be reached (debug: got type ${el.type})`);
