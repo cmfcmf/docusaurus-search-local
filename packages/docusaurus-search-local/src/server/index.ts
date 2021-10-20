@@ -35,6 +35,10 @@ type MyOptions = {
   indexDocSidebarParentCategories: number;
   lunr: {
     tokenizerSeparator?: string;
+    k1?: number;
+    b?: number;
+    titleBoost?: number;
+    contentBoost?: number;
   };
   style?: "none";
 };
@@ -89,6 +93,10 @@ const optionsSchema = Joi.object({
 
   lunr: Joi.object({
     tokenizerSeparator: Joi.object().regex(),
+    b: Joi.number().min(0).max(1).default(0.75),
+    k1: Joi.number().min(0).max(5).default(1.2), // TODO not sure 5 is a good max
+    contentBoost: Joi.number().min(0).default(1),
+    titleBoost: Joi.number().min(0).default(5),
   }).default(),
 });
 
@@ -106,8 +114,22 @@ export default function cmfcmfDocusaurusSearchLocal(
     indexDocs,
     indexPages,
     style,
-    lunr: { tokenizerSeparator: lunrTokenizerSeparator },
+    lunr: {
+      tokenizerSeparator: lunrTokenizerSeparator,
+      k1,
+      b,
+      titleBoost,
+      contentBoost,
+    },
   } = options;
+
+  logger.info(`
+--- lunr options ---
+tokenizerSeparator: ${lunrTokenizerSeparator || "default"}
+k1: ${k1}
+b: ${b}
+titleBoost: ${titleBoost}
+contentBoost: ${contentBoost}`);
 
   if (lunrTokenizerSeparator) {
     // @ts-expect-error
@@ -226,6 +248,8 @@ export const tokenize = (input) => lunr.tokenizer(input)
   .map(token => token.str);\n`;
   }
   generated += `export const mylunr = lunr;\n`;
+  generated += `export const titleBoost = ${titleBoost};\n`;
+  generated += `export const contentBoost = ${contentBoost};\n`;
   generated += `export const docsBasePath = ${JSON.stringify(docsBasePath)};\n`;
   generated += `export const blogBasePath = ${JSON.stringify(blogBasePath)};\n`;
   generated += `export const indexDocSidebarParentCategories = ${JSON.stringify(
@@ -322,6 +346,17 @@ export const tokenize = (input) => lunr.tokenizer(input)
               html2text(html, type, url);
             const docVersion = getDocVersion(html);
 
+            // logger.info(
+            //   sections
+            //     .map(
+            //       (section) =>
+            //         `${section.title} "\n \n content:" ${section.content}`
+            //     )
+            //     .join(
+            //       "\n\n=========================================================\n\n"
+            //     )
+            // );
+
             return sections.map((section) => ({
               id: nextDocId++,
               pageTitle,
@@ -351,6 +386,11 @@ export const tokenize = (input) => lunr.tokenizer(input)
         this.ref("id");
         this.field("title");
         this.field("content");
+        logger.info(`Using 'k1' of ${k1}.`);
+        this.k1(k1!); // controls how quickly the boost given by a common word reaches saturation
+        logger.info(`Using 'b' of ${b}.`);
+        this.b(b!); // controls the importance given to the length of a document and its fields.
+
         if (useDocVersioning) {
           this.field("version");
         }
