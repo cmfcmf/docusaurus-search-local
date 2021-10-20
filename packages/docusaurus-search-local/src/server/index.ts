@@ -346,17 +346,6 @@ export const tokenize = (input) => lunr.tokenizer(input)
               html2text(html, type, url);
             const docVersion = getDocVersion(html);
 
-            // logger.info(
-            //   sections
-            //     .map(
-            //       (section) =>
-            //         `${section.title} "\n \n content:" ${section.content}`
-            //     )
-            //     .join(
-            //       "\n\n=========================================================\n\n"
-            //     )
-            // );
-
             return sections.map((section) => ({
               id: nextDocId++,
               pageTitle,
