@@ -26,6 +26,7 @@ function urlMatchesPrefix(url: string, prefix: string) {
 
 type MyOptions = {
   blogRouteBasePath: string;
+  docsPath: string;
   docsRouteBasePath: string;
   indexPages: boolean;
   indexBlog: boolean;
@@ -66,6 +67,7 @@ const basePathSchema = Joi.string().pattern(/^\//);
 
 const optionsSchema = Joi.object({
   indexDocs: Joi.boolean().default(true),
+  docsPath: Joi.string().default("docs"),
   docsRouteBasePath: basePathSchema.default("/docs"),
   indexDocSidebarParentCategories: Joi.number()
     .integer()
@@ -97,6 +99,7 @@ export default function cmfcmfDocusaurusSearchLocal(
   let {
     language,
     blogRouteBasePath: blogBasePath,
+    docsPath,
     docsRouteBasePath: docsBasePath,
     indexDocSidebarParentCategories,
     indexBlog,
@@ -118,7 +121,7 @@ export default function cmfcmfDocusaurusSearchLocal(
   blogBasePath = blogBasePath.substr(1);
   docsBasePath = docsBasePath.substr(1);
 
-  const docsDir = path.resolve(context.siteDir, "docs");
+  const docsDir = path.resolve(context.siteDir, docsPath);
   let docVersions = [];
   let useDocVersioning = false;
   if (!fs.existsSync(docsDir)) {

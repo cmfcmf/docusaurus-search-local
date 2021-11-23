@@ -63,6 +63,11 @@ The following options are available (defaults are shown below):
 {
   // whether to index docs pages
   indexDocs: true,
+
+  // must correspond to the `path` configured for the docs plugin
+  // https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#path
+  docsPath: 'docs',
+
   // must start with "/" and correspond to the routeBasePath configured for the docs plugin
   // use "/" if you use docs-only-mode
   // (see https://docusaurus.io/docs/docs-introduction#docs-only-mode)

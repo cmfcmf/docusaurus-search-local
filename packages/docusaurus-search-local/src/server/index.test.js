@@ -10,6 +10,7 @@ const validate = (schema, options) => {
 
 const DEFAULT_OPTIONS = {
   indexDocs: true,
+  docsPath: "docs",
   docsRouteBasePath: "/docs",
   indexDocSidebarParentCategories: 0,
   indexBlog: true,
@@ -57,6 +58,7 @@ it("validates options correctly", () => {
 
   const options = {
     indexDocs: false,
+    docsPath: "baz",
     docsRouteBasePath: "/foo",
     indexDocSidebarParentCategories: 3,
     indexBlog: false,
