@@ -65,7 +65,7 @@ The following options are available (defaults are shown below):
   indexDocs: true,
   // must start with "/" and correspond to the routeBasePath configured for the docs plugin
   // use "/" if you use docs-only-mode
-  // (see https://v2.docusaurus.io/docs/2.0.0-alpha.70/docs-introduction#docs-only-mode)
+  // (see https://docusaurus.io/docs/docs-introduction#docs-only-mode)
   docsRouteBasePath: '/docs',
 
   // Whether to also index the titles of the parent categories in the sidebar of a doc page.
@@ -81,7 +81,7 @@ The following options are available (defaults are shown below):
   indexBlog: true,
   // must start with "/" and correspond to the routeBasePath configured for the blog plugin
   // use "/" if you use blog-only-mode
-  // (see https://v2.docusaurus.io/docs/2.0.0-alpha.70/blog#blog-only-mode)
+  // (see https://docusaurus.io/docs/blog#blog-only-mode)
   blogRouteBasePath: '/blog',
 
   // whether to index static pages
