@@ -10,15 +10,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [12.x, 14.x, 15.x, 16.x]
+        node-version: [14.x, 15.x, 16.x, 17.x]
         docusaurus-version:
-          - "v2.0.0-beta.2"
-          - "v2.0.0-beta.3"
           - "v2.0.0-beta.4"
           - "v2.0.0-beta.5"
           - "v2.0.0-beta.6"
           - "v2.0.0-beta.7"
+          - "v2.0.0-beta.8"
+          - "v2.0.0-beta.9"
           - "canary"
 
     steps:
@@ -40,7 +41,7 @@ jobs:
 
     - run: yarn install --frozen-lockfile
     - run: yarn lint
-    - run: yarn build:server || true # temporarily here due to https://github.com/facebook/docusaurus/pull/5124
+    - run: yarn build:server
     - run: yarn build:client
 
     - run: yarn --cwd example-docs install
