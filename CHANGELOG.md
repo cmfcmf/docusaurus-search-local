@@ -1,8 +1,9 @@
 # Unreleased
 
-- CLEANUP: Reorganize repository layout, use yarn workspaces
+- FEAT: Add option to specify the path to the docs directory (#78)
 - BREAKING: Now requires Docusaurus v2.0.0-beta4 or later
 - BREAKING: Now requires at least Node.js 14
+- CLEANUP: Reorganize repository layout, use yarn workspaces
 
 # 0.6.7
 
