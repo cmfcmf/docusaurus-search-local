@@ -19,6 +19,7 @@ import {
   tokenize,
   contentBoost,
   titleBoost,
+  parentCategoriesBoost,
 } from "./generatedWrapper";
 import { HighlightSearchResults } from "./HighlightSearchResults";
 
@@ -238,14 +239,12 @@ const SearchBar = () => {
               const terms = tokenize(input);
               const results = index
                 .query((query) => {
-                  // Boost matches in title by 5 by default, configure by defining 'titleBoost' in the 'lunr' field of the options
                   query.term(terms, { fields: ["title"], boost: titleBoost });
                   query.term(terms, {
                     fields: ["title"],
                     boost: titleBoost,
                     wildcard: mylunr.Query.wildcard.TRAILING,
                   });
-                  // Boost matches in content by 1 by default, configure by defining 'contentBoost' in the 'lunr' field of the options
                   query.term(terms, {
                     fields: ["content"],
                     boost: contentBoost,
@@ -259,11 +258,11 @@ const SearchBar = () => {
                   if (indexDocSidebarParentCategories) {
                     query.term(terms, {
                       fields: ["sidebarParentCategories"],
-                      boost: 2,
+                      boost: parentCategoriesBoost,
                     });
                     query.term(terms, {
                       fields: ["sidebarParentCategories"],
-                      boost: 2,
+                      boost: parentCategoriesBoost,
                       wildcard: mylunr.Query.wildcard.TRAILING,
                     });
                   }

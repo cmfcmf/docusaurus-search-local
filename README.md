@@ -42,20 +42,19 @@ Add this plugin to the `plugins` array in `docusaurus.config.js`.
 ```js
 module.exports = {
   // ...
-  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
+  plugins: [
+    require.resolve('@cmfcmf/docusaurus-search-local')
+  ],
 
   // or, if you want to specify options:
 
   // ...
   plugins: [
-    [
-      require.resolve("@cmfcmf/docusaurus-search-local"),
-      {
-        // Options here
-      },
-    ],
+    [require.resolve('@cmfcmf/docusaurus-search-local'), {
+      // Options here
+    }]
   ],
-};
+}
 ```
 
 The following options are available (defaults are shown below):
@@ -123,11 +122,13 @@ The following options are available (defaults are shown below):
     // of words that are not covered by a stop word filter, these words can quickly dominate any
     // similarity calculation. In these cases, this value can be reduced to get more balanced results.
     k1: 1.2,
-    //  https://lunrjs.com/guides/searching.html#boosts
-    //
-    // A boosted term will get a higher relevance score, and appear higher up in the results
+    // By default, we rank pages where the search term appears in the title higher than pages where
+    // the search term appears in just the text. This is done by "boosting" title matches with a
+    // higher value than content matches. The concrete boosting behavior can be controlled by changing
+    // the following settings.
     titleBoost: 5,
     contentBoost: 1,
+    parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
   }
 }
 ```
