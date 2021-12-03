@@ -14,15 +14,10 @@ import {
 } from "@theme/hooks/useDocs";
 import { useDocsPreferredVersion } from "@docusaurus/theme-common";
 import useThemeContext from "@theme/hooks/useThemeContext";
-import {
-  mylunr,
-  indexDocSidebarParentCategories,
-  tokenize,
-  contentBoost,
-  titleBoost,
-  parentCategoriesBoost,
-} from "./generatedWrapper";
+import { mylunr, tokenize } from "./generatedWrapper";
 import { HighlightSearchResults } from "./HighlightSearchResults";
+import { usePluginData } from "@docusaurus/useGlobalData";
+import type { DSLAPluginData } from "../../../types";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 
@@ -73,6 +68,13 @@ const SearchBar = () => {
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
+  const {
+    titleBoost,
+    contentBoost,
+    parentCategoriesBoost,
+    indexDocSidebarParentCategories,
+  } = usePluginData<DSLAPluginData>("@cmfcmf/docusaurus-search-local");
+
   const history = useHistory<{ cmfcmfhighlight?: string[] }>();
 
   const versions = useVersions();

@@ -9,6 +9,7 @@ import {
 } from "@docusaurus/types";
 import lunr from "lunr";
 import { Joi } from "@docusaurus/utils-validation";
+import type { DSLAPluginData } from "../types";
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -243,14 +244,6 @@ export const tokenize = (input) => lunr.tokenizer(input)
   .map(token => token.str);\n`;
   }
   generated += `export const mylunr = lunr;\n`;
-  generated += `export const titleBoost = ${titleBoost};\n`;
-  generated += `export const contentBoost = ${contentBoost};\n`;
-  generated += `export const parentCategoriesBoost = ${parentCategoriesBoost};\n`;
-  generated += `export const docsBasePath = ${JSON.stringify(docsBasePath)};\n`;
-  generated += `export const blogBasePath = ${JSON.stringify(blogBasePath)};\n`;
-  generated += `export const indexDocSidebarParentCategories = ${JSON.stringify(
-    indexDocSidebarParentCategories
-  )};\n`;
 
   ["src", "lib"].forEach((folder) => {
     const generatedPath = path.join(
@@ -279,6 +272,16 @@ export const tokenize = (input) => lunr.tokenizer(input)
         dirPath: path.resolve(__dirname, "..", "..", "codeTranslations"),
         locale: context.i18n.currentLocale,
       }),
+    async contentLoaded({ actions: { setGlobalData } }) {
+      setGlobalData<DSLAPluginData>({
+        docsBasePath,
+        blogBasePath,
+        titleBoost,
+        contentBoost,
+        parentCategoriesBoost,
+        indexDocSidebarParentCategories,
+      });
+    },
     async postBuild({
       routesPaths = [],
       outDir,
