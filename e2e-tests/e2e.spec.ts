@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 async function search(page, text: string) {
-  const searchField = page.locator('.dsla-search-field');
-  const searchButton = searchField.locator('button');
-  searchButton.click();
+  const searchFieldButton = page.locator('.dsla-search-field button');
+  searchFieldButton.click();
 
   await expect(page.locator('.aa-Input')).toBeFocused();
   await page.fill('.aa-Input', text);
