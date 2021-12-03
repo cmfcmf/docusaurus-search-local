@@ -147,7 +147,7 @@ export default function cmfcmfDocusaurusSearchLocal(
       `Skipping search index generation for documentation because directory ${docsDir} does not exist.`
     );
   } else {
-    const versionsPath = path.join(docsDir, "..", "versions.json");
+    const versionsPath = path.join(context.siteDir, "versions.json");
     if (fs.existsSync(versionsPath)) {
       useDocVersioning = true;
       docVersions = [
