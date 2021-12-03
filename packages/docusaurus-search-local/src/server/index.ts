@@ -35,6 +35,11 @@ type MyOptions = {
   indexDocSidebarParentCategories: number;
   lunr: {
     tokenizerSeparator?: string;
+    k1: number;
+    b: number;
+    titleBoost: number;
+    contentBoost: number;
+    parentCategoriesBoost: number;
   };
   style?: "none";
 };
@@ -89,6 +94,11 @@ const optionsSchema = Joi.object({
 
   lunr: Joi.object({
     tokenizerSeparator: Joi.object().regex(),
+    b: Joi.number().min(0).max(1).default(0.75),
+    k1: Joi.number().min(0).default(1.2),
+    titleBoost: Joi.number().min(0).default(5),
+    contentBoost: Joi.number().min(0).default(1),
+    parentCategoriesBoost: Joi.number().min(0).default(2),
   }).default(),
 });
 
@@ -106,7 +116,14 @@ export default function cmfcmfDocusaurusSearchLocal(
     indexDocs,
     indexPages,
     style,
-    lunr: { tokenizerSeparator: lunrTokenizerSeparator },
+    lunr: {
+      tokenizerSeparator: lunrTokenizerSeparator,
+      k1,
+      b,
+      titleBoost,
+      contentBoost,
+      parentCategoriesBoost,
+    },
   } = options;
 
   if (lunrTokenizerSeparator) {
@@ -226,6 +243,9 @@ export const tokenize = (input) => lunr.tokenizer(input)
   .map(token => token.str);\n`;
   }
   generated += `export const mylunr = lunr;\n`;
+  generated += `export const titleBoost = ${titleBoost};\n`;
+  generated += `export const contentBoost = ${contentBoost};\n`;
+  generated += `export const parentCategoriesBoost = ${parentCategoriesBoost};\n`;
   generated += `export const docsBasePath = ${JSON.stringify(docsBasePath)};\n`;
   generated += `export const blogBasePath = ${JSON.stringify(blogBasePath)};\n`;
   generated += `export const indexDocSidebarParentCategories = ${JSON.stringify(
@@ -348,9 +368,14 @@ export const tokenize = (input) => lunr.tokenizer(input)
             this.use(lunr[language]);
           }
         }
+
+        this.k1(k1);
+        this.b(b);
+
         this.ref("id");
         this.field("title");
         this.field("content");
+
         if (useDocVersioning) {
           this.field("version");
         }

@@ -20,6 +20,11 @@ const DEFAULT_OPTIONS = {
   style: undefined,
   lunr: {
     tokenizerSeparator: undefined,
+    b: 0.75,
+    k1: 1.2,
+    titleBoost: 5,
+    contentBoost: 1,
+    parentCategoriesBoost: 2,
   },
 };
 
@@ -71,6 +76,11 @@ it("validates options correctly", () => {
 
     lunr: {
       tokenizerSeparator: /-+/,
+      b: 0.6,
+      k1: 0.2,
+      titleBoost: 10,
+      contentBoost: 1,
+      parentCategoriesBoost: 4,
     },
   };
 
