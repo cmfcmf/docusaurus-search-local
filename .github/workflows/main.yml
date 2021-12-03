@@ -2,9 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [14.x, 15.x, 16.x, 17.x]
+        node-version: [14.x, 16.x, 17.x]
         docusaurus-version:
           - "v2.0.0-beta.4"
           - "v2.0.0-beta.5"
@@ -52,11 +51,10 @@ jobs:
 
     - run: yarn install --frozen-lockfile
     - run: yarn lint
-    - run: yarn build:server
-    - run: yarn build:client
+    - run: yarn --cwd packages/docusaurus-search-local build:server
+    - run: yarn --cwd packages/docusaurus-search-local build:client
 
-    - run: yarn --cwd example-docs install
-    - run: yarn --cwd example-docs add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
-    - run: yarn --cwd example-docs build
+    - run: yarn --cwd packages/example-docs            add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
+    - run: yarn --cwd packages/example-docs            build
 
     - run: yarn test

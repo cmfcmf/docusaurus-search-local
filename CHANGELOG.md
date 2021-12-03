@@ -1,3 +1,9 @@
+# Unreleased
+
+- CLEANUP: Reorganize repository layout, use yarn workspaces
+- BREAKING: Now requires Docusaurus v2.0.0-beta4 or later
+- BREAKING: Now requires at least Node.js 14
+
 # 0.6.7
 
 - FEAT: Add support for Bahasa Indonesia (`id`)

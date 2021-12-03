@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 yarn install
-yarn build:server
-yarn build:client
-yarn --cwd example-docs build
-yarn test
-yarn lint
-yarn publish
+yarn --cwd packages/docusaurus-search-local build:server
+yarn --cwd packages/docusaurus-search-local build:client
+yarn --cwd packages/example-docs            build
+yarn --cwd packages/docusaurus-search-local test
+yarn --cwd packages/docusaurus-search-local lint
+yarn --cwd packages/docusaurus-search-local publish

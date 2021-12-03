@@ -1,0 +1,92 @@
+{
+  "name": "@cmfcmf/docusaurus-search-local",
+  "version": "0.6.7",
+  "description": "Local / Offline Search for Docusaurus",
+  "keywords": [
+    "docusaurus",
+    "search",
+    "plugin",
+    "offline",
+    "local"
+  ],
+  "license": "MIT",
+  "repository": "cmfcmf/docusaurus-search-local",
+  "main": "lib/server/index.js",
+  "files": [
+    "/src",
+    "/codeTranslations",
+    "/lib",
+    "/CHANGELOG.md",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Christian Flach",
+  "dependencies": {
+    "@algolia/autocomplete-js": "^1.2.2",
+    "@algolia/autocomplete-theme-classic": "^1.2.2",
+    "@algolia/client-search": "^4.10.3",
+    "algoliasearch": "^4.10.3",
+    "cheerio": "^1.0.0-rc.9",
+    "clsx": "^1.1.1",
+    "lunr": "^2.3.9",
+    "lunr-languages": "^1.4.0",
+    "mark.js": "^8.11.1"
+  },
+  "peerDependencies": {
+    "@docusaurus/core": "^v2.0.0-beta.4",
+    "nodejieba": "^2.5.0"
+  },
+  "peerDependenciesMeta": {
+    "nodejieba": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
+    "@docusaurus/core": "^2.0.0-beta.9",
+    "@docusaurus/module-type-aliases": "^2.0.0-beta.9",
+    "@docusaurus/theme-classic": "^2.0.0-beta.9",
+    "@types/jest": "^27.0.3",
+    "@types/lodash": "^4.14.177",
+    "@types/lunr": "^2.3.3",
+    "@types/mark.js": "^8.11.5",
+    "@types/prismjs": "^1.16.6",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-helmet": "^6.1.4",
+    "@types/react-loadable": "^5.5.5",
+    "@types/react-router-config": "^5.0.2",
+    "@types/react-router-dom": "^5.3.2",
+    "@types/rtlcss": "^3.1.1",
+    "babel-jest": "^27.4.2",
+    "concurrently": "^6.4.0",
+    "copyfiles": "^2.4.1",
+    "husky": "^6.0.0",
+    "jest": "^27.4.2",
+    "nodejieba": "^2.5.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.5.2"
+  },
+  "scripts": {
+    "build": "concurrently --names client,server --prefix-colors blue,green yarn:build:client yarn:build:server && yarn build:example-docs",
+    "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/client/**/*.css lib",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build:example-docs": "cd ../example-docs && yarn build && yarn serve",
+    "start": "concurrently --names client,server --prefix-colors blue,green yarn:start:client yarn:start:server",
+    "start:client": "concurrently --names tsc,cp yarn:start:client:tsc yarn:start:client:cp",
+    "start:client:tsc": "tsc --project tsconfig.client.json --watch",
+    "start:client:cp": "nodemon --watch src/client --ext css --exec \"copyfiles --up 1 src/client/**/*.css lib && touch lib/client/theme/SearchBar/index.js\" ",
+    "start:server": "tsc --project tsconfig.server.json --watch",
+    "start:example-docs": "cd example-docs && yarn start",
+    "test": "jest"
+  }
+}

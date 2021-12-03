@@ -109,13 +109,13 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+            'https://github.com/facebook/docusaurus/edit/main/website/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
+            'https://github.com/facebook/docusaurus/edit/main/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -124,7 +124,7 @@ module.exports = {
     ],
   ],
   plugins: [
-    [require('path').resolve(__dirname, '..'), {
+    [require.resolve("@cmfcmf/docusaurus-search-local"), {
       // Options
     }],
   ]

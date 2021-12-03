@@ -1,95 +1,22 @@
 {
-  "name": "@cmfcmf/docusaurus-search-local",
-  "version": "0.6.7",
-  "description": "Local / Offline Search for Docusaurus",
-  "keywords": [
-    "docusaurus",
-    "search",
-    "plugin",
-    "offline",
-    "local"
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "license": "MIT",
-  "repository": "cmfcmf/docusaurus-search-local",
-  "main": "lib/server/index.js",
-  "files": [
-    "/src",
-    "/codeTranslations",
-    "/lib",
-    "/CHANGELOG.md",
-    "/LICENSE",
-    "/README.md"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "author": "Christian Flach",
-  "dependencies": {
-    "@algolia/autocomplete-js": "^1.2.2",
-    "@algolia/autocomplete-theme-classic": "^1.2.2",
-    "@algolia/client-search": "^4.10.3",
-    "algoliasearch": "^4.10.3",
-    "cheerio": "^1.0.0-rc.9",
-    "clsx": "^1.1.1",
-    "lunr": "^2.3.9",
-    "lunr-languages": "^1.4.0",
-    "mark.js": "^8.11.1"
-  },
-  "peerDependencies": {
-    "@docusaurus/core": "^v2.0.0-beta.0",
-    "nodejieba": "^2.5.0"
-  },
-  "peerDependenciesMeta": {
-    "nodejieba": {
-      "optional": true
-    }
-  },
   "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.13.16",
-    "@babel/preset-env": "^7.14.1",
-    "@babel/preset-typescript": "^7.14.5",
-    "@docusaurus/core": "^2.0.0-beta.4",
-    "@docusaurus/module-type-aliases": "^2.0.0-beta.4",
-    "@types/jest": "^26.0.22",
-    "@types/lunr": "^2.3.3",
-    "@types/mark.js": "^8.11.5",
-    "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.3",
-    "@types/react-helmet": "^6.1.1",
-    "@types/react-loadable": "^5.5.5",
-    "@types/react-router-config": "^5.0.2",
-    "@types/react-router-dom": "^5.1.7",
-    "babel-jest": "^26.6.3",
-    "concurrently": "^6.1.0",
-    "copyfiles": "^2.4.1",
-    "cypress": "^6.8.0",
+    "cypress": "^6.9.1",
     "husky": "^6.0.0",
-    "jest": "^26.6.3",
-    "lint-staged": "^11.0.0",
-    "nodejieba": "^2.5.0",
-    "nodemon": "^2.0.7",
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.4"
+    "lint-staged": "^11"
   },
   "scripts": {
-    "build": "concurrently --names client,server --prefix-colors blue,green yarn:build:client yarn:build:server && yarn build:example-docs",
-    "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/client/**/*.css lib",
-    "build:server": "tsc --project tsconfig.server.json",
-    "build:example-docs": "cd example-docs && yarn build && yarn serve",
-    "start": "concurrently --names client,server --prefix-colors blue,green yarn:start:client yarn:start:server",
-    "start:client": "concurrently --names tsc,cp yarn:start:client:tsc yarn:start:client:cp",
-    "start:client:tsc": "tsc --project tsconfig.client.json --watch",
-    "start:client:cp": "nodemon --watch src/client --ext css --exec \"copyfiles --up 1 src/client/**/*.css lib && touch lib/client/theme/SearchBar/index.js\" ",
-    "start:server": "tsc --project tsconfig.server.json --watch",
-    "start:example-docs": "cd example-docs && yarn start",
-    "lint": "prettier --check {src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "format": "prettier --write {src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "prettier --check packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "format": "prettier --write packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "test": "jest"
   },
   "lint-staged": {
-    "{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+    "packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
       "prettier --write"
     ]
   },

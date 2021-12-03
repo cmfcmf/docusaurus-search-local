@@ -1,4 +1,4 @@
-# Offline / Local Search for Docusaurus v2.0.0-beta0+
+# Offline / Local Search for Docusaurus v2.0.0-beta4+
 
 ![Version](https://img.shields.io/npm/v/@cmfcmf/docusaurus-search-local?style=flat-square)
 ![License](https://img.shields.io/npm/l/@cmfcmf/docusaurus-search-local?style=flat-square)
@@ -6,7 +6,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/cmfcmf/docusaurus-search-local?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/cmfcmf/docusaurus-search-local?style=flat-square)
 
-Offline / local search for Docusaurus **v2.0.0-beta0+** that works behind your firewall.
+Offline / local search for Docusaurus **v2.0.0-beta4+** that works behind your firewall.
 
 Feature Highlights:
 
