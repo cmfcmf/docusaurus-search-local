@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.17.1",
     "cypress": "^6.9.1",
     "husky": "^6.0.0",
     "lint-staged": "^11"
@@ -13,7 +14,8 @@
     "prepare": "husky install",
     "lint": "prettier --check packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
     "format": "prettier --write packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "test": "jest"
+    "test": "jest packages/docusaurus-search-local",
+    "test:e2e": "playwright test e2e-tests"
   },
   "lint-staged": {
     "packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [

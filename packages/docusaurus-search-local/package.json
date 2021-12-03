@@ -86,7 +86,6 @@
     "start:client:tsc": "tsc --project tsconfig.client.json --watch",
     "start:client:cp": "nodemon --watch src/client --ext css --exec \"copyfiles --up 1 src/client/**/*.css lib && touch lib/client/theme/SearchBar/index.js\" ",
     "start:server": "tsc --project tsconfig.server.json --watch",
-    "start:example-docs": "cd example-docs && yarn start",
-    "test": "jest"
+    "start:example-docs": "cd example-docs && yarn start"
   }
 }

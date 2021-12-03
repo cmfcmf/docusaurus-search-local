@@ -58,3 +58,7 @@ jobs:
     - run: yarn --cwd packages/example-docs            build
 
     - run: yarn test
+
+    - run: yarn --cwd packages/example-docs            serve &
+    - run: yarn playwright install-deps
+    - run: yarn test:e2e
