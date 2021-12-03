@@ -54,11 +54,12 @@ jobs:
     - run: yarn --cwd packages/docusaurus-search-local build:server
     - run: yarn --cwd packages/docusaurus-search-local build:client
 
-    - run: yarn --cwd packages/example-docs            add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
-    - run: yarn --cwd packages/example-docs            build
+    - run: yarn -W add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
 
+    - run: yarn --cwd packages/example-docs            build
     - run: yarn test
 
     - run: yarn --cwd packages/example-docs            serve &
-    - run: yarn playwright install-deps
+    - run: yarn playwright install-deps # OS dependencies
+    - run: yarn playwright install      # Browser
     - run: yarn test:e2e
