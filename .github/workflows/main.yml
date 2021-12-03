@@ -62,4 +62,4 @@ jobs:
     - run: yarn --cwd packages/example-docs            serve &
     - run: yarn playwright install-deps # OS dependencies
     - run: yarn playwright install      # Browser
-    - run: yarn test:e2e
+    - run: yarn test:e2e --browser=all
