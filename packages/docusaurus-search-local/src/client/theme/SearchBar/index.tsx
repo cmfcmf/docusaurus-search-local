@@ -12,6 +12,7 @@ import {
   useLatestVersion,
   useActiveVersion,
 } from "@theme/hooks/useDocs";
+import { useDocsPreferredVersion } from "@docusaurus/theme-common";
 import useThemeContext from "@theme/hooks/useThemeContext";
 import {
   mylunr,
@@ -74,13 +75,14 @@ const SearchBar = () => {
   } = useDocusaurusContext();
   const history = useHistory<{ cmfcmfhighlight?: string[] }>();
 
-  const versions: { name: string; label: string }[] = useVersions();
-  const activeVersion: { name: string; label: string } | undefined =
-    useActiveVersion();
-  const latestVersion: { name: string; label: string } | undefined =
-    useLatestVersion();
+  const versions = useVersions();
+  const activeVersion = useActiveVersion();
+  const latestVersion = useLatestVersion();
+  const { preferredVersion } = useDocsPreferredVersion();
   const versionToSearch =
-    versions.length <= 1 ? undefined : activeVersion ?? latestVersion;
+    versions.length <= 1
+      ? undefined
+      : activeVersion ?? preferredVersion ?? latestVersion;
 
   const index = useRef<
     | null
@@ -105,14 +107,14 @@ const SearchBar = () => {
         translate({
           message: "cmfcmf/d-s-l.searchBar.placeholderWithVersion",
           description:
-            "Placeholder shown in the searchbar if it is empty and no documentation version has been detected",
+            "Placeholder shown in the searchbar if it is empty and a documentation version has been detected (available in the {version} placeholder",
         }),
         { version: versionToSearch.label }
       )
     : translate({
         message: "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion",
         description:
-          "Placeholder shown in the searchbar if it is empty and a documentation version has been detected (available in the {version} placeholder",
+          "Placeholder shown in the searchbar if it is empty and no documentation version has been detected",
       });
 
   const autocompleteRef = useRef<HTMLDivElement>(null);
