@@ -37,6 +37,10 @@
 
     "rootDir": "src",
     "outDir": "lib",
-    "types": ["node", "@docusaurus/module-type-aliases", "@docusaurus/theme-classic"]
+    "types": [
+      "node",
+      "@docusaurus/module-type-aliases",
+      "@docusaurus/theme-classic"
+    ]
   }
 }

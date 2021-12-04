@@ -1,7 +1,5 @@
 {
-  "references": [
-    { "path": "./packages/docusaurus-search-local" }
-  ],
+  "references": [{ "path": "./packages/docusaurus-search-local" }],
   "files": [],
   "include": [],
   "exclude": ["**/node_modules"]

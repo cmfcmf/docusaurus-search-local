@@ -42,19 +42,20 @@ Add this plugin to the `plugins` array in `docusaurus.config.js`.
 ```js
 module.exports = {
   // ...
-  plugins: [
-    require.resolve('@cmfcmf/docusaurus-search-local')
-  ],
+  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
 
   // or, if you want to specify options:
 
   // ...
   plugins: [
-    [require.resolve('@cmfcmf/docusaurus-search-local'), {
-      // Options here
-    }]
+    [
+      require.resolve("@cmfcmf/docusaurus-search-local"),
+      {
+        // Options here
+      },
+    ],
   ],
-}
+};
 ```
 
 The following options are available (defaults are shown below):

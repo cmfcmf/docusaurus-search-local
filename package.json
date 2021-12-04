@@ -18,13 +18,13 @@
     "build": "yarn --cwd packages/docusaurus-search-local build && yarn --cwd packages/example-docs build",
     "build-and-serve": "yarn build && yarn --cwd packages/example-docs serve",
     "prepare": "husky install",
-    "lint": "prettier --check packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "format": "prettier --write packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "lint": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "format": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
     "test": "jest packages/docusaurus-search-local",
     "test:e2e": "playwright test e2e-tests"
   },
   "lint-staged": {
-    "packages/docusaurus-search-local/{src,cypress}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+    "**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
       "prettier --write"
     ]
   },

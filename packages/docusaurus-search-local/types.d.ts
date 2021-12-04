@@ -1,3 +1,3 @@
-declare module '@algolia/autocomplete-theme-classic' {
+declare module "@algolia/autocomplete-theme-classic" {
   // CSS only
 }
