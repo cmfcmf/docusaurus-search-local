@@ -9,13 +9,13 @@ import {
 } from "@docusaurus/types";
 import lunr from "lunr";
 import { Joi } from "@docusaurus/utils-validation";
-import type { DSLAPluginData } from "../types";
+import type { DSLAPluginData, MyDocument } from "../types";
+import { html2text, getDocVersion } from "./parse";
+import logger from "./logger";
+import { DEFAULT_PLUGIN_ID } from "@docusaurus/core/lib/constants";
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
-
-import { html2text, getDocVersion } from "./parse";
-import logger from "./logger";
 
 // FIXME: Duplicated in src/theme/SearchBar/util.js
 function urlMatchesPrefix(url: string, prefix: string) {
@@ -26,14 +26,12 @@ function urlMatchesPrefix(url: string, prefix: string) {
 }
 
 type MyOptions = {
-  blogRouteBasePath: string;
-  docsPath: string;
-  docsRouteBasePath: string;
-  indexPages: boolean;
-  indexBlog: boolean;
   indexDocs: boolean;
-  language: string | string[];
   indexDocSidebarParentCategories: number;
+  indexBlog: boolean;
+  indexPages: boolean;
+  language: string | string[];
+  style?: "none";
   lunr: {
     tokenizerSeparator?: string;
     k1: number;
@@ -42,7 +40,6 @@ type MyOptions = {
     contentBoost: number;
     parentCategoriesBoost: number;
   };
-  style?: "none";
 };
 
 const languageSchema = Joi.string().valid(
@@ -69,12 +66,8 @@ const languageSchema = Joi.string().valid(
   "zh"
 );
 
-const basePathSchema = Joi.string().pattern(/^\//);
-
 const optionsSchema = Joi.object({
   indexDocs: Joi.boolean().default(true),
-  docsPath: Joi.string().default("docs"),
-  docsRouteBasePath: basePathSchema.default("/docs"),
   indexDocSidebarParentCategories: Joi.number()
     .integer()
     .min(0)
@@ -82,7 +75,6 @@ const optionsSchema = Joi.object({
     .default(0),
 
   indexBlog: Joi.boolean().default(true),
-  blogRouteBasePath: basePathSchema.default("/blog"),
 
   indexPages: Joi.boolean().default(false),
 
@@ -108,14 +100,11 @@ export default function cmfcmfDocusaurusSearchLocal(
   options: MyOptions
 ): Plugin<unknown> {
   let {
-    language,
-    blogRouteBasePath: blogBasePath,
-    docsPath,
-    docsRouteBasePath: docsBasePath,
     indexDocSidebarParentCategories,
     indexBlog,
     indexDocs,
     indexPages,
+    language,
     style,
     lunr: {
       tokenizerSeparator: lunrTokenizerSeparator,
@@ -134,36 +123,6 @@ export default function cmfcmfDocusaurusSearchLocal(
 
   if (Array.isArray(language) && language.length === 1) {
     language = language[0];
-  }
-
-  blogBasePath = blogBasePath.substr(1);
-  docsBasePath = docsBasePath.substr(1);
-
-  const docsDir = path.resolve(context.siteDir, docsPath);
-  let docVersions = [];
-  let useDocVersioning = false;
-  if (!fs.existsSync(docsDir)) {
-    logger.info(
-      `Skipping search index generation for documentation because directory ${docsDir} does not exist.`
-    );
-  } else {
-    const versionsPath = path.join(context.siteDir, "versions.json");
-    if (fs.existsSync(versionsPath)) {
-      useDocVersioning = true;
-      docVersions = [
-        ...JSON.parse(fs.readFileSync(versionsPath, "utf-8")),
-        "next",
-      ];
-      logger.info(
-        `The following documentation versions were detected: ${docVersions.join(
-          ", "
-        )}`
-      );
-    } else {
-      logger.info(
-        `The documentation is not versioned (${versionsPath} does not exist).`
-      );
-    }
   }
 
   let generated =
@@ -274,8 +233,6 @@ export const tokenize = (input) => lunr.tokenizer(input)
       }),
     async contentLoaded({ actions: { setGlobalData } }) {
       setGlobalData<DSLAPluginData>({
-        docsBasePath,
-        blogBasePath,
         titleBoost,
         contentBoost,
         parentCategoriesBoost,
@@ -287,11 +244,61 @@ export const tokenize = (input) => lunr.tokenizer(input)
       outDir,
       baseUrl,
       siteConfig: { trailingSlash },
+      plugins,
     }) {
       logger.info("Gathering documents");
 
+      const docsPlugin = plugins.find(
+        (plugin) =>
+          plugin.name === "docusaurus-plugin-content-docs" &&
+          plugin.options.id === DEFAULT_PLUGIN_ID
+      );
+      const blogPlugin = plugins.find(
+        (plugin) =>
+          plugin.name === "docusaurus-plugin-content-blog" &&
+          plugin.options.id === DEFAULT_PLUGIN_ID
+      );
+      const docsBasePath = docsPlugin?.options.routeBasePath as
+        | string
+        | undefined;
+      const blogBasePath = blogPlugin?.options.routeBasePath as
+        | string
+        | undefined;
+
+      if (indexDocs && docsBasePath === undefined) {
+        throw new Error(
+          'The "indexDocs" option is enabled but no docs plugin has been found.'
+        );
+      }
+      if (indexBlog && blogBasePath === undefined) {
+        throw new Error(
+          'The "indexBlog" option is enabled but no blog plugin has been found.'
+        );
+      }
+
+      let useDocVersioning = false;
+      if (indexDocs) {
+        const docVersions = (
+          docsPlugin!.content as {
+            // There are a bunch more properties here.
+            loadedVersions: Array<{ versionName: string }>;
+          }
+        ).loadedVersions;
+        useDocVersioning = docVersions.length > 0;
+        if (useDocVersioning) {
+          logger.info(
+            `The following documentation versions were detected: ${docVersions
+              .map((docVersion) => docVersion.versionName)
+              .join(", ")}`
+          );
+        } else {
+          logger.info(`The documentation is not versioned.`);
+        }
+      }
+
       const data = routesPaths
         .flatMap((url) => {
+          // baseUrl includes the language prefix, thus `route` will be language-agnostic.
           const route = url.substr(baseUrl.length);
           if (!url.startsWith(baseUrl)) {
             throw new Error(
@@ -302,7 +309,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
             // Do not index error page.
             return [];
           }
-          if (indexBlog && urlMatchesPrefix(route, blogBasePath)) {
+          if (indexBlog && urlMatchesPrefix(route, blogBasePath!)) {
             if (
               route === blogBasePath ||
               urlMatchesPrefix(route, `${blogBasePath}/tags`)
@@ -312,7 +319,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
             }
             return { route, url, type: "blog" as const };
           }
-          if (indexDocs && urlMatchesPrefix(route, docsBasePath)) {
+          if (indexDocs && urlMatchesPrefix(route, docsBasePath!)) {
             return { route, url, type: "docs" as const };
           }
           if (indexPages) {
@@ -354,12 +361,13 @@ export const tokenize = (input) => lunr.tokenizer(input)
               sectionContent: section.content,
               docVersion,
               docSidebarParentCategories,
+              type,
             }));
           })
         )
       ).flat();
 
-      logger.info("Building index");
+      logger.info(`Building index (${documents.length} documents)`);
 
       const index = lunr(function () {
         if (language !== "en") {
@@ -420,13 +428,21 @@ export const tokenize = (input) => lunr.tokenizer(input)
         path.join(outDir, "search-index.json"),
         JSON.stringify({
           documents: documents.map(
-            ({ id, pageTitle, sectionTitle, sectionRoute, docVersion }) => ({
+            ({
+              id,
+              pageTitle,
+              sectionTitle,
+              sectionRoute,
+              docVersion,
+              type,
+            }): MyDocument => ({
               id,
               pageTitle,
               sectionTitle,
               sectionRoute,
               // Only include docVersion metadata if versioning is used
               docVersion: useDocVersioning ? docVersion : undefined,
+              type,
             })
           ),
           index,

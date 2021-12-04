@@ -10,11 +10,8 @@ const validate = (schema, options) => {
 
 const DEFAULT_OPTIONS = {
   indexDocs: true,
-  docsPath: "docs",
-  docsRouteBasePath: "/docs",
   indexDocSidebarParentCategories: 0,
   indexBlog: true,
-  blogRouteBasePath: "/blog",
   indexPages: false,
   language: "en",
   style: undefined,
@@ -39,12 +36,6 @@ it("validates options correctly", () => {
 
   expect(validateOptions({ options: {}, validate })).toEqual(DEFAULT_OPTIONS);
 
-  expect(() =>
-    validateOptions({ options: { docsRouteBasePath: "foo" }, validate })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"\\"docsRouteBasePath\\" with value \\"foo\\" fails to match the required pattern: /^\\\\//"`
-  );
-
   expect(
     validateOptions({ options: { language: ["en", "de"] }, validate })
   ).toEqual({
@@ -63,17 +54,11 @@ it("validates options correctly", () => {
 
   const options = {
     indexDocs: false,
-    docsPath: "baz",
-    docsRouteBasePath: "/foo",
     indexDocSidebarParentCategories: 3,
     indexBlog: false,
-    blogRouteBasePath: "/bar",
-
     indexPages: true,
     language: "hi",
-
     style: "none",
-
     lunr: {
       tokenizerSeparator: /-+/,
       b: 0.6,

@@ -3,38 +3,30 @@ import { useEffect, useState } from "react";
 import { useLocation } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { useHistory } from "@docusaurus/router";
-import { usePluginData } from "@docusaurus/useGlobalData";
-import type { DSLAPluginData } from "../../../types";
 
-function isDocsOrBlog(
-  baseUrl: string,
-  docsBasePath: string,
-  blogBasePath: string
-) {
-  return (
-    window.location.pathname.startsWith(`${baseUrl}${docsBasePath}`) ||
-    window.location.pathname.startsWith(`${baseUrl}${blogBasePath}`)
-  );
-}
+export type DSLALocationState = {
+  cmfcmfhighlight?: { terms: string[]; isDocsOrBlog: boolean };
+};
 
 export function HighlightSearchResults() {
-  const location = useLocation<{ cmfcmfhighlight?: string[] }>();
+  const location = useLocation<DSLALocationState>();
   const history = useHistory();
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
-  const { docsBasePath, blogBasePath } = usePluginData<DSLAPluginData>(
-    "@cmfcmf/docusaurus-search-local"
-  );
 
-  const [terms, setTerms] = useState<string[]>([]);
+  const [highlightData, setHighlightData] = useState<
+    NonNullable<DSLALocationState["cmfcmfhighlight"]>
+  >({ terms: [], isDocsOrBlog: false });
 
   useEffect(() => {
-    const termsToHighlight = location.state?.cmfcmfhighlight ?? [];
-    if (termsToHighlight.length === 0) {
+    if (
+      !location.state?.cmfcmfhighlight ||
+      location.state.cmfcmfhighlight.terms.length === 0
+    ) {
       return;
     }
-    setTerms(termsToHighlight);
+    setHighlightData(location.state.cmfcmfhighlight);
 
     const { cmfcmfhighlight, ...state } = location.state;
     history.replace({
@@ -44,12 +36,12 @@ export function HighlightSearchResults() {
   }, [location.state?.cmfcmfhighlight, history, location]);
 
   useEffect(() => {
-    if (terms.length === 0) {
+    if (highlightData.terms.length === 0) {
       return;
     }
 
     // Make sure to also adjust parse.js if you change the top element here.
-    const root = isDocsOrBlog(baseUrl, docsBasePath, blogBasePath)
+    const root = highlightData.isDocsOrBlog
       ? document.getElementsByTagName("article")[0]
       : document.getElementsByTagName("main")[0];
     if (!root) {
@@ -60,9 +52,9 @@ export function HighlightSearchResults() {
     const options = {
       ignoreJoiners: true,
     };
-    mark.mark(terms, options);
+    mark.mark(highlightData.terms, options);
     return () => mark.unmark(options);
-  }, [terms, baseUrl, docsBasePath, blogBasePath]);
+  }, [highlightData, baseUrl]);
 
   return null;
 }

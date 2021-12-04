@@ -15,18 +15,14 @@ import {
 import { useDocsPreferredVersion } from "@docusaurus/theme-common";
 import useThemeContext from "@theme/hooks/useThemeContext";
 import { mylunr, tokenize } from "./generatedWrapper";
-import { HighlightSearchResults } from "./HighlightSearchResults";
+import {
+  DSLALocationState,
+  HighlightSearchResults,
+} from "./HighlightSearchResults";
 import { usePluginData } from "@docusaurus/useGlobalData";
-import type { DSLAPluginData } from "../../../types";
+import type { DSLAPluginData, MyDocument } from "../../../types";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
-
-type MyDocument = {
-  id: number;
-  pageTitle: string;
-  sectionTitle: string;
-  sectionRoute: string;
-};
 
 type MyItem = {
   document: MyDocument;
@@ -75,7 +71,7 @@ const SearchBar = () => {
     indexDocSidebarParentCategories,
   } = usePluginData<DSLAPluginData>("@cmfcmf/docusaurus-search-local");
 
-  const history = useHistory<{ cmfcmfhighlight?: string[] }>();
+  const history = useHistory<DSLALocationState>();
 
   const versions = useVersions();
   const activeVersion = useActiveVersion();
@@ -143,7 +139,13 @@ const SearchBar = () => {
       // Use react-router for navigation
       navigator: {
         navigate({ item, itemUrl }) {
-          history.push(itemUrl, { cmfcmfhighlight: item.terms });
+          history.push(itemUrl, {
+            cmfcmfhighlight: {
+              terms: item.terms,
+              isDocsOrBlog:
+                item.document.type === "docs" || item.document.type === "blog",
+            },
+          });
         },
       },
       // always open a modal window
@@ -193,7 +195,14 @@ const SearchBar = () => {
                     className="aa-ItemLink"
                     onClick={(e) => {
                       e.preventDefault();
-                      history.push(url, { cmfcmfhighlight: item.terms });
+                      history.push(url, {
+                        cmfcmfhighlight: {
+                          terms: item.terms,
+                          isDocsOrBlog:
+                            item.document.type === "docs" ||
+                            item.document.type === "blog",
+                        },
+                      });
                     }}
                   >
                     <div className="aa-ItemContent">

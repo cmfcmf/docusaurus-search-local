@@ -1,8 +1,15 @@
 export type DSLAPluginData = {
-  docsBasePath: string;
-  blogBasePath: string;
+  indexDocSidebarParentCategories: number;
   titleBoost: number;
   contentBoost: number;
   parentCategoriesBoost: number;
-  indexDocSidebarParentCategories: number;
+};
+
+export type MyDocument = {
+  id: number;
+  pageTitle: string;
+  sectionTitle: string;
+  sectionRoute: string;
+  docVersion?: string;
+  type: "docs" | "blog" | "page";
 };
