@@ -86,6 +86,11 @@ const SearchBar = () => {
       ? undefined
       : activeVersion ?? preferredVersion ?? latestVersion;
 
+  const versionToSearchRef = useRef(versionToSearch);
+  useEffect(() => {
+    versionToSearchRef.current = versionToSearch;
+  }, [versionToSearch]);
+
   const index = useRef<
     | null
     | "loading"
@@ -173,7 +178,7 @@ const SearchBar = () => {
               //   return <h1>header</h1>
               // },
               item({ item }) {
-                // if (versionToSearch && document.docVersion !== undefined) {
+                // if (versionToSearchRef.current && document.docVersion !== undefined) {
                 //   result += ` <span class="badge badge--secondary">${escape(
                 //     document.docVersion
                 //   )}</span>`;
@@ -271,7 +276,8 @@ const SearchBar = () => {
                     });
                   }
 
-                  if (versionToSearch) {
+                  const versionToSearch = versionToSearchRef.current;
+                  if (versionToSearch !== undefined) {
                     // We want to search all documents with version = versionToSearch OR version = undefined
                     // (blog posts and static pages have an undefined version)
                     //

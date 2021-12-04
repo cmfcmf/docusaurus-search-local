@@ -24,11 +24,11 @@
       "args": [
         "build"
       ],
-      "cwd": "${workspaceFolder}/example-docs",
+      "cwd": "${workspaceFolder}/packages/example-docs",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
-      "program": "${workspaceFolder}/example-docs/node_modules/.bin/docusaurus"
+      "program": "${workspaceFolder}/packages/example-docs/node_modules/.bin/docusaurus"
     }
   ]
 }
