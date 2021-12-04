@@ -1,4 +1,4 @@
-# Unreleased
+# 0.7.0
 
 - FEAT: Infer `docsPath`, `docsRouteBasePath`, and `blogRouteBasePath` from Docusaurus context
 - FEAT: Make similarity tuning parameters and boosting behavior of title vs content vs parent categories configurable (#67)

@@ -1,6 +1,5 @@
 {
-  "name": "example-docs-2",
-  "version": "0.0.0",
+  "name": "example-docs",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
