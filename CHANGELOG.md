@@ -3,6 +3,7 @@
 - FEAT: Infer `docsPath`, `docsRouteBasePath`, and `blogRouteBasePath` from Docusaurus context
 - FEAT: Make similarity tuning parameters and boosting behavior of title vs content vs parent categories configurable (#67)
 - FEAT: Align documentation version detection with [DocsVersionNavbarItem](https://github.com/facebook/docusaurus/blob/fcaa94695d76ad508ff4dcdc1a2cabbe1a22650e/packages/docusaurus-theme-classic/src/theme/NavbarItem/DocsVersionNavbarItem.tsx)
+- FIX: Correctly exclude tags pages of both docs and blogs, respect `tagsBasePath` if configured
 - BREAKING: Now requires Docusaurus v2.0.0-beta4 or later
 - BREAKING: Now requires at least Node.js 14
 - CLEANUP: Reorganize repository layout, use yarn workspaces

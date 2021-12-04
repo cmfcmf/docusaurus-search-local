@@ -2,11 +2,24 @@ import fs from "fs";
 import path from "path";
 import util from "util";
 import { readDefaultCodeTranslationMessages } from "@docusaurus/utils";
-import {
+import type {
   LoadContext,
+  LoadedPlugin,
   OptionValidationContext,
   Plugin,
 } from "@docusaurus/types";
+import type {
+  LoadedContent as DocsLoadedContent,
+  PluginOptions as DocsOptions,
+} from "@docusaurus/plugin-content-docs/src/types";
+import type {
+  BlogContent as BlogLoadedContent,
+  PluginOptions as BlogOptions,
+} from "@docusaurus/plugin-content-blog/src/types";
+import type {
+  LoadedContent as PagesLoadedContent,
+  PluginOptions as PagesOptions,
+} from "@docusaurus/plugin-content-pages/src/types";
 import lunr from "lunr";
 import { Joi } from "@docusaurus/utils-validation";
 import type { DSLAPluginData, MyDocument } from "../types";
@@ -23,6 +36,13 @@ function urlMatchesPrefix(url: string, prefix: string) {
     throw new Error(`prefix must not end with a /. This is a bug.`);
   }
   return prefix === "" || url === prefix || url.startsWith(`${prefix}/`);
+}
+
+function trimTrailingSlash(path: string | undefined) {
+  if (!path || !path.endsWith("/")) {
+    return path;
+  }
+  return path.slice(0, -1);
 }
 
 type MyOptions = {
@@ -252,38 +272,43 @@ export const tokenize = (input) => lunr.tokenizer(input)
         (plugin) =>
           plugin.name === "docusaurus-plugin-content-docs" &&
           plugin.options.id === DEFAULT_PLUGIN_ID
-      );
+      ) as
+        | (LoadedPlugin<DocsLoadedContent> & { options: DocsOptions })
+        | undefined;
       const blogPlugin = plugins.find(
         (plugin) =>
           plugin.name === "docusaurus-plugin-content-blog" &&
           plugin.options.id === DEFAULT_PLUGIN_ID
-      );
-      const docsBasePath = docsPlugin?.options.routeBasePath as
-        | string
+      ) as
+        | (LoadedPlugin<BlogLoadedContent> & { options: BlogOptions })
         | undefined;
-      const blogBasePath = blogPlugin?.options.routeBasePath as
-        | string
+      const pagesPlugin = plugins.find(
+        (plugin) =>
+          plugin.name === "docusaurus-plugin-content-pages" &&
+          plugin.options.id === DEFAULT_PLUGIN_ID
+      ) as
+        | (LoadedPlugin<PagesLoadedContent> & { options: PagesOptions })
         | undefined;
 
-      if (indexDocs && docsBasePath === undefined) {
+      if (indexDocs && !docsPlugin) {
         throw new Error(
           'The "indexDocs" option is enabled but no docs plugin has been found.'
         );
       }
-      if (indexBlog && blogBasePath === undefined) {
+      if (indexBlog && !blogPlugin) {
         throw new Error(
           'The "indexBlog" option is enabled but no blog plugin has been found.'
+        );
+      }
+      if (indexPages && !pagesPlugin) {
+        throw new Error(
+          'The "indexPages" option is enabled but no pages plugin has been found.'
         );
       }
 
       let useDocVersioning = false;
       if (indexDocs) {
-        const docVersions = (
-          docsPlugin!.content as {
-            // There are a bunch more properties here.
-            loadedVersions: Array<{ versionName: string }>;
-          }
-        ).loadedVersions;
+        const docVersions = docsPlugin!.content.loadedVersions;
         useDocVersioning = docVersions.length > 0;
         if (useDocVersioning) {
           logger.info(
@@ -295,6 +320,14 @@ export const tokenize = (input) => lunr.tokenizer(input)
           logger.info(`The documentation is not versioned.`);
         }
       }
+
+      const docsBasePath = trimTrailingSlash(docsPlugin?.options.routeBasePath);
+      const docsTagsPath = docsPlugin?.options.tagsBasePath;
+      const blogBasePath = trimTrailingSlash(blogPlugin?.options.routeBasePath);
+      const blogTagsPath = blogPlugin?.options.tagsBasePath;
+      const pagesBasePath = trimTrailingSlash(
+        pagesPlugin?.options.routeBasePath
+      );
 
       const data = routesPaths
         .flatMap((url) => {
@@ -312,7 +345,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
           if (indexBlog && urlMatchesPrefix(route, blogBasePath!)) {
             if (
               route === blogBasePath ||
-              urlMatchesPrefix(route, `${blogBasePath}/tags`)
+              urlMatchesPrefix(route, `${blogBasePath}/${blogTagsPath}`)
             ) {
               // Do not index list of blog posts and tags filter pages
               return [];
@@ -320,9 +353,13 @@ export const tokenize = (input) => lunr.tokenizer(input)
             return { route, url, type: "blog" as const };
           }
           if (indexDocs && urlMatchesPrefix(route, docsBasePath!)) {
+            if (urlMatchesPrefix(route, `${docsBasePath}/${docsTagsPath}`)) {
+              // Do not index tags filter pages
+              return [];
+            }
             return { route, url, type: "docs" as const };
           }
-          if (indexPages) {
+          if (indexPages && urlMatchesPrefix(route, pagesBasePath!)) {
             return { route, url, type: "page" as const };
           }
           return [];

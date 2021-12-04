@@ -105,6 +105,7 @@ module.exports = {
     [
       '@docusaurus/preset-classic',
       {
+        debug: true,
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
@@ -125,7 +126,7 @@ module.exports = {
   ],
   plugins: [
     [require("path").join(__dirname, "..", "..", "node_modules", "@cmfcmf", "docusaurus-search-local"), {
-      // Options
+      indexPages: true
     }],
   ]
 };
