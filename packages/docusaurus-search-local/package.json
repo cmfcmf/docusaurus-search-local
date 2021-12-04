@@ -74,15 +74,13 @@
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "build": "concurrently --names client,server --prefix-colors blue,green yarn:build:client yarn:build:server && yarn build:example-docs",
+    "build": "concurrently --names client,server --prefix-colors blue,green yarn:build:client yarn:build:server",
     "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/client/**/*.css lib",
     "build:server": "tsc --project tsconfig.server.json",
-    "build:example-docs": "cd ../example-docs && yarn build && yarn serve",
     "start": "concurrently --names client,server --prefix-colors blue,green yarn:start:client yarn:start:server",
     "start:client": "concurrently --names tsc,cp yarn:start:client:tsc yarn:start:client:cp",
     "start:client:tsc": "tsc --project tsconfig.client.json --watch",
     "start:client:cp": "nodemon --watch src/client --ext css --exec \"copyfiles --up 1 src/client/**/*.css lib && touch lib/client/theme/SearchBar/index.js\" ",
-    "start:server": "tsc --project tsconfig.server.json --watch",
-    "start:example-docs": "cd example-docs && yarn start"
+    "start:server": "tsc --project tsconfig.server.json --watch"
   }
 }

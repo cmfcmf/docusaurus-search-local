@@ -11,9 +11,10 @@ async function search(page, text: string) {
 
 test('basic search works', async ({ page }) => {
   await page.goto('http://localhost:3000/');
-  await search(page, 'document number 3');
+  await search(page, '3');
 
   await expect(page.url()).toBe('http://localhost:3000/docs/doc3');
+  await expect(page.locator('mark[data-markjs="true"]')).toHaveText('3');
 });
 
 test('version matches version in version selector navbar item', async ({ page }) => {
