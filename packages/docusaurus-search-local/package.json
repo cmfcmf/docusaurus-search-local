@@ -77,7 +77,7 @@
   "scripts": {
     "build": "concurrently --names client,server --prefix-colors blue,green yarn:build:client yarn:build:server",
     "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/client/**/*.css lib",
-    "build:server": "tsc --project tsconfig.server.json",
+    "build:server": "tsc --project tsconfig.server.json && copyfiles --up 1 src/lunr.js lib",
     "start": "concurrently --names client,server --prefix-colors blue,green yarn:start:client yarn:start:server",
     "start:client": "concurrently --names tsc,cp yarn:start:client:tsc yarn:start:client:cp",
     "start:client:tsc": "tsc --project tsconfig.client.json --watch",
