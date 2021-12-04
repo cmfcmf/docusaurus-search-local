@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 
 async function search(page, text: string) {
   const searchFieldButton = page.locator(".dsla-search-field button");
@@ -17,13 +17,22 @@ test("basic search works", async ({ page }) => {
   await expect(page.locator('mark[data-markjs="true"]')).toHaveText("3");
 });
 
+async function expectDocVersion(page: Page, version: string) {
+  await expect(
+    page.locator(
+      `.dsla-search-field[data-tags="default,docs-default-${version}"]`
+    )
+  ).toHaveCount(1);
+}
+
 test("version matches version in version selector navbar item", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000/");
   const searchFieldButton = page.locator(".dsla-search-field button");
 
-  await expect(searchFieldButton).toHaveText("Search... [1.0.0]");
+  await expect(searchFieldButton).toHaveText("Search...");
+  await expectDocVersion(page, "1.0.0");
 
   const VERSION_SELECTOR =
     ".navbar__inner > div:nth-child(1) > div:nth-child(3)";
@@ -35,22 +44,22 @@ test("version matches version in version selector navbar item", async ({
   await page.locator(`${VERSION_SELECTOR} > ul > li:nth-child(1) > a`).click();
 
   await expect(currentVersionButton).toHaveText("Next");
-  await expect(searchFieldButton).toHaveText("Search... [Next]");
+  await expectDocVersion(page, "current");
 
   // Go back to the homepage, which does not indicate in its url which version is active
   await page.goto("http://localhost:3000/");
   await expect(currentVersionButton).toHaveText("Next");
-  await expect(searchFieldButton).toHaveText("Search... [Next]");
+  await expectDocVersion(page, "current");
 
   // Reload the page - the active version should be persisted in localstorage
   await page.reload();
   await expect(currentVersionButton).toHaveText("Next");
-  await expect(searchFieldButton).toHaveText("Search... [Next]");
+  await expectDocVersion(page, "current");
 
   // Go to a doc of version 1.0.0, it should change the version back to 1.0.0.
   await page.goto("http://localhost:3000/docs/d-s-l-test");
   await expect(currentVersionButton).toHaveText("1.0.0");
-  await expect(searchFieldButton).toHaveText("Search... [1.0.0]");
+  await expectDocVersion(page, "1.0.0");
 });
 
 test("language-based search index is used", async ({ page }) => {

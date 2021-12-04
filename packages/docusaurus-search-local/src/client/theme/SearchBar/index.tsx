@@ -3,16 +3,18 @@ import { render } from "react-dom";
 import { autocomplete, AutocompleteApi } from "@algolia/autocomplete-js";
 import type lunr from "lunr";
 import Head from "@docusaurus/Head";
-import { interpolate } from "@docusaurus/Interpolate";
 import { translate } from "@docusaurus/Translate";
 import { useHistory } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import {
-  useVersions,
-  useLatestVersion,
-  useActiveVersion,
+  useActivePluginAndVersion,
+  useAllDocsData,
 } from "@theme/hooks/useDocs";
-import { useDocsPreferredVersion } from "@docusaurus/theme-common";
+import {
+  docVersionSearchTag,
+  DEFAULT_SEARCH_TAG,
+  useDocsPreferredVersionByPluginId,
+} from "@docusaurus/theme-common";
 import useThemeContext from "@theme/hooks/useThemeContext";
 import { mylunr, tokenize } from "./generatedWrapper";
 import {
@@ -45,12 +47,14 @@ function fetchIndex(baseUrl: string) {
       .then((content) => content.json())
       .then((json) => ({
         documents: json.documents as MyDocument[],
+        allTags: json.allTags as string[],
         index: mylunr.Index.load(json.index),
       }));
   } else {
     // The index does not exist in development, therefore load a dummy index here.
     return Promise.resolve({
       documents: [],
+      allTags: [DEFAULT_SEARCH_TAG],
       index: mylunr(function () {
         this.ref("id");
         this.field("title");
@@ -58,6 +62,40 @@ function fetchIndex(baseUrl: string) {
       }),
     });
   }
+}
+
+// Copied from Docusaurus, will be available from @docusaurus/theme-common from beta10 onwards.
+// https://github.com/facebook/docusaurus/blob/main/packages/docusaurus-theme-common/src/utils/useContextualSearchFilters.ts
+function useContextualSearchFilters() {
+  const { i18n } = useDocusaurusContext();
+  const allDocsData = useAllDocsData();
+  const activePluginAndVersion = useActivePluginAndVersion();
+  const docsPreferredVersionByPluginId = useDocsPreferredVersionByPluginId();
+
+  function getDocPluginTags(pluginId: string) {
+    const activeVersion =
+      activePluginAndVersion?.activePlugin?.pluginId === pluginId
+        ? activePluginAndVersion.activeVersion
+        : undefined;
+
+    const preferredVersion = docsPreferredVersionByPluginId[pluginId];
+
+    const latestVersion = allDocsData[pluginId].versions.find((v) => v.isLast)!;
+
+    const version = activeVersion ?? preferredVersion ?? latestVersion;
+
+    return docVersionSearchTag(pluginId, version.name);
+  }
+
+  const tags = [
+    DEFAULT_SEARCH_TAG,
+    ...Object.keys(allDocsData).map(getDocPluginTags),
+  ];
+
+  return {
+    locale: i18n.currentLocale,
+    tags,
+  };
 }
 
 const SearchBar = () => {
@@ -73,25 +111,18 @@ const SearchBar = () => {
 
   const history = useHistory<DSLALocationState>();
 
-  const versions = useVersions();
-  const activeVersion = useActiveVersion();
-  const latestVersion = useLatestVersion();
-  const { preferredVersion } = useDocsPreferredVersion();
-  const versionToSearch =
-    versions.length <= 1
-      ? undefined
-      : activeVersion ?? preferredVersion ?? latestVersion;
-
-  const versionToSearchRef = useRef(versionToSearch);
+  const { tags } = useContextualSearchFilters();
+  const tagsRef = useRef(tags);
   useEffect(() => {
-    versionToSearchRef.current = versionToSearch;
-  }, [versionToSearch]);
+    tagsRef.current = tags;
+  }, [tags]);
 
   const index = useRef<
     | null
     | "loading"
     | {
         documents: MyDocument[];
+        allTags: string[];
         index: lunr.Index;
       }
   >(null);
@@ -105,20 +136,10 @@ const SearchBar = () => {
     return (index.current = await fetchIndex(baseUrl));
   };
 
-  const placeholder = versionToSearch
-    ? interpolate(
-        translate({
-          message: "cmfcmf/d-s-l.searchBar.placeholderWithVersion",
-          description:
-            "Placeholder shown in the searchbar if it is empty and a documentation version has been detected (available in the {version} placeholder",
-        }),
-        { version: versionToSearch.label }
-      )
-    : translate({
-        message: "cmfcmf/d-s-l.searchBar.placeholderWithoutVersion",
-        description:
-          "Placeholder shown in the searchbar if it is empty and no documentation version has been detected",
-      });
+  const placeholder = translate({
+    message: "cmfcmf/d-s-l.searchBar.placeholder",
+    description: "Placeholder shown in the searchbar",
+  });
 
   const autocompleteRef = useRef<HTMLDivElement>(null);
   const autocompleteApi = useRef<AutocompleteApi<MyItem> | null>(null);
@@ -258,7 +279,7 @@ const SearchBar = () => {
               return getItemUrl(item);
             },
             async getItems() {
-              const { documents, index } = await getIndex();
+              const { documents, allTags, index } = await getIndex();
               const terms = tokenize(input);
               const results = index
                 .query((query) => {
@@ -290,25 +311,22 @@ const SearchBar = () => {
                     });
                   }
 
-                  const versionToSearch = versionToSearchRef.current;
-                  if (versionToSearch !== undefined) {
-                    // We want to search all documents with version = versionToSearch OR version = undefined
-                    // (blog posts and static pages have an undefined version)
-                    //
-                    // Since lunr.js does not allow OR queries, we instead prohibit all versions
-                    // except versionToSearch and undefined.
-                    //
-                    // https://github.com/cmfcmf/docusaurus-search-local/issues/19
-                    versions.forEach((version) => {
-                      if (version.name !== versionToSearch.name) {
-                        query.term(version.name, {
-                          fields: ["version"],
-                          boost: 0,
-                          presence: mylunr.Query.presence.PROHIBITED,
-                        });
-                      }
-                    });
-                  }
+                  // We want to search all documents with whose tag is included in `searchTags`.
+                  // Since lunr.js does not allow OR queries, we instead prohibit all other tags.
+                  //
+                  // https://github.com/cmfcmf/docusaurus-search-local/issues/19
+                  const searchTags = tagsRef.current;
+                  allTags.forEach((tag) => {
+                    if (!searchTags.includes(tag)) {
+                      query.term(tag, {
+                        fields: ["tag"],
+                        boost: 0,
+                        presence: mylunr.Query.presence.PROHIBITED,
+                        // Disable stemmer for tags.
+                        usePipeline: false,
+                      });
+                    }
+                  });
                 })
                 // We need to remove results with a score of 0 that occur
                 // when the docs are versioned and just the version matches.
@@ -345,15 +363,7 @@ const SearchBar = () => {
     return () => autocompleteApi.current?.destroy();
   }, []);
 
-  useEffect(() => {
-    if (autocompleteApi.current) {
-      autocompleteApi.current.update({
-        placeholder,
-      });
-    }
-  }, [placeholder]);
-
-  const isDarkTheme = useThemeContext().isDarkTheme;
+  const { isDarkTheme } = useThemeContext();
 
   return (
     <>
@@ -366,7 +376,11 @@ const SearchBar = () => {
       </Head>
       <HighlightSearchResults />
       <div className="dsla-search-wrapper">
-        <div className="dsla-search-field" ref={autocompleteRef}></div>
+        <div
+          className="dsla-search-field"
+          ref={autocompleteRef}
+          data-tags={tags.join(",")}
+        />
         {/*<button className="dsla-search-button"></button>*/}
       </div>
     </>

@@ -10,6 +10,5 @@ export type MyDocument = {
   pageTitle: string;
   sectionTitle: string;
   sectionRoute: string;
-  docVersion?: string;
   type: "docs" | "blog" | "page";
 };

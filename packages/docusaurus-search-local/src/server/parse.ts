@@ -201,7 +201,13 @@ export function html2text(
   }
 }
 
-export function getDocVersion(html: string) {
+export function getDocusaurusTag(html: string) {
   const $ = cheerio.load(html);
-  return $('meta[name="docusaurus_version"]').attr("content");
+  const tag = $('meta[name="docusaurus_tag"]').attr("content");
+  if (!tag || tag.length === 0) {
+    throw new Error(
+      "docusaurus_tag meta tag not found. This is a bug and should never happen."
+    );
+  }
+  return tag;
 }

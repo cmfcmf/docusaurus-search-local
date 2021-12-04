@@ -1,3 +1,7 @@
+# 0.8.0
+
+- FEAT: Support multiple docs, blogs, and pages plugins (#33)
+
 # 0.7.0
 
 - FEAT: Infer `docsPath`, `docsRouteBasePath`, and `blogRouteBasePath` from Docusaurus context

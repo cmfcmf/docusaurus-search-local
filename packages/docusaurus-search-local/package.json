@@ -30,7 +30,6 @@
     "algoliasearch": "^4.10.3",
     "cheerio": "^1.0.0-rc.9",
     "clsx": "^1.1.1",
-    "lunr": "^2.3.9",
     "lunr-languages": "^1.4.0",
     "mark.js": "^8.11.1"
   },
