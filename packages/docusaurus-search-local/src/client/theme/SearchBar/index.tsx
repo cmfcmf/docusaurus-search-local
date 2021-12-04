@@ -206,15 +206,17 @@ const SearchBar = () => {
                     }}
                   >
                     <div className="aa-ItemContent">
-                      <div className="aa-ItemContentTitle">
-                        {item.document.sectionTitle}
-                      </div>
-                      {item.document.pageTitle !==
-                        item.document.sectionTitle && (
-                        <div className="aa-ItemContentDescription">
-                          {item.document.pageTitle}
+                      <div className="aa-ItemContentBody">
+                        <div className="aa-ItemContentTitle">
+                          {item.document.sectionTitle}
                         </div>
-                      )}
+                        {item.document.pageTitle !==
+                          item.document.sectionTitle && (
+                          <div className="aa-ItemContentDescription">
+                            {item.document.pageTitle}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="aa-ItemActions">
                       <button
@@ -238,13 +240,16 @@ const SearchBar = () => {
               noResults() {
                 return (
                   <div className="aa-ItemContent">
-                    {SEARCH_INDEX_AVAILABLE
-                      ? translate({
-                          message: "cmfcmf/d-s-l.searchBar.noResults",
-                          description: "message shown if no results are found",
-                        })
-                      : // No need to translate this message, since its only shown in development.
-                        "The search index is only available when you run docusaurus build!"}
+                    <div className="aa-ItemContentBody">
+                      {SEARCH_INDEX_AVAILABLE
+                        ? translate({
+                            message: "cmfcmf/d-s-l.searchBar.noResults",
+                            description:
+                              "message shown if no results are found",
+                          })
+                        : // No need to translate this message, since its only shown in development.
+                          "The search index is only available when you run docusaurus build!"}
+                    </div>
                   </div>
                 );
               },
