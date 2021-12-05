@@ -16,6 +16,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
+    // "noUncheckedIndexedAccess": true,
 
     /* Additional Checks */
     "noUnusedLocals": true,

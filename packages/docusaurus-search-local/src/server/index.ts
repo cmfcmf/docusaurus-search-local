@@ -154,7 +154,7 @@ export default function cmfcmfDocusaurusSearchLocal(
   }
 
   if (Array.isArray(language) && language.length === 1) {
-    language = language[0];
+    language = language[0]!;
   }
 
   let generated =
@@ -455,91 +455,96 @@ export const tokenize = (input) => lunr.tokenizer(input)
         )
       ).flat();
 
-      logger.info(`Building index (${documents.length} documents)`);
+      const documentsByTag = documents.reduce((acc, doc) => {
+        acc[doc.tag] = acc[doc.tag] ?? [];
+        acc[doc.tag]!.push(doc);
+        return acc;
+      }, {} as Record<string, typeof documents>);
 
-      const allTags = new Set();
-
-      const index = lunr(function () {
-        if (language !== "en") {
-          if (Array.isArray(language)) {
-            // @ts-expect-error
-            this.use(lunr.multiLanguage(...language));
-          } else {
-            // @ts-expect-error
-            this.use(lunr[language]);
-          }
-        }
-
-        this.k1(k1);
-        this.b(b);
-
-        this.ref("id");
-        this.field("title");
-        this.field("content");
-        // @ts-expect-error
-        this.field("tag", { isLiteral: true });
-
-        if (indexDocSidebarParentCategories > 0) {
-          this.field("sidebarParentCategories");
-        }
-        const that = this;
-        documents.forEach(function ({
-          id,
-          sectionTitle,
-          sectionContent,
-          tag,
-          docSidebarParentCategories,
-        }) {
-          let sidebarParentCategories;
-          if (
-            indexDocSidebarParentCategories > 0 &&
-            docSidebarParentCategories
-          ) {
-            sidebarParentCategories = docSidebarParentCategories
-              .reverse()
-              .slice(0, indexDocSidebarParentCategories)
-              .join(" ");
-          }
-
-          allTags.add(tag);
-
-          that.add({
-            id: id.toString(), // the ref must be a string
-            title: sectionTitle,
-            content: sectionContent,
-            tag,
-            sidebarParentCategories,
-          });
-        });
-      });
-
-      logger.info("Writing index to disk");
-
-      await writeFileAsync(
-        path.join(outDir, "search-index.json"),
-        JSON.stringify({
-          documents: documents.map(
-            ({
-              id,
-              pageTitle,
-              sectionTitle,
-              sectionRoute,
-              type,
-            }): MyDocument => ({
-              id,
-              pageTitle,
-              sectionTitle,
-              sectionRoute,
-              type,
-            })
-          ),
-          allTags: [...allTags.values()],
-          index,
-        }),
-        { encoding: "utf8" }
+      logger.info(
+        `${Object.keys(documentsByTag).length} indexes will be created.`
       );
 
-      logger.info("Index written to disk, success!");
+      await Promise.all(
+        Object.entries(documentsByTag).map(async ([tag, documents]) => {
+          logger.info(`Building index ${tag} (${documents.length} documents)`);
+
+          const index = lunr(function () {
+            if (language !== "en") {
+              if (Array.isArray(language)) {
+                // @ts-expect-error
+                this.use(lunr.multiLanguage(...language));
+              } else {
+                // @ts-expect-error
+                this.use(lunr[language]);
+              }
+            }
+
+            this.k1(k1);
+            this.b(b);
+
+            this.ref("id");
+            this.field("title");
+            this.field("content");
+
+            if (indexDocSidebarParentCategories > 0) {
+              this.field("sidebarParentCategories");
+            }
+            const that = this;
+            documents.forEach(
+              ({
+                id,
+                sectionTitle,
+                sectionContent,
+                docSidebarParentCategories,
+              }) => {
+                let sidebarParentCategories;
+                if (
+                  indexDocSidebarParentCategories > 0 &&
+                  docSidebarParentCategories
+                ) {
+                  sidebarParentCategories = docSidebarParentCategories
+                    .reverse()
+                    .slice(0, indexDocSidebarParentCategories)
+                    .join(" ");
+                }
+
+                that.add({
+                  id: id.toString(), // the ref must be a string
+                  title: sectionTitle,
+                  content: sectionContent,
+                  sidebarParentCategories,
+                });
+              }
+            );
+          });
+
+          await writeFileAsync(
+            path.join(outDir, `search-index-${tag}.json`),
+            JSON.stringify({
+              documents: documents.map(
+                ({
+                  id,
+                  pageTitle,
+                  sectionTitle,
+                  sectionRoute,
+                  type,
+                }): MyDocument => ({
+                  id,
+                  pageTitle,
+                  sectionTitle,
+                  sectionRoute,
+                  type,
+                })
+              ),
+              index,
+            }),
+            { encoding: "utf8" }
+          );
+
+          logger.info(`Index ${tag} written to disk`);
+        })
+      );
     },
   };
 }

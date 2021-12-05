@@ -21,7 +21,7 @@
     "prepare": "husky install",
     "lint": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
     "format": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "test": "jest packages/docusaurus-search-local",
+    "test": "jest packages/docusaurus-search-local/src",
     "test:e2e": "playwright test e2e-tests"
   },
   "lint-staged": {

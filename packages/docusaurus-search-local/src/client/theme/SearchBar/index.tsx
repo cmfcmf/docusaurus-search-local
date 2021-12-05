@@ -25,6 +25,7 @@ import { usePluginData } from "@docusaurus/useGlobalData";
 import type { DSLAPluginData, MyDocument } from "../../../types";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
+const MAX_SEARCH_RESULTS = 8;
 
 type MyItem = {
   document: MyDocument;
@@ -32,29 +33,27 @@ type MyItem = {
   terms: string[];
 };
 
-function getItemUrl({ document }: MyItem) {
+function getItemUrl({ document }: MyItem): string {
   const [path, hash] = document.sectionRoute.split("#");
-  let url = path;
+  let url = path!;
   if (hash) {
     url += "#" + hash;
   }
   return url;
 }
 
-function fetchIndex(baseUrl: string) {
+function fetchIndex(baseUrl: string, tag: string): Promise<IndexWithDocuments> {
   if (SEARCH_INDEX_AVAILABLE) {
-    return fetch(`${baseUrl}search-index.json`)
+    return fetch(`${baseUrl}search-index-${tag}.json`)
       .then((content) => content.json())
       .then((json) => ({
         documents: json.documents as MyDocument[],
-        allTags: json.allTags as string[],
         index: mylunr.Index.load(json.index),
       }));
   } else {
     // The index does not exist in development, therefore load a dummy index here.
     return Promise.resolve({
       documents: [],
-      allTags: [DEFAULT_SEARCH_TAG],
       index: mylunr(function () {
         this.ref("id");
         this.field("title");
@@ -80,7 +79,9 @@ function useContextualSearchFilters() {
 
     const preferredVersion = docsPreferredVersionByPluginId[pluginId];
 
-    const latestVersion = allDocsData[pluginId].versions.find((v) => v.isLast)!;
+    const latestVersion = allDocsData[pluginId]!.versions.find(
+      (v) => v.isLast
+    )!;
 
     const version = activeVersion ?? preferredVersion ?? latestVersion;
 
@@ -97,6 +98,11 @@ function useContextualSearchFilters() {
     tags,
   };
 }
+
+type IndexWithDocuments = {
+  documents: MyDocument[];
+  index: lunr.Index;
+};
 
 const SearchBar = () => {
   const {
@@ -117,23 +123,41 @@ const SearchBar = () => {
     tagsRef.current = tags;
   }, [tags]);
 
-  const index = useRef<
-    | null
-    | "loading"
-    | {
-        documents: MyDocument[];
-        allTags: string[];
-        index: lunr.Index;
-      }
-  >(null);
+  const indexes = useRef<
+    Record<
+      string,
+      | {
+          state: "loading";
+          callbacks: Array<(index: IndexWithDocuments) => void>;
+        }
+      | ({ state: "ready" } & IndexWithDocuments)
+    >
+  >({});
 
-  const getIndex = async () => {
-    if (index.current !== null && index.current !== "loading") {
-      // Do not load the index (again) if its already loaded or in the process of being loaded.
-      return index.current;
+  const getIndex = async (tag: string): Promise<IndexWithDocuments> => {
+    const index = indexes.current[tag];
+    switch (index?.state) {
+      case "ready":
+        return index;
+      case undefined: {
+        const callbacks: Array<(index: IndexWithDocuments) => void> = [];
+        indexes.current[tag] = {
+          state: "loading",
+          callbacks,
+        };
+        const index = await fetchIndex(baseUrl, tag);
+        callbacks.forEach((cb) => cb(index));
+
+        return (indexes.current[tag] = {
+          state: "ready",
+          ...index,
+        });
+      }
+      case "loading":
+        return new Promise<IndexWithDocuments>((resolve) => {
+          index.callbacks.push(resolve);
+        });
     }
-    index.current = "loading";
-    return (index.current = await fetchIndex(baseUrl));
   };
 
   const placeholder = translate({
@@ -279,81 +303,59 @@ const SearchBar = () => {
               return getItemUrl(item);
             },
             async getItems() {
-              const { documents, allTags, index } = await getIndex();
+              const tags = tagsRef.current;
+              const indexes = await Promise.all(
+                tags.map((tag) => getIndex(tag))
+              );
+
               const terms = tokenize(input);
-              const results = index
-                .query((query) => {
-                  query.term(terms, { fields: ["title"], boost: titleBoost });
-                  query.term(terms, {
-                    fields: ["title"],
-                    boost: titleBoost,
-                    wildcard: mylunr.Query.wildcard.TRAILING,
-                  });
-                  query.term(terms, {
-                    fields: ["content"],
-                    boost: contentBoost,
-                  });
-                  query.term(terms, {
-                    fields: ["content"],
-                    boost: contentBoost,
-                    wildcard: mylunr.Query.wildcard.TRAILING,
-                  });
 
-                  if (indexDocSidebarParentCategories) {
-                    query.term(terms, {
-                      fields: ["sidebarParentCategories"],
-                      boost: parentCategoriesBoost,
-                    });
-                    query.term(terms, {
-                      fields: ["sidebarParentCategories"],
-                      boost: parentCategoriesBoost,
-                      wildcard: mylunr.Query.wildcard.TRAILING,
-                    });
-                  }
-
-                  // We want to search all documents with whose tag is included in `searchTags`.
-                  // Since lunr.js does not allow OR queries, we instead prohibit all other tags.
-                  //
-                  // https://github.com/cmfcmf/docusaurus-search-local/issues/19
-                  const searchTags = tagsRef.current;
-                  allTags.forEach((tag) => {
-                    if (!searchTags.includes(tag)) {
-                      query.term(tag, {
-                        fields: ["tag"],
-                        boost: 0,
-                        presence: mylunr.Query.presence.PROHIBITED,
-                        // Disable stemmer for tags.
-                        usePipeline: false,
+              return indexes
+                .flatMap(({ index, documents }) =>
+                  index
+                    .query((query) => {
+                      query.term(terms, {
+                        fields: ["title"],
+                        boost: titleBoost,
                       });
-                    }
-                  });
-                })
-                // We need to remove results with a score of 0 that occur
-                // when the docs are versioned and just the version matches.
-                .filter((result) => result.score > 0)
-                .slice(0, 8)
-                .map((result) => ({
-                  document: documents.find(
-                    (document) => document.id.toString() === result.ref
-                  )!,
-                  score: result.score,
-                  terms,
-                }));
+                      query.term(terms, {
+                        fields: ["title"],
+                        boost: titleBoost,
+                        wildcard: mylunr.Query.wildcard.TRAILING,
+                      });
+                      query.term(terms, {
+                        fields: ["content"],
+                        boost: contentBoost,
+                      });
+                      query.term(terms, {
+                        fields: ["content"],
+                        boost: contentBoost,
+                        wildcard: mylunr.Query.wildcard.TRAILING,
+                      });
 
-              // if (!SEARCH_INDEX_AVAILABLE) {
-              //   results.push({
-              //     score: 0.5,
-              //     document: {
-              //       id: 1,
-              //       pageTitle: "BLOG POST TITLE",
-              //       sectionTitle: "BLOG POST TITLE",
-              //       sectionRoute: "/blog/d-s-l-test",
-              //     },
-              //     terms: ["a", "b"],
-              //   });
-              // }
-
-              return results;
+                      if (indexDocSidebarParentCategories) {
+                        query.term(terms, {
+                          fields: ["sidebarParentCategories"],
+                          boost: parentCategoriesBoost,
+                        });
+                        query.term(terms, {
+                          fields: ["sidebarParentCategories"],
+                          boost: parentCategoriesBoost,
+                          wildcard: mylunr.Query.wildcard.TRAILING,
+                        });
+                      }
+                    })
+                    .slice(0, MAX_SEARCH_RESULTS)
+                    .map((result) => ({
+                      document: documents.find(
+                        (document) => document.id.toString() === result.ref
+                      )!,
+                      score: result.score,
+                      terms,
+                    }))
+                )
+                .sort((a, b) => b.score - a.score)
+                .slice(0, MAX_SEARCH_RESULTS);
             },
           },
         ];
