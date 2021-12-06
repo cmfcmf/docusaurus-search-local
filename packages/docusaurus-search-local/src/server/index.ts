@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import util from "util";
-import { readDefaultCodeTranslationMessages } from "@docusaurus/utils";
 import type {
   LoadContext,
   LoadedPlugin,
@@ -55,6 +54,26 @@ function trimTrailingSlash(path: string) {
     return path;
   }
   return path.slice(0, -1);
+}
+
+// Copied from Docusaurus, licensed under the MIT License.
+// https://github.com/facebook/docusaurus/blob/63bd6b9025be282b50adbc65176598c96fd4f7e9/packages/docusaurus-theme-translations/src/index.ts#L20-L36
+function codeTranslationLocalesToTry(locale: string): string[] {
+  const intlLocale = Intl.Locale ? new Intl.Locale(locale) : undefined;
+  if (!intlLocale) {
+    return [locale];
+  }
+  // if locale is just a simple language like "pt", we want to fallback to pt-BR (not pt-PT!)
+  // see https://github.com/facebook/docusaurus/pull/4536#issuecomment-810088783
+  if (intlLocale.language === locale) {
+    const maximizedLocale = intlLocale.maximize(); // pt-Latn-BR`
+    // ["pt","pt-BR"]
+    return [locale, `${maximizedLocale.language}-${maximizedLocale.region}`];
+  }
+  // if locale is like "pt-BR", we want to fallback to "pt"
+  else {
+    return [locale, intlLocale.language!];
+  }
 }
 
 type MyOptions = {
@@ -258,11 +277,27 @@ export const tokenize = (input) => lunr.tokenizer(input)
     getTypeScriptThemePath() {
       return path.resolve(__dirname, "..", "..", "src", "client", "theme");
     },
-    getDefaultCodeTranslationMessages: () =>
-      readDefaultCodeTranslationMessages({
-        dirPath: path.resolve(__dirname, "..", "..", "codeTranslations"),
-        locale: context.i18n.currentLocale,
-      }),
+    getDefaultCodeTranslationMessages: async () => {
+      const translationsDir = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "codeTranslations"
+      );
+      const localesToTry = codeTranslationLocalesToTry(
+        context.i18n.currentLocale
+      );
+      for (const locale of localesToTry) {
+        const translationPath = path.join(translationsDir, `${locale}.json`);
+        if (fs.existsSync(translationPath)) {
+          return JSON.parse(
+            await fs.promises.readFile(translationPath, "utf8")
+          );
+        }
+      }
+
+      return {};
+    },
     async contentLoaded({ actions: { setGlobalData } }) {
       setGlobalData<DSLAPluginData>({
         titleBoost,

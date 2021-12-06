@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, createElement, Fragment } from "react";
+import React, {
+  useRef,
+  useEffect,
+  createElement,
+  Fragment,
+  useState,
+} from "react";
 import { render } from "react-dom";
 import { autocomplete, AutocompleteApi } from "@algolia/autocomplete-js";
 import type lunr from "lunr";
@@ -15,7 +21,6 @@ import {
   DEFAULT_SEARCH_TAG,
   useDocsPreferredVersionByPluginId,
 } from "@docusaurus/theme-common";
-import useThemeContext from "@theme/hooks/useThemeContext";
 import { mylunr, tokenize } from "./generatedWrapper";
 import {
   DSLALocationState,
@@ -23,6 +28,7 @@ import {
 } from "./HighlightSearchResults";
 import { usePluginData } from "@docusaurus/useGlobalData";
 import type { DSLAPluginData, MyDocument } from "../../../types";
+import useIsBrowser from "@docusaurus/useIsBrowser";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 const MAX_SEARCH_RESULTS = 8;
@@ -105,6 +111,28 @@ type IndexWithDocuments = {
 };
 
 const SearchBar = () => {
+  // A bit of a hack that makes sure data-theme is not only set on <html>, but also on <body>.
+  // We would like to useThemeContext, but that is specific to docusaurus-theme-classic.
+  const isBrowser = useIsBrowser();
+  const [isDarkTheme, setIsDarkTheme] = useState(() =>
+    isBrowser
+      ? document.documentElement.getAttribute("data-theme") === "dark"
+      : false
+  );
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkTheme(
+        document.documentElement.getAttribute("data-theme") === "dark"
+      );
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
@@ -365,14 +393,12 @@ const SearchBar = () => {
     return () => autocompleteApi.current?.destroy();
   }, []);
 
-  const { isDarkTheme } = useThemeContext();
-
   return (
     <>
       <Head>
         {/*
           Needed by the autocomplete for dark mode support
-          https://autocomplete.algolia.com/docs/autocomplete-theme-classic#dark-mode
+          https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-theme-classic/#dark-mode
         */}
         <body data-theme={isDarkTheme ? "dark" : "light"} />
       </Head>

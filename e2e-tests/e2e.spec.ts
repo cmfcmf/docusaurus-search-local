@@ -77,3 +77,22 @@ test("language-based search index is used", async ({ page }) => {
     "http://localhost:3000/de/docs/next/translated"
   );
 });
+
+test("dark mode is copied from <html> to <body> correctly", async ({
+  page,
+}) => {
+  async function check(theme: string) {
+    await expect(await page.locator("html").getAttribute("data-theme")).toBe(
+      theme
+    );
+    await expect(await page.locator("body").getAttribute("data-theme")).toBe(
+      theme
+    );
+  }
+  await page.goto("http://localhost:3000/");
+  await check("light");
+  await page.locator("text=🌞").click();
+  await check("dark");
+  await page.locator("text=🌜").click();
+  await check("light");
+});
