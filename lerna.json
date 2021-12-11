@@ -2,7 +2,10 @@
   "packages": ["packages/*"],
   "command": {
     "version": {
-      "allowBranch": "main"
+      "allowBranch": "main",
+      "conventionalCommits": true,
+      "createRelease": "github",
+      "noPrivate": true
     }
   },
   "npmClient": "yarn",
