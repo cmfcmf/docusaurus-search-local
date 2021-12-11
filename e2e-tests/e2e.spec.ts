@@ -82,12 +82,8 @@ test("dark mode is copied from <html> to <body> correctly", async ({
   page,
 }) => {
   async function check(theme: string) {
-    await expect(await page.locator("html").getAttribute("data-theme")).toBe(
-      theme
-    );
-    await expect(await page.locator("body").getAttribute("data-theme")).toBe(
-      theme
-    );
+    await page.locator(`html[data-theme=${theme}]`);
+    await page.locator(`body[data-theme=${theme}]`);
   }
   await page.goto("http://localhost:3000/");
   await check("light");
