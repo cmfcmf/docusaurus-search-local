@@ -1,0 +1,66 @@
+name: Bug Report
+description: Create a bug report to help improve this plugin
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    attributes:
+      label: Please describe the bug you are seeing
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How can we best reproduce the bug?
+      description: |
+        If this bug report is about a failure that occurs while building your documentation, please find out
+        which document breaks the build process by building your documentation with debug
+        information enabled as described in the README (`DEBUG=1 yarn build`). If you can,
+        provide the document that breaks the build process as indicated by the debug messages.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Which version of Docusaurus and @cmfcmf/docusaurus-search-local are you using?
+      description: |
+        Paste the output of the following commands:
+        - when using `yarn`: `yarn list --pattern '@docusaurus|@cmfcmf' --depth=0`
+        - when using `npm`: `npm list '@docusaurus/core' '@cmfcmf/docusaurus-search-local'`
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: Which Node.js version are you using?
+      description: Run `node -v` to find out.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        :100: Almost done! We only need to some more details on your Docusaurus configuration.
+  - type: dropdown
+    attributes:
+      label: Which theme are you using?
+      description: Are you using the default/classic Docusaurus theme (`@docusaurus/theme-classic`) or a custom theme?
+      options:
+        - Yes, I am using @docusaurus/theme-classic
+        - No, I am using a custom theme
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How does your plugin config look like?
+      description: Paste the plugin config of the `@cmfcmf/docusaurus-search-local` plugin from your `docusaurus.config.js` file
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Anything else we should know?
+    validations:
+      required: false
