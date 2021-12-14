@@ -49,6 +49,10 @@ jobs:
     - run: yarn test
 
     - run: yarn --cwd packages/example-docs            serve &
-    - run: yarn playwright install-deps # OS dependencies
-    - run: yarn playwright install      # Browsers
+
+    # Install OS dependencies
+    # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
+    - run: sudo apt update && yarn playwright install-deps
+    # Install Browsers
+    - run: yarn playwright install
     - run: yarn test:e2e --browser=all
