@@ -354,7 +354,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
       const data = routesPaths
         .flatMap((url) => {
           // baseUrl includes the language prefix, thus `route` will be language-agnostic.
-          const route = url.substr(baseUrl.length);
+          const route = url.substring(baseUrl.length);
           if (!url.startsWith(baseUrl)) {
             throw new Error(
               `The route must start with the baseUrl ${baseUrl}, but was ${route}. This is a bug, please report it.`
@@ -453,7 +453,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
         .map(({ route, url, type }) => {
           const file =
             trailingSlash === false
-              ? path.join(outDir, `${route}.html`)
+              ? path.join(outDir, `${route === "" ? "index" : route}.html`)
               : path.join(outDir, route, "index.html");
           return {
             file,

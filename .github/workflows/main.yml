@@ -45,14 +45,18 @@ jobs:
     - run: yarn --cwd packages/docusaurus-search-local build:server
     - run: yarn --cwd packages/docusaurus-search-local build:client
 
-    - run: yarn --cwd packages/example-docs            build
-    - run: yarn test
-
-    - run: yarn --cwd packages/example-docs            serve &
-
     # Install OS dependencies
     # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
     - run: sudo apt update && yarn playwright install-deps
     # Install Browsers
     - run: yarn playwright install
+
+    - run: yarn --cwd packages/example-docs build
+    - run: yarn test
+    - run: yarn --cwd packages/example-docs serve &
     - run: yarn test:e2e --browser=all
+
+    # TODO: Cannot run browser tests for these for now.
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlash.js
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.subDirectory.js
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlashSubdirectory.js
