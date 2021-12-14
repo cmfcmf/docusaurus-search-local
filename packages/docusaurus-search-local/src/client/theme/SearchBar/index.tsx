@@ -48,24 +48,39 @@ function getItemUrl({ document }: MyItem): string {
   return url;
 }
 
-function fetchIndex(baseUrl: string, tag: string): Promise<IndexWithDocuments> {
+const EMPTY_INDEX = {
+  documents: [],
+  index: mylunr(function () {
+    this.ref("id");
+    this.field("title");
+    this.field("content");
+  }),
+};
+
+async function fetchIndex(
+  baseUrl: string,
+  tag: string
+): Promise<IndexWithDocuments> {
   if (SEARCH_INDEX_AVAILABLE) {
-    return fetch(`${baseUrl}search-index-${tag}.json`)
-      .then((content) => content.json())
-      .then((json) => ({
-        documents: json.documents as MyDocument[],
-        index: mylunr.Index.load(json.index),
-      }));
+    let json;
+    try {
+      const response = await fetch(`${baseUrl}search-index-${tag}.json`);
+      json = await response.json();
+    } catch (err) {
+      // An index might not actually exist if no pages for it have been indexed.
+      // https://github.com/cmfcmf/docusaurus-search-local/issues/85
+      // TODO: we should somehow pass the names of indexes that exist to the
+      // client at build time instead of catching the error here.
+      return EMPTY_INDEX;
+    }
+
+    return {
+      documents: json.documents as MyDocument[],
+      index: mylunr.Index.load(json.index),
+    };
   } else {
     // The index does not exist in development, therefore load a dummy index here.
-    return Promise.resolve({
-      documents: [],
-      index: mylunr(function () {
-        this.ref("id");
-        this.field("title");
-        this.field("content");
-      }),
-    });
+    return Promise.resolve(EMPTY_INDEX);
   }
 }
 
