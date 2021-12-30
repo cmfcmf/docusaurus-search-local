@@ -90,6 +90,7 @@ type MyOptions = {
     titleBoost: number;
     contentBoost: number;
     parentCategoriesBoost: number;
+    ignore: string[];
   };
 };
 
@@ -143,6 +144,7 @@ const optionsSchema = Joi.object({
     titleBoost: Joi.number().min(0).default(5),
     contentBoost: Joi.number().min(0).default(1),
     parentCategoriesBoost: Joi.number().min(0).default(2),
+    ignore: Joi.array().items(Joi.string()),
   }).default(),
 });
 
@@ -164,6 +166,7 @@ export default function cmfcmfDocusaurusSearchLocal(
       titleBoost,
       contentBoost,
       parentCategoriesBoost,
+      ignore,
     },
   } = options;
 
@@ -359,6 +362,10 @@ export const tokenize = (input) => lunr.tokenizer(input)
             throw new Error(
               `The route must start with the baseUrl ${baseUrl}, but was ${route}. This is a bug, please report it.`
             );
+          }
+          if (ignore?.includes(url)) {
+            // Do not index ignored page.
+            return [];
           }
           if (route === "404.html") {
             // Do not index error page.

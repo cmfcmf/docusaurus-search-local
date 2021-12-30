@@ -66,6 +66,7 @@ it("validates options correctly", () => {
       titleBoost: 10,
       contentBoost: 1,
       parentCategoriesBoost: 4,
+      ignore: ["/changelog"],
     },
   };
 

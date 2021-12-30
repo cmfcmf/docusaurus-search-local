@@ -117,6 +117,8 @@ The following options are available (defaults are shown below):
     titleBoost: 5,
     contentBoost: 1,
     parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
+    // Add urls to be excluded from the search index
+    ignore: ['/docs/reference/changelog']
   }
 }
 ```
