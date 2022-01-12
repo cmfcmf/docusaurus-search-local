@@ -335,7 +335,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
         "docusaurus-plugin-content-pages"
       );
 
-      if (indexDocs && pagesPlugins.size === 0) {
+      if (indexDocs && docsPlugins.size === 0) {
         throw new Error(
           'The "indexDocs" option is enabled but no docs plugin has been found.'
         );
