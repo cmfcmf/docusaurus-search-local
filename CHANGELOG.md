@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.3](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.2...v0.9.3) (2022-01-13)
+
+### Bug Fixes
+
+- wrong variable when checking available documentation plugins ([8b04bbf](https://github.com/cmfcmf/docusaurus-search-local/commit/8b04bbfa277b1a7afd4aeecae48e52f68f4d4f77))
+
 ## [0.9.2](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.1...v0.9.2) (2021-12-14)
 
 ### Bug Fixes
