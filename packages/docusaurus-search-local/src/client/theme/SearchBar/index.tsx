@@ -65,6 +65,8 @@ async function fetchIndex(
     let json;
     try {
       const response = await fetch(`${baseUrl}search-index-${tag}.json`);
+      if (!response.ok)
+        return EMPTY_INDEX;
       json = await response.json();
     } catch (err) {
       // An index might not actually exist if no pages for it have been indexed.
