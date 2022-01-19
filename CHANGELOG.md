@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.4](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.3...v0.9.4) (2022-01-19)
+
+### Bug Fixes
+
+- Return EMPTY_INDEX when server responds with error. ([#91](https://github.com/cmfcmf/docusaurus-search-local/issues/91)) ([1a4d89c](https://github.com/cmfcmf/docusaurus-search-local/commit/1a4d89c77ff7bb029386de50d2a1b1e5dc7e95b3))
+
 ## [0.9.3](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.2...v0.9.3) (2022-01-13)
 
 ### Bug Fixes
