@@ -97,7 +97,7 @@ The following options are available (defaults are shown below):
     // By default, it splits the text at whitespace and dashes.
     //
     // Note: Does not work for "ja" and "th" languages, since these use a different tokenizer.
-    tokenizerSeparator: /[\s\-]+/
+    tokenizerSeparator: /[\s\-]+/,
     // https://lunrjs.com/guides/customising.html#similarity-tuning
     //
     // This parameter controls the importance given to the length of a document and its fields. This
