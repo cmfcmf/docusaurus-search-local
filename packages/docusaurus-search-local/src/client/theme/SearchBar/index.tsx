@@ -12,15 +12,6 @@ import Head from "@docusaurus/Head";
 import { translate } from "@docusaurus/Translate";
 import { useHistory } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import {
-  useActivePluginAndVersion,
-  useAllDocsData,
-} from "@theme/hooks/useDocs";
-import {
-  docVersionSearchTag,
-  DEFAULT_SEARCH_TAG,
-  useDocsPreferredVersionByPluginId,
-} from "@docusaurus/theme-common";
 import { mylunr, tokenize } from "./generatedWrapper";
 import {
   DSLALocationState,
@@ -29,6 +20,7 @@ import {
 import { usePluginData } from "@docusaurus/useGlobalData";
 import type { DSLAPluginData, MyDocument } from "../../../types";
 import useIsBrowser from "@docusaurus/useIsBrowser";
+import { useContextualSearchFilters } from "@docusaurus/theme-common";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
 const MAX_SEARCH_RESULTS = 8;
@@ -83,42 +75,6 @@ async function fetchIndex(
     // The index does not exist in development, therefore load a dummy index here.
     return Promise.resolve(EMPTY_INDEX);
   }
-}
-
-// Copied from Docusaurus, will be available from @docusaurus/theme-common from beta10 onwards.
-// https://github.com/facebook/docusaurus/blob/main/packages/docusaurus-theme-common/src/utils/useContextualSearchFilters.ts
-function useContextualSearchFilters() {
-  const { i18n } = useDocusaurusContext();
-  const allDocsData = useAllDocsData();
-  const activePluginAndVersion = useActivePluginAndVersion();
-  const docsPreferredVersionByPluginId = useDocsPreferredVersionByPluginId();
-
-  function getDocPluginTags(pluginId: string) {
-    const activeVersion =
-      activePluginAndVersion?.activePlugin?.pluginId === pluginId
-        ? activePluginAndVersion.activeVersion
-        : undefined;
-
-    const preferredVersion = docsPreferredVersionByPluginId[pluginId];
-
-    const latestVersion = allDocsData[pluginId]!.versions.find(
-      (v) => v.isLast
-    )!;
-
-    const version = activeVersion ?? preferredVersion ?? latestVersion;
-
-    return docVersionSearchTag(pluginId, version.name);
-  }
-
-  const tags = [
-    DEFAULT_SEARCH_TAG,
-    ...Object.keys(allDocsData).map(getDocPluginTags),
-  ];
-
-  return {
-    locale: i18n.currentLocale,
-    tags,
-  };
 }
 
 type IndexWithDocuments = {

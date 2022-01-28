@@ -13,11 +13,7 @@ jobs:
       matrix:
         node-version: [14.x, 16.x, 17.x]
         docusaurus-version:
-          - "v2.0.0-beta.9"
-          - "v2.0.0-beta.10"
-          - "v2.0.0-beta.11"
-          - "v2.0.0-beta.13"
-          - "v2.0.0-beta.14"
+          - "v2.0.0-beta.15"
           - "canary"
 
     steps:

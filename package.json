@@ -5,8 +5,8 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@docusaurus/core": "^2.0.0-beta.13",
-    "@docusaurus/preset-classic": "^2.0.0-beta.13",
+    "@docusaurus/core": "^2.0.0-beta.15",
+    "@docusaurus/preset-classic": "^2.0.0-beta.15",
     "@playwright/test": "^1.17.1",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
