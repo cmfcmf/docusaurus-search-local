@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.4...v0.10.0) (2022-01-28)
+
+
+### Features
+
+* support Docusaurus v2.0.0-beta.15, fixes [#93](https://github.com/cmfcmf/docusaurus-search-local/issues/93) ([30a6c66](https://github.com/cmfcmf/docusaurus-search-local/commit/30a6c66e974df0536a51399bd18ba5458d1c62a8))
+
+
+### BREAKING CHANGES
+
+* the minimum supported Docusaurus version is now v2.0.0-beta15.
+
+
+
+
+
 ## [0.9.4](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.3...v0.9.4) (2022-01-19)
 
 **Note:** Version bump only for package example-docs
