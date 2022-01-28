@@ -162,7 +162,7 @@ export function html2text(
 
     const docSidebarParentCategories =
       type === "docs"
-        ? $("*[class^=docSidebarContainer_] .menu__link--active")
+        ? $(".theme-doc-sidebar-container .menu__link--active")
             .map((_, element) => $(element).text())
             .get()
             .slice(0, -1)

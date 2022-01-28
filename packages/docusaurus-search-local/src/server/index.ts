@@ -7,18 +7,12 @@ import type {
   OptionValidationContext,
   Plugin,
 } from "@docusaurus/types";
-import type {
-  LoadedContent as DocsLoadedContent,
-  PluginOptions as DocsOptions,
-} from "@docusaurus/plugin-content-docs/src/types";
-import type {
-  BlogContent as BlogLoadedContent,
-  PluginOptions as BlogOptions,
-} from "@docusaurus/plugin-content-blog/src/types";
-import type {
-  LoadedContent as PagesLoadedContent,
-  PluginOptions as PagesOptions,
-} from "@docusaurus/plugin-content-pages/src/types";
+import type { LoadedContent as DocsLoadedContent } from "@docusaurus/plugin-content-docs/src/types";
+import type { PluginOptions as DocsOptions } from "@docusaurus/plugin-content-docs";
+import type { BlogContent as BlogLoadedContent } from "@docusaurus/plugin-content-blog/src/types";
+import type { PluginOptions as BlogOptions } from "@docusaurus/plugin-content-blog";
+import type { LoadedContent as PagesLoadedContent } from "@docusaurus/plugin-content-pages/src/types";
+import type { PluginOptions as PagesOptions } from "@docusaurus/plugin-content-pages";
 import { Joi } from "@docusaurus/utils-validation";
 import type { DSLAPluginData, MyDocument } from "../types";
 import { html2text, getDocusaurusTag } from "./parse";
