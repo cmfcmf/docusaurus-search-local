@@ -117,6 +117,10 @@ The following options are available (defaults are shown below):
     titleBoost: 5,
     contentBoost: 1,
     parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
+    // Add urls to be excluded from the search index. All versions of the given url will be ignores.
+    // If a baseUrl is set in docusaurus.config.js it will be prepended
+    ignore: ['/docs/reference/changelog']
+
   }
 }
 ```

@@ -84,6 +84,7 @@ type MyOptions = {
     titleBoost: number;
     contentBoost: number;
     parentCategoriesBoost: number;
+    ignore?: string[];
   };
 };
 
@@ -137,6 +138,7 @@ const optionsSchema = Joi.object({
     titleBoost: Joi.number().min(0).default(5),
     contentBoost: Joi.number().min(0).default(1),
     parentCategoriesBoost: Joi.number().min(0).default(2),
+    ignore: Joi.array().items(Joi.string()),
   }).default(),
 });
 
@@ -158,6 +160,7 @@ export default function cmfcmfDocusaurusSearchLocal(
       titleBoost,
       contentBoost,
       parentCategoriesBoost,
+      ignore,
     },
   } = options;
 
@@ -345,6 +348,10 @@ export const tokenize = (input) => lunr.tokenizer(input)
         );
       }
 
+      // To keep track if there are ignored pages that are not used
+      const initialIgnore = new Set(ignore);
+      const actuallyIgnored = new Set();
+
       const data = routesPaths
         .flatMap((url) => {
           // baseUrl includes the language prefix, thus `route` will be language-agnostic.
@@ -356,6 +363,12 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
           if (route === "404.html") {
             // Do not index error page.
+            return [];
+          }
+          if (ignore?.includes(url)) {
+            // Do not index pages in 'ignore' config.
+            actuallyIgnored.add(url);
+            initialIgnore.delete(url);
             return [];
           }
           if (indexDocs) {
@@ -455,6 +468,15 @@ export const tokenize = (input) => lunr.tokenizer(input)
             type,
           };
         });
+
+      logger.info(`Ignored pages: ${[...actuallyIgnored].join(", ")}`);
+
+      if (initialIgnore.size)
+        logger.warn(
+          `The following pages in the "ignore" config option were not encountered: ${[
+            ...initialIgnore,
+          ].join(", ")}`
+        );
 
       logger.info("Parsing documents");
 
