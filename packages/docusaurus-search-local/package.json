@@ -34,7 +34,7 @@
     "mark.js": "^8.11.1"
   },
   "peerDependencies": {
-    "@docusaurus/core": "^v2.0.0-beta.15",
+    "@docusaurus/core": "^v2.0.0-beta.17",
     "nodejieba": "^2.5.0"
   },
   "peerDependenciesMeta": {
@@ -51,6 +51,7 @@
     "@docusaurus/plugin-content-blog": "^2.0.0-beta.13",
     "@docusaurus/plugin-content-docs": "^2.0.0-beta.13",
     "@docusaurus/plugin-content-pages": "^2.0.0-beta.13",
+    "@docusaurus/theme-classic": "^2.0.0-beta.17",
     "@docusaurus/theme-common": "^2.0.0-beta.13",
     "@docusaurus/types": "^2.0.0-beta.13",
     "@types/jest": "^27.4.0",
