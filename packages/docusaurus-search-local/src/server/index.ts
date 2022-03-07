@@ -75,6 +75,7 @@ type MyOptions = {
   indexDocSidebarParentCategories: number;
   indexBlog: boolean;
   indexPages: boolean;
+  ignore: string[];
   language: string | string[];
   style?: "none";
   lunr: {
@@ -84,7 +85,6 @@ type MyOptions = {
     titleBoost: number;
     contentBoost: number;
     parentCategoriesBoost: number;
-    ignore?: string[];
   };
 };
 
@@ -124,6 +124,8 @@ const optionsSchema = Joi.object({
 
   indexPages: Joi.boolean().default(false),
 
+  ignore: Joi.array().items(Joi.string()).default([]),
+
   language: Joi.alternatives(
     languageSchema,
     Joi.array().items(languageSchema)
@@ -138,7 +140,6 @@ const optionsSchema = Joi.object({
     titleBoost: Joi.number().min(0).default(5),
     contentBoost: Joi.number().min(0).default(1),
     parentCategoriesBoost: Joi.number().min(0).default(2),
-    ignore: Joi.array().items(Joi.string()),
   }).default(),
 });
 
@@ -151,6 +152,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     indexBlog,
     indexDocs,
     indexPages,
+    ignore,
     language,
     style,
     lunr: {
@@ -160,13 +162,23 @@ export default function cmfcmfDocusaurusSearchLocal(
       titleBoost,
       contentBoost,
       parentCategoriesBoost,
-      ignore,
     },
   } = options;
 
   if (lunrTokenizerSeparator) {
     // @ts-expect-error
     lunr.tokenizer.separator = lunrTokenizerSeparator;
+  }
+
+  // Check ignore paths
+  for (const route of ignore) {
+    if (route === "/") {
+      continue;
+    } else if (route.endsWith("/")) {
+      throw new Error(`Ignore route '${route}' ends with a trailing slash`);
+    } else if (!route.startsWith("/")) {
+      throw new Error(`Ignore route '${route}' does not start with a slash`);
+    }
   }
 
   if (Array.isArray(language) && language.length === 1) {
@@ -365,10 +377,11 @@ export const tokenize = (input) => lunr.tokenizer(input)
             // Do not index error page.
             return [];
           }
-          if (ignore?.includes(url)) {
+          const path = `/${route}`;
+          if (ignore.includes(path)) {
             // Do not index pages in 'ignore' config.
-            actuallyIgnored.add(url);
-            initialIgnore.delete(url);
+            actuallyIgnored.add(path);
+            initialIgnore.delete(path);
             return [];
           }
           if (indexDocs) {
@@ -470,13 +483,13 @@ export const tokenize = (input) => lunr.tokenizer(input)
         });
 
       logger.info(`Ignored pages: ${[...actuallyIgnored].join(", ")}`);
-
-      if (initialIgnore.size)
+      if (initialIgnore.size) {
         logger.warn(
           `The following pages in the "ignore" config option were not encountered: ${[
             ...initialIgnore,
           ].join(", ")}`
         );
+      }
 
       logger.info("Parsing documents");
 
