@@ -40,6 +40,11 @@ jobs:
     - run: yarn playwright install
 
     - run: yarn --cwd packages/example-docs build
+    - run: |
+        [ "$(grep -cF '/docs/doc2'      packages/example-docs/build/search-index-docs-default-1.0.0.json)"   = "1" ]
+    - run: |
+        [ "$(grep -cF '/docs/next/doc2' packages/example-docs/build/search-index-docs-default-current.json)" = "1" ]
+
     - run: yarn test
     - run: yarn --cwd packages/example-docs serve &
     - run: yarn test:e2e --browser=all
@@ -48,3 +53,17 @@ jobs:
     - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlash.js
     - run: yarn --cwd packages/example-docs build --config docusaurus.config.subDirectory.js
     - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlashSubdirectory.js
+
+    # Test `ignore` option
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.ignore-valid.js > /tmp/out 2>&1
+    - run: |
+        [ "$(grep -cF '[Local Search] [INFO]: Ignored pages: /docs/doc2, /' /tmp/out)"                                                         = "2" ]
+    - run: |
+        [ "$(grep -cF '[Local Search] [WARN]: The following pages in the "ignore" config option were not encountered: /nonexisting' /tmp/out)" = "2" ]
+    - run: |
+        [ "$(grep -cF '/docs/doc2'      packages/example-docs/build/search-index-docs-default-1.0.0.json)"   = "0" ]
+    - run: |
+        [ "$(grep -cF '/docs/next/doc2' packages/example-docs/build/search-index-docs-default-current.json)" = "0" ]
+
+    - run: '! yarn --cwd packages/example-docs build --config docusaurus.config.ignore-invalid-1.js'
+    - run: '! yarn --cwd packages/example-docs build --config docusaurus.config.ignore-invalid-2.js'
