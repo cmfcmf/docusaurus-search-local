@@ -206,7 +206,7 @@ export function getDocusaurusTag(html: string) {
   const tag = $('meta[name="docusaurus_tag"]').attr("content");
   if (!tag || tag.length === 0) {
     throw new Error(
-      "docusaurus_tag meta tag not found. This is a bug and should never happen."
+      "The `docusaurus_tag` meta tag could not be found. Please make sure that your page is wrapped in the `<Layout>` component (from `@theme/Layout`). If it is, then this is a bug, please report it."
     );
   }
   return tag;
