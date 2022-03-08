@@ -13,6 +13,7 @@ const DEFAULT_OPTIONS = {
   indexDocSidebarParentCategories: 0,
   indexBlog: true,
   indexPages: false,
+  ignore: [],
   language: "en",
   style: undefined,
   lunr: {
