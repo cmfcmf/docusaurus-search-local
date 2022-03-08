@@ -58,6 +58,7 @@ it("validates options correctly", () => {
     indexDocSidebarParentCategories: 3,
     indexBlog: false,
     indexPages: true,
+    ignore: ["/changelog"],
     language: "hi",
     style: "none",
     lunr: {
@@ -67,7 +68,6 @@ it("validates options correctly", () => {
       titleBoost: 10,
       contentBoost: 1,
       parentCategoriesBoost: 4,
-      ignore: ["/changelog"],
     },
   };
 
