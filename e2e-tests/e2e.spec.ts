@@ -70,7 +70,7 @@ test("language-based search index is used", async ({ page }) => {
   await expect(page.url()).toBe("http://localhost:3000/docs/next/translated");
 
   // Go to a random German doc
-  //await page.goto("http://localhost:3000/de/docs/next/d-s-l-test");
+  await page.goto("http://localhost:3000/de/docs/next/d-s-l-test");
 
   await search(page, "german");
   await expect(page.url()).toBe(
