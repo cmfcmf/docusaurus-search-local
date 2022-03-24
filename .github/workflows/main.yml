@@ -17,34 +17,34 @@ jobs:
           - "canary"
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
 
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
+    - run: yarn install --frozen-lockfile
+    - run: yarn lint
 
-      - run: yarn -W add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
-      - run: yarn --cwd packages/docusaurus-search-local add --dev '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
+    - run: yarn -W add '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}'
+    - run: yarn --cwd packages/docusaurus-search-local add --dev '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
 
-      - run: yarn --cwd packages/docusaurus-search-local build:server
-      - run: yarn --cwd packages/docusaurus-search-local build:client
+    - run: yarn --cwd packages/docusaurus-search-local build:server
+    - run: yarn --cwd packages/docusaurus-search-local build:client
 
-      # Install OS dependencies
-      # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
-      - run: sudo apt update && yarn playwright install-deps
-      # Install Browsers
-      - run: yarn playwright install
+    # Install OS dependencies
+    # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
+    - run: sudo apt update && yarn playwright install-deps
+    # Install Browsers
+    - run: yarn playwright install
 
-      - run: yarn --cwd packages/example-docs build
-      - run: yarn test
-      - run: yarn --cwd packages/example-docs serve &
-      - run: yarn test:e2e --browser=all
+    - run: yarn --cwd packages/example-docs build
+    - run: yarn test
+    - run: yarn --cwd packages/example-docs serve &
+    - run: yarn test:e2e --browser=all
 
-      # TODO: Cannot run browser tests for these for now.
-      - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlash.js
-      - run: yarn --cwd packages/example-docs build --config docusaurus.config.subDirectory.js
-      - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlashSubdirectory.js
+    # TODO: Cannot run browser tests for these for now.
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlash.js
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.subDirectory.js
+    - run: yarn --cwd packages/example-docs build --config docusaurus.config.noTrailingSlashSubdirectory.js
