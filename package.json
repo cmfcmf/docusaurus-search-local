@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "@cmfcmf/docusaurus-search-local",
   "private": true,
   "workspaces": [
     "packages/*"
