@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.10.0...v0.11.0) (2022-06-12)
+
+### Bug Fixes
+
+- Correct alignment of search input, closes [#117](https://github.com/cmfcmf/docusaurus-search-local/issues/117) ([f29dc02](https://github.com/cmfcmf/docusaurus-search-local/commit/f29dc02c475980509599018bae3ff45beecad6f3))
+
+### chore
+
+- Update dependencies ([1fe21f7](https://github.com/cmfcmf/docusaurus-search-local/commit/1fe21f768b957140ad9fcbd1ac05cebfbee48b3a))
+
+### Features
+
+- Add Czech translation ([#115](https://github.com/cmfcmf/docusaurus-search-local/issues/115)) ([cc7c724](https://github.com/cmfcmf/docusaurus-search-local/commit/cc7c7249b3e28cf5cb3c958932144618cd211ae6))
+- Add Slowak translation ([#116](https://github.com/cmfcmf/docusaurus-search-local/issues/116)) ([970ba86](https://github.com/cmfcmf/docusaurus-search-local/commit/970ba8656bd1380385e3bd7ea10009fa3c108d4f))
+- Add Swedish Translation ([#105](https://github.com/cmfcmf/docusaurus-search-local/issues/105)) ([72fdcd8](https://github.com/cmfcmf/docusaurus-search-local/commit/72fdcd80c555a70d4791a5930083fe93ed8c2e7d))
+- Make number of search results configurable, closes [#122](https://github.com/cmfcmf/docusaurus-search-local/issues/122) ([a9d2faa](https://github.com/cmfcmf/docusaurus-search-local/commit/a9d2faa3847f9762e8498c253b89f04bdaf7ab2a))
+- support Docusaurus v2.0.0-beta.17, update dependencies, closes [#102](https://github.com/cmfcmf/docusaurus-search-local/issues/102), closes [#99](https://github.com/cmfcmf/docusaurus-search-local/issues/99) ([84c72c3](https://github.com/cmfcmf/docusaurus-search-local/commit/84c72c3d98c6e0d578c7799274f4a33a896c1425))
+- Support indexing of docs and blog tags, closes [#121](https://github.com/cmfcmf/docusaurus-search-local/issues/121) ([df0a81e](https://github.com/cmfcmf/docusaurus-search-local/commit/df0a81ee07c84f15c8d0095e31aa827a45289c19))
+
+### BREAKING CHANGES
+
+- The default height of the search input is now 36px. Use
+  the --aa-search-input-height CSS variable to adjust it if needed.
+- The minimum supported Docusaurus version is now v2.0.0-beta21
+- the minimum supported Docusaurus version is now v2.0.0-beta17.
+
 # [0.10.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.9.4...v0.10.0) (2022-01-28)
 
 ### Features
