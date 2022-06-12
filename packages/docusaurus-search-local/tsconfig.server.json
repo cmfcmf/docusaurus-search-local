@@ -5,13 +5,5 @@
     "module": "CommonJS",
     "lib": ["ESNext", "DOM"]
   },
-  // TODO: Currently required, otherwise we get the following type errors:
-  // [server] ../../node_modules/@docusaurus/plugin-content-blog/src/plugin-content-blog.d.ts(153,34): error TS2307: Cannot find module '@theme/BlogSidebar' or its corresponding type declarations.
-  // [server] ../../node_modules/@docusaurus/plugin-content-blog/src/plugin-content-blog.d.ts(200,34): error TS2307: Cannot find module '@theme/BlogSidebar' or its corresponding type declarations.
-  // [server] ../../node_modules/@docusaurus/plugin-content-blog/src/plugin-content-blog.d.ts(224,34): error TS2307: Cannot find module '@theme/BlogSidebar' or its corresponding type declarations.
-  // [server] ../../node_modules/@docusaurus/plugin-content-blog/src/plugin-content-blog.d.ts(243,34): error TS2307: Cannot find module '@theme/BlogSidebar' or its corresponding type declarations.
-  "files": [
-    "../../node_modules/@docusaurus/theme-classic/lib/theme-classic.d.ts"
-  ],
   "include": ["src/server/**/*"]
 }

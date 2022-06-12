@@ -5,15 +5,15 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@docusaurus/core": "^2.0.0-beta.17",
-    "@docusaurus/preset-classic": "^2.0.0-beta.17",
+    "@docusaurus/core": "^2.0.0-beta.21",
+    "@docusaurus/preset-classic": "^2.0.0-beta.21",
     "@playwright/test": "^1.17.1",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.2",
     "playwright": "^1.17.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   },
   "scripts": {
     "build": "yarn --cwd packages/docusaurus-search-local build && yarn --cwd packages/example-docs build",
@@ -30,7 +30,7 @@
     ]
   },
   "engines": {
-    "node": ">=14",
+    "node": ">=16.14",
     "yarn": "<2"
   }
 }

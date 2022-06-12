@@ -113,7 +113,7 @@ const SearchBar = () => {
     contentBoost,
     parentCategoriesBoost,
     indexDocSidebarParentCategories,
-  } = usePluginData<DSLAPluginData>("@cmfcmf/docusaurus-search-local");
+  } = usePluginData("@cmfcmf/docusaurus-search-local") as DSLAPluginData;
 
   const history = useHistory<DSLALocationState>();
 

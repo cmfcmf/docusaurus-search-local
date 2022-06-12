@@ -7,11 +7,11 @@ import type {
   OptionValidationContext,
   Plugin,
 } from "@docusaurus/types";
-import type { LoadedContent as DocsLoadedContent } from "@docusaurus/plugin-content-docs/src/types";
+import type { LoadedContent as DocsLoadedContent } from "@docusaurus/plugin-content-docs";
 import type { PluginOptions as DocsOptions } from "@docusaurus/plugin-content-docs";
-import type { BlogContent as BlogLoadedContent } from "@docusaurus/plugin-content-blog/src/types";
+import type { BlogContent as BlogLoadedContent } from "@docusaurus/plugin-content-blog";
 import type { PluginOptions as BlogOptions } from "@docusaurus/plugin-content-blog";
-import type { LoadedContent as PagesLoadedContent } from "@docusaurus/plugin-content-pages/src/types";
+import type { LoadedContent as PagesLoadedContent } from "@docusaurus/plugin-content-pages";
 import type { PluginOptions as PagesOptions } from "@docusaurus/plugin-content-pages";
 import { Joi } from "@docusaurus/utils-validation";
 import type { DSLAPluginData, MyDocument } from "../types";
@@ -293,12 +293,13 @@ export const tokenize = (input) => lunr.tokenizer(input)
       return {};
     },
     async contentLoaded({ actions: { setGlobalData } }) {
-      setGlobalData<DSLAPluginData>({
+      const data: DSLAPluginData = {
         titleBoost,
         contentBoost,
         parentCategoriesBoost,
         indexDocSidebarParentCategories,
-      });
+      };
+      setGlobalData(data);
     },
     async postBuild({
       routesPaths = [],
@@ -314,7 +315,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
           plugins
             .filter((plugin) => plugin.name === name)
             .map((plugin) => [plugin.options.id, plugin]) as Array<
-            [string, LoadedPlugin<Content> & { options: Options }]
+            [string, LoadedPlugin & { content: Content; options: Options }]
           >
         );
       }
@@ -581,6 +582,6 @@ export const tokenize = (input) => lunr.tokenizer(input)
 export function validateOptions({
   options,
   validate,
-}: OptionValidationContext<MyOptions>) {
+}: OptionValidationContext<MyOptions, MyOptions>) {
   return validate(optionsSchema, options);
 }
