@@ -87,6 +87,9 @@ The following options are available (defaults are shown below):
   // setting this to "none" will prevent the default CSS to be included. The default CSS
   // comes from autocomplete-theme-classic, which you can read more about here:
   // https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-theme-classic/
+  // When you want to overwrite CSS variables defined by the default theme, make sure to suffix your
+  // overwrites with `!important`, because they might otherwise not be applied as expected. See the
+  // following comment for more information: https://github.com/cmfcmf/docusaurus-search-local/issues/107#issuecomment-1119831938.
   style: undefined,
 
   // lunr.js-specific settings

@@ -1,5 +1,5 @@
-.dsla-search-wrapper {
-  margin-left: var(--aa-spacing);
+:root {
+  --aa-search-input-height: 36px;
 }
 
 body.dark,
