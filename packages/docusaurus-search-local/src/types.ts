@@ -4,6 +4,7 @@ export type DSLAPluginData = {
   contentBoost: number;
   tagsBoost: number;
   parentCategoriesBoost: number;
+  maxSearchResults: number;
 };
 
 export type MyDocument = {

@@ -92,6 +92,10 @@ The following options are available (defaults are shown below):
   // following comment for more information: https://github.com/cmfcmf/docusaurus-search-local/issues/107#issuecomment-1119831938.
   style: undefined,
 
+  // The maximum number of search results shown to the user. This does _not_ affect performance of
+  // searches, but simply does not display additional search results that have been found.
+  maxSearchResults: 8,
+
   // lunr.js-specific settings
   lunr: {
     // When indexing your documents, their content is split into "tokens".

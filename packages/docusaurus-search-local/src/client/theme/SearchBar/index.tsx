@@ -23,7 +23,6 @@ import useIsBrowser from "@docusaurus/useIsBrowser";
 import { useContextualSearchFilters } from "@docusaurus/theme-common";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
-const MAX_SEARCH_RESULTS = 8;
 
 type MyItem = {
   document: MyDocument;
@@ -114,6 +113,7 @@ const SearchBar = () => {
     tagsBoost,
     parentCategoriesBoost,
     indexDocSidebarParentCategories,
+    maxSearchResults,
   } = usePluginData("@cmfcmf/docusaurus-search-local") as DSLAPluginData;
 
   const history = useHistory<DSLALocationState>();
@@ -355,7 +355,7 @@ const SearchBar = () => {
                         });
                       }
                     })
-                    .slice(0, MAX_SEARCH_RESULTS)
+                    .slice(0, maxSearchResults)
                     .map((result) => ({
                       document: documents.find(
                         (document) => document.id.toString() === result.ref
@@ -365,7 +365,7 @@ const SearchBar = () => {
                     }))
                 )
                 .sort((a, b) => b.score - a.score)
-                .slice(0, MAX_SEARCH_RESULTS);
+                .slice(0, maxSearchResults);
             },
           },
         ];
@@ -373,7 +373,7 @@ const SearchBar = () => {
     });
 
     return () => autocompleteApi.current?.destroy();
-  }, []);
+  }, [maxSearchResults]);
 
   return (
     <>

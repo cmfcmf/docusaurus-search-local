@@ -77,6 +77,7 @@ type MyOptions = {
   indexPages: boolean;
   language: string | string[];
   style?: "none";
+  maxSearchResults: number;
   lunr: {
     tokenizerSeparator?: string;
     k1: number;
@@ -131,6 +132,8 @@ const optionsSchema = Joi.object({
 
   style: Joi.string().valid("none"),
 
+  maxSearchResults: Joi.number().integer().min(1).default(8),
+
   lunr: Joi.object({
     tokenizerSeparator: Joi.object().regex(),
     b: Joi.number().min(0).max(1).default(0.75),
@@ -153,6 +156,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     indexPages,
     language,
     style,
+    maxSearchResults,
     lunr: {
       tokenizerSeparator: lunrTokenizerSeparator,
       k1,
@@ -302,6 +306,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
         tagsBoost,
         parentCategoriesBoost,
         indexDocSidebarParentCategories,
+        maxSearchResults,
       };
       setGlobalData(data);
     },

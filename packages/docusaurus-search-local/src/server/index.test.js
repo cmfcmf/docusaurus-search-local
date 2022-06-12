@@ -15,6 +15,7 @@ const DEFAULT_OPTIONS = {
   indexPages: false,
   language: "en",
   style: undefined,
+  maxSearchResults: 8,
   lunr: {
     tokenizerSeparator: undefined,
     b: 0.75,
@@ -60,6 +61,7 @@ it("validates options correctly", () => {
     indexPages: true,
     language: "hi",
     style: "none",
+    maxSearchResults: 123,
     lunr: {
       tokenizerSeparator: /-+/,
       b: 0.6,
