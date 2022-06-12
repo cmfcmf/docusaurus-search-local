@@ -21,6 +21,7 @@ const DEFAULT_OPTIONS = {
     k1: 1.2,
     titleBoost: 5,
     contentBoost: 1,
+    tagsBoost: 3,
     parentCategoriesBoost: 2,
   },
 };
@@ -65,6 +66,7 @@ it("validates options correctly", () => {
       k1: 0.2,
       titleBoost: 10,
       contentBoost: 1,
+      tagsBoost: 3,
       parentCategoriesBoost: 4,
     },
   };

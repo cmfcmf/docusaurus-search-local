@@ -83,6 +83,7 @@ type MyOptions = {
     b: number;
     titleBoost: number;
     contentBoost: number;
+    tagsBoost: number;
     parentCategoriesBoost: number;
   };
 };
@@ -136,6 +137,7 @@ const optionsSchema = Joi.object({
     k1: Joi.number().min(0).default(1.2),
     titleBoost: Joi.number().min(0).default(5),
     contentBoost: Joi.number().min(0).default(1),
+    tagsBoost: Joi.number().min(0).default(3),
     parentCategoriesBoost: Joi.number().min(0).default(2),
   }).default(),
 });
@@ -157,6 +159,7 @@ export default function cmfcmfDocusaurusSearchLocal(
       b,
       titleBoost,
       contentBoost,
+      tagsBoost,
       parentCategoriesBoost,
     },
   } = options;
@@ -296,6 +299,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
       const data: DSLAPluginData = {
         titleBoost,
         contentBoost,
+        tagsBoost,
         parentCategoriesBoost,
         indexDocSidebarParentCategories,
       };
@@ -468,7 +472,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
             const html = await readFileAsync(file, { encoding: "utf8" });
             const { pageTitle, sections, docSidebarParentCategories } =
               html2text(html, type, url);
-            const tag = getDocusaurusTag(html);
+            const docusaurusTag = getDocusaurusTag(html);
 
             return sections.map((section) => ({
               id: nextDocId++,
@@ -477,7 +481,8 @@ export const tokenize = (input) => lunr.tokenizer(input)
               sectionRoute: url + section.hash,
               sectionTitle: section.title,
               sectionContent: section.content,
-              tag,
+              sectionTags: section.tags,
+              docusaurusTag,
               docSidebarParentCategories,
               type,
             }));
@@ -485,95 +490,104 @@ export const tokenize = (input) => lunr.tokenizer(input)
         )
       ).flat();
 
-      const documentsByTag = documents.reduce((acc, doc) => {
-        acc[doc.tag] = acc[doc.tag] ?? [];
-        acc[doc.tag]!.push(doc);
+      const documentsByDocusaurusTag = documents.reduce((acc, doc) => {
+        acc[doc.docusaurusTag] = acc[doc.docusaurusTag] ?? [];
+        acc[doc.docusaurusTag]!.push(doc);
         return acc;
       }, {} as Record<string, typeof documents>);
 
       logger.info(
-        `${Object.keys(documentsByTag).length} indexes will be created.`
+        `${
+          Object.keys(documentsByDocusaurusTag).length
+        } indexes will be created.`
       );
 
       await Promise.all(
-        Object.entries(documentsByTag).map(async ([tag, documents]) => {
-          logger.info(`Building index ${tag} (${documents.length} documents)`);
-
-          const index = lunr(function () {
-            if (language !== "en") {
-              if (Array.isArray(language)) {
-                // @ts-expect-error
-                this.use(lunr.multiLanguage(...language));
-              } else {
-                // @ts-expect-error
-                this.use(lunr[language]);
-              }
-            }
-
-            this.k1(k1);
-            this.b(b);
-
-            this.ref("id");
-            this.field("title");
-            this.field("content");
-
-            if (indexDocSidebarParentCategories > 0) {
-              this.field("sidebarParentCategories");
-            }
-            const that = this;
-            documents.forEach(
-              ({
-                id,
-                sectionTitle,
-                sectionContent,
-                docSidebarParentCategories,
-              }) => {
-                let sidebarParentCategories;
-                if (
-                  indexDocSidebarParentCategories > 0 &&
-                  docSidebarParentCategories
-                ) {
-                  sidebarParentCategories = docSidebarParentCategories
-                    .reverse()
-                    .slice(0, indexDocSidebarParentCategories)
-                    .join(" ");
-                }
-
-                that.add({
-                  id: id.toString(), // the ref must be a string
-                  title: sectionTitle,
-                  content: sectionContent,
-                  sidebarParentCategories,
-                });
-              }
+        Object.entries(documentsByDocusaurusTag).map(
+          async ([docusaurusTag, documents]) => {
+            logger.info(
+              `Building index ${docusaurusTag} (${documents.length} documents)`
             );
-          });
 
-          await writeFileAsync(
-            path.join(outDir, `search-index-${tag}.json`),
-            JSON.stringify({
-              documents: documents.map(
+            const index = lunr(function () {
+              if (language !== "en") {
+                if (Array.isArray(language)) {
+                  // @ts-expect-error
+                  this.use(lunr.multiLanguage(...language));
+                } else {
+                  // @ts-expect-error
+                  this.use(lunr[language]);
+                }
+              }
+
+              this.k1(k1);
+              this.b(b);
+
+              this.ref("id");
+              this.field("title");
+              this.field("content");
+              this.field("tags");
+
+              if (indexDocSidebarParentCategories > 0) {
+                this.field("sidebarParentCategories");
+              }
+              const that = this;
+              documents.forEach(
                 ({
                   id,
-                  pageTitle,
                   sectionTitle,
-                  sectionRoute,
-                  type,
-                }): MyDocument => ({
-                  id,
-                  pageTitle,
-                  sectionTitle,
-                  sectionRoute,
-                  type,
-                })
-              ),
-              index,
-            }),
-            { encoding: "utf8" }
-          );
+                  sectionContent,
+                  sectionTags,
+                  docSidebarParentCategories,
+                }) => {
+                  let sidebarParentCategories;
+                  if (
+                    indexDocSidebarParentCategories > 0 &&
+                    docSidebarParentCategories
+                  ) {
+                    sidebarParentCategories = docSidebarParentCategories
+                      .reverse()
+                      .slice(0, indexDocSidebarParentCategories)
+                      .join(" ");
+                  }
 
-          logger.info(`Index ${tag} written to disk`);
-        })
+                  that.add({
+                    id: id.toString(), // the ref must be a string
+                    title: sectionTitle,
+                    content: sectionContent,
+                    tags: sectionTags,
+                    sidebarParentCategories,
+                  });
+                }
+              );
+            });
+
+            await writeFileAsync(
+              path.join(outDir, `search-index-${docusaurusTag}.json`),
+              JSON.stringify({
+                documents: documents.map(
+                  ({
+                    id,
+                    pageTitle,
+                    sectionTitle,
+                    sectionRoute,
+                    type,
+                  }): MyDocument => ({
+                    id,
+                    pageTitle,
+                    sectionTitle,
+                    sectionRoute,
+                    type,
+                  })
+                ),
+                index,
+              }),
+              { encoding: "utf8" }
+            );
+
+            logger.info(`Index ${docusaurusTag} written to disk`);
+          }
+        )
       );
     },
   };

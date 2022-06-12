@@ -119,6 +119,7 @@ The following options are available (defaults are shown below):
     // the following settings.
     titleBoost: 5,
     contentBoost: 1,
+    tagsBoost: 3,
     parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
   }
 }

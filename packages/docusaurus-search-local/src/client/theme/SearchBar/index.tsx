@@ -111,6 +111,7 @@ const SearchBar = () => {
   const {
     titleBoost,
     contentBoost,
+    tagsBoost,
     parentCategoriesBoost,
     indexDocSidebarParentCategories,
   } = usePluginData("@cmfcmf/docusaurus-search-local") as DSLAPluginData;
@@ -330,6 +331,15 @@ const SearchBar = () => {
                       query.term(terms, {
                         fields: ["content"],
                         boost: contentBoost,
+                        wildcard: mylunr.Query.wildcard.TRAILING,
+                      });
+                      query.term(terms, {
+                        fields: ["tags"],
+                        boost: tagsBoost,
+                      });
+                      query.term(terms, {
+                        fields: ["tags"],
+                        boost: tagsBoost,
                         wildcard: mylunr.Query.wildcard.TRAILING,
                       });
 

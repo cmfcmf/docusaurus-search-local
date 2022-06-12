@@ -2,6 +2,10 @@
 id: d-s-l-test
 title: DOC TITLE
 sidebar_label: SIDEBAR LABEL
+tags:
+  - tag1
+  - tag2
+  - tag3
 ---
 
 FIRST _**SEC**TION CONTENT_

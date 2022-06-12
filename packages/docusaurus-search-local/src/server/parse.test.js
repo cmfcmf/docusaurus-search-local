@@ -27,17 +27,20 @@ describe("parser", () => {
           title: "BLOG POST TITLE",
           content: "FIRST SECTION CONTENT FIRST SECTION CONTENT 2",
           hash: "",
+          tags: ["tag1", "tag2", "tag3"],
         },
         {
           title: "FIRST HEADER",
           content: "FIRST HEADER CONTENT FIRST HEADER CONTENT 2",
           hash: "", // no hashes are assigned to h1 headers
+          tags: [],
         },
         {
           title: "FIRST SUBHEADER",
           content:
             'FIRST SUBHEADER CONTENT #include <stdio.h> int main(int argc, char** argv) { printf("Hello World"); }',
           hash: "#first-subheader",
+          tags: [],
         },
       ],
     });
@@ -61,31 +64,37 @@ describe("parser", () => {
             title: "DOC TITLE",
             content: "FIRST SECTION CONTENT A link to a video.",
             hash: "",
+            tags: ["tag1", "tag2", "tag3"],
           },
           {
             title: "FIRST HEADER",
             content: "FIRST HEADER CONTENT",
             hash: "", // no hashes are assigned to h1 headers
+            tags: [],
           },
           {
             title: "FIRST SUBHEADER",
             content: "LIST ITEM 1 LIST ITEM 2",
             hash: "#first-subheader",
+            tags: [],
           },
           {
             title: "SECOND SUBHEADER",
             content: "COL 1 COL 2 A1 B1 A2 B2",
             hash: "#second-subheader",
+            tags: [],
           },
           {
             content: "BLOCKQUOTE CONTENT",
             hash: "#blockquotes",
             title: "Blockquotes",
+            tags: [],
           },
           {
             content: "note This is a note",
             hash: "#first-sub-sub-header",
             title: "FIRST SUB SUB HEADER",
+            tags: [],
           },
         ],
       });
@@ -103,7 +112,7 @@ describe("parser", () => {
       expect(html2text(html, "docs")).toEqual({
         docSidebarParentCategories: ["Docusaurus"],
         pageTitle: "DOC TITLE",
-        sections: [{ content: "", hash: "", title: "DOC TITLE" }],
+        sections: [{ content: "", hash: "", title: "DOC TITLE", tags: [] }],
       });
     });
 
@@ -124,6 +133,7 @@ describe("parser", () => {
             content: "私は電車が好きです。",
             hash: "",
             title: "NestedSidebarDoc",
+            tags: [],
           },
         ],
       });
@@ -146,16 +156,19 @@ describe("parser", () => {
             title: "DOC TITLE",
             content: "",
             hash: "",
+            tags: [],
           },
           {
             title: "FIRST HEADER",
             content: "",
             hash: "#first-header",
+            tags: [],
           },
           {
             title: "SECOND HEADER",
             content: "",
             hash: "#second-header",
+            tags: [],
           },
         ],
       });
@@ -173,6 +186,7 @@ describe("parser", () => {
             title: "H1",
             hash: "",
             content: "",
+            tags: [],
           },
         ],
       });
@@ -186,6 +200,7 @@ describe("parser", () => {
             title: "TITLE",
             hash: "",
             content: "",
+            tags: [],
           },
         ],
       });
@@ -199,6 +214,7 @@ describe("parser", () => {
             title: "",
             hash: "",
             content: "",
+            tags: [],
           },
         ],
       });
@@ -213,6 +229,7 @@ describe("parser", () => {
             title: "H1",
             hash: "",
             content: "this is content",
+            tags: [],
           },
         ],
       });

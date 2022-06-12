@@ -103,12 +103,18 @@ export function html2text(
       title: string;
       hash: string;
       content: string;
+      tags: string[];
     }> = [];
+    // Parse tags, and add them to the first section.
+    const tags = $("article footer ul[class^=tags_] li")
+      .map((_, element) => $(element).text())
+      .toArray();
+
     // Make sure to also adjust the highlighting functionality in the client
     // if you change the top element here.
     $("article")
       .find(HEADINGS)
-      .each((_, heading) => {
+      .each((i, heading) => {
         const title = $(heading)
           .contents()
           // Remove elements that are marked as aria-hidden and the hash-link.
@@ -132,7 +138,12 @@ export function html2text(
             .first(); // h1 || p
           if ($firstElement.filter(HEADINGS).length) {
             // The first element is a header. This section is empty.
-            sections.push({ title, hash, content: "" });
+            sections.push({
+              title,
+              hash,
+              content: "",
+              tags: i === 0 ? tags : [],
+            });
             return;
           }
           $sectionElements = $firstElement
@@ -157,6 +168,7 @@ export function html2text(
           title,
           hash,
           content,
+          tags: i === 0 ? tags : [],
         });
       });
 
@@ -193,6 +205,7 @@ export function html2text(
           title: pageTitle,
           hash: "",
           content: $main.length ? getText($, $main.get()) : "",
+          tags: [],
         },
       ],
     };

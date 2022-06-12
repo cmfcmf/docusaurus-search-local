@@ -2,6 +2,7 @@ export type DSLAPluginData = {
   indexDocSidebarParentCategories: number;
   titleBoost: number;
   contentBoost: number;
+  tagsBoost: number;
   parentCategoriesBoost: number;
 };
 
