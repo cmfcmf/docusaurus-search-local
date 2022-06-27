@@ -1,7 +1,7 @@
 {
-  "cmfcmf/d-s-l.searchBar.placeholder": "Tìm kiếm...",
+  "cmfcmf/d-s-l.searchBar.placeholder": "Tìm...",
   "cmfcmf/d-s-l.searchBar.noResults": "Không tìm thấy gì.",
   "cmfcmf/d-s-l.searchBar.clearButtonTitle": "Xóa",
-  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "Hủy bỏ",
+  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "Đóng",
   "cmfcmf/d-s-l.searchBar.submitButtonTitle": "Thực hiện"
 }
