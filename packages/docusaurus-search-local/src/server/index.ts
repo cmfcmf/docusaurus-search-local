@@ -18,6 +18,8 @@ import type { DSLAPluginData, MyDocument } from "../types";
 import { html2text, getDocusaurusTag } from "./parse";
 import logger from "./logger";
 
+const initSqlJs = require("sql.js");
+
 const lunr = require("../lunr.js") as (
   config: import("lunr").ConfigFunction
 ) => import("lunr").Index;
@@ -506,6 +508,38 @@ export const tokenize = (input) => lunr.tokenizer(input)
           Object.keys(documentsByDocusaurusTag).length
         } indexes will be created.`
       );
+      logger.info("loading sql.js..");
+
+      const SQL: any = await initSqlJs();
+      logger.info("..loaded!");
+      const db = new SQL.Database();
+      logger.info(`Creating SQLite database index`);
+
+      // Create index
+      db.run("CREATE VIRTUAL TABLE posts USING FTS3(title, body);");
+      db.run(
+        `
+        INSERT INTO posts(title, body) VALUES
+          ('Learn SQlite FTS3','This tutorial teaches you how to perform full-text search in SQLite using FTS5'),
+          ('Advanced SQlite Full-text Search','Show you some advanced techniques in SQLite full-text searching'),
+          ('SQLite Tutorial','Help you learn SQLite quickly and effectively');
+        `
+      );
+      // optimize db layout as recommended by https://github.com/phiresky/sql.js-httpvfs#usage
+      db.run(
+        `
+        -- first, add whatever indices you need. Note that here having many and correct indices is even more important than for a normal database.
+        pragma journal_mode = delete; -- to be able to actually set page size
+        pragma page_size = 1024; -- trade off of number of requests that need to be made vs overhead. 
+
+        insert into posts(posts) values ('optimize'); -- for every FTS table you have (if you have any)
+
+        vacuum; -- reorganize database and apply changed page size
+        `
+      );
+      /*const results = db.exec(`SELECT *  FROM posts  WHERE posts MATCH 'FTS3'`);
+      console.log(`search results:`);
+      console.log(JSON.stringify(results));*/
 
       await Promise.all(
         Object.entries(documentsByDocusaurusTag).map(
@@ -594,6 +628,11 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
         )
       );
+
+      const buffer = Buffer.from(db.export());
+      const dbFilename = path.join(outDir, "search-index.sqlite");
+      await writeFileAsync(dbFilename, buffer);
+      logger.info(`${dbFilename} sqlite index written to disk`);
     },
   };
 }

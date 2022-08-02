@@ -1,0 +1,18 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
+// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
+{
+  "name": "docusauris-search-local",
+  "dockerFile": "Dockerfile",
+  "containerEnv": {
+    "PROJECT_DIR": "${containerWorkspaceFolder}"
+  },
+
+  "userEnvProbe": "loginShell",
+  //"updateRemoteUserUID": false,
+
+  // build development environment on creation
+  "onCreateCommand": "echo 'yarn install executed' || true",
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": []
+}

@@ -31,7 +31,9 @@
     "cheerio": "^1.0.0-rc.9",
     "clsx": "^1.1.1",
     "lunr-languages": "^1.4.0",
-    "mark.js": "^8.11.1"
+    "mark.js": "^8.11.1",
+    "sql.js": "^1.7.0",
+    "sql.js-httpvfs": "^0.8.11"
   },
   "peerDependencies": {
     "@docusaurus/core": "^v2.0.0-beta.21",

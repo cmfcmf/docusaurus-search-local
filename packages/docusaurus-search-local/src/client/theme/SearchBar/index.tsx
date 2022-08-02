@@ -104,6 +104,60 @@ const SearchBar = () => {
     return () => observer.disconnect();
   }, []);
 
+  const workerRef: any = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      // sadly there's no good way to package workers and wasm directly so you need
+      // a way to get these two URLs from your bundler. This is the webpack5 way to
+      // create a asset bundle of the worker and wasm:
+      const workerUrl = new URL(
+        "sql.js-httpvfs/dist/sqlite.worker.js",
+        import.meta.url
+      );
+      const wasmUrl = new URL(
+        "sql.js-httpvfs/dist/sql-wasm.wasm",
+        import.meta.url
+      );
+      const dbPath = `${baseUrl}search-index.sqlite`;
+
+      const { createDbWorker } = require("sql.js-httpvfs");
+      console.log(`Creating DB worker with dbPath='${dbPath}'`);
+      workerRef.current = await createDbWorker(
+        [
+          {
+            from: "inline",
+            config: {
+              serverMode: "full", // file is just a plain old full sqlite database
+              url: dbPath, // url to the database (relative or full)
+              requestChunkSize: 4096,
+            },
+          },
+        ],
+        workerUrl.toString(),
+        wasmUrl.toString()
+      );
+      console.log("..done!");
+
+      // worker.db is a now SQL.js instance except that all functions return
+      // Promises.
+      console.log("running query...");
+      const result = await workerRef.current.db.exec(
+        `SELECT *  FROM posts  WHERE posts MATCH 'FTS3'`
+        //`select * from table where id = ?`, [123]
+      );
+      console.log("..done! results:");
+      console.log(JSON.stringify(result));
+
+      // worker.worker.bytesRead is a Promise for the number of bytes read by
+      // the worker. if a request would cause it to exceed maxBytesToRead,
+      // that request will throw a SQLite disk I/O error.
+      console.log(await workerRef.current.worker.bytesRead);
+
+      return () => workerRef.current.terminate();
+    })();
+  }, []);
+
   const {
     siteConfig: { baseUrl },
   } = useDocusaurusContext();
