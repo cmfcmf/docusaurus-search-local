@@ -513,33 +513,38 @@ export const tokenize = (input) => lunr.tokenizer(input)
           Object.keys(documentsByDocusaurusTag).length
         } indexes will be created.`
       );
-      logger.info("loading sql.js..");
+      var SQL: any;
+      var db: any;
 
-      const SQL: any = await initSqlJs();
-      logger.info("..loaded!");
-      const db = new SQL.Database();
-      logger.info(`Creating SQLite database tables..`);
+      if (searchEngine === "sqlite") {
+        logger.info("loading sql.js..");
 
-      // Create index
-      db.run(
-        `
-          CREATE VIRTUAL TABLE sections USING FTS3(
-            documentId,
-            sectionTitle,
-            sectionContent,
-            sectionTags,
-            sidebarParentCategories
-          );
-          CREATE TABLE documents(
-            documentId TEXT PRIMARY KEY,
-            pageTitle TEXT,
-            sectionTitle TEXT,
-            sectionRoute TEXT,
-            type TEXT
-          );
-        `
-      );
-      logger.info(`..done!`);
+        SQL = await initSqlJs();
+        logger.info("..loaded!");
+        db = new SQL.Database();
+        logger.info(`Creating SQLite database tables..`);
+
+        // Create index
+        db.run(
+          `
+            CREATE VIRTUAL TABLE sections USING FTS3(
+              documentId,
+              sectionTitle,
+              sectionContent,
+              sectionTags,
+              sidebarParentCategories
+            );
+            CREATE TABLE documents(
+              documentId TEXT PRIMARY KEY,
+              pageTitle TEXT,
+              sectionTitle TEXT,
+              sectionRoute TEXT,
+              type TEXT
+            );
+          `
+        );
+        logger.info(`..done!`);
+      }
 
       await Promise.all(
         Object.entries(documentsByDocusaurusTag).map(
@@ -681,25 +686,27 @@ export const tokenize = (input) => lunr.tokenizer(input)
         )
       );
 
-      // optimize db layout as recommended by https://github.com/phiresky/sql.js-httpvfs#usage
-      db.run(
-        `
-        -- first, add whatever indices you need. Note that here having many and correct indices is even more important than for a normal database.
-        pragma journal_mode = delete; -- to be able to actually set page size
-        pragma page_size = 1024; -- trade off of number of requests that need to be made vs overhead. 
+      if (searchEngine === "sqlite") {
+        // optimize db layout as recommended by https://github.com/phiresky/sql.js-httpvfs#usage
+        db.run(
+          `
+          -- first, add whatever indices you need. Note that here having many and correct indices is even more important than for a normal database.
+          pragma journal_mode = delete; -- to be able to actually set page size
+          pragma page_size = 1024; -- trade off of number of requests that need to be made vs overhead. 
 
-        -- optimize for every FTS table you have (if you have any)
-        insert into sections(sections) values ('optimize');
+          -- optimize for every FTS table you have (if you have any)
+          insert into sections(sections) values ('optimize');
 
-        vacuum; -- reorganize database and apply changed page size
-        `
-      );
+          vacuum; -- reorganize database and apply changed page size
+          `
+        );
 
-      // Save SQLite DB
-      const buffer = Buffer.from(db.export());
-      const dbFilename = path.join(outDir, "search-index.sqlite");
-      await writeFileAsync(dbFilename, buffer);
-      logger.info(`${dbFilename} sqlite index written to disk`);
+        // Save SQLite DB
+        const buffer = Buffer.from(db.export());
+        const dbFilename = path.join(outDir, "search-index.sqlite");
+        await writeFileAsync(dbFilename, buffer);
+        logger.info(`${dbFilename} sqlite index written to disk`);
+      }
     },
   };
 }
