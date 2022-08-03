@@ -80,6 +80,7 @@ type MyOptions = {
   language: string | string[];
   style?: "none";
   maxSearchResults: number;
+  searchEngine?: "lunr" | "sqlite";
   lunr: {
     tokenizerSeparator?: string;
     k1: number;
@@ -123,6 +124,8 @@ const optionsSchema = Joi.object({
     .max(Number.MAX_SAFE_INTEGER)
     .default(0),
 
+  searchEngine: Joi.string().default("lunr"),
+
   indexBlog: Joi.boolean().default(true),
 
   indexPages: Joi.boolean().default(false),
@@ -159,6 +162,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     language,
     style,
     maxSearchResults,
+    searchEngine,
     lunr: {
       tokenizerSeparator: lunrTokenizerSeparator,
       k1,
@@ -309,6 +313,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
         parentCategoriesBoost,
         indexDocSidebarParentCategories,
         maxSearchResults,
+        searchEngine,
       };
       setGlobalData(data);
     },
@@ -513,33 +518,28 @@ export const tokenize = (input) => lunr.tokenizer(input)
       const SQL: any = await initSqlJs();
       logger.info("..loaded!");
       const db = new SQL.Database();
-      logger.info(`Creating SQLite database index`);
+      logger.info(`Creating SQLite database tables..`);
 
       // Create index
-      db.run("CREATE VIRTUAL TABLE posts USING FTS3(title, body);");
       db.run(
         `
-        INSERT INTO posts(title, body) VALUES
-          ('Learn SQlite FTS3','This tutorial teaches you how to perform full-text search in SQLite using FTS5'),
-          ('Advanced SQlite Full-text Search','Show you some advanced techniques in SQLite full-text searching'),
-          ('SQLite Tutorial','Help you learn SQLite quickly and effectively');
+          CREATE VIRTUAL TABLE sections USING FTS3(
+            documentId,
+            sectionTitle,
+            sectionContent,
+            sectionTags,
+            sidebarParentCategories
+          );
+          CREATE TABLE documents(
+            documentId TEXT PRIMARY KEY,
+            pageTitle TEXT,
+            sectionTitle TEXT,
+            sectionRoute TEXT,
+            type TEXT
+          );
         `
       );
-      // optimize db layout as recommended by https://github.com/phiresky/sql.js-httpvfs#usage
-      db.run(
-        `
-        -- first, add whatever indices you need. Note that here having many and correct indices is even more important than for a normal database.
-        pragma journal_mode = delete; -- to be able to actually set page size
-        pragma page_size = 1024; -- trade off of number of requests that need to be made vs overhead. 
-
-        insert into posts(posts) values ('optimize'); -- for every FTS table you have (if you have any)
-
-        vacuum; -- reorganize database and apply changed page size
-        `
-      );
-      /*const results = db.exec(`SELECT *  FROM posts  WHERE posts MATCH 'FTS3'`);
-      console.log(`search results:`);
-      console.log(JSON.stringify(results));*/
+      logger.info(`..done!`);
 
       await Promise.all(
         Object.entries(documentsByDocusaurusTag).map(
@@ -548,36 +548,17 @@ export const tokenize = (input) => lunr.tokenizer(input)
               `Building index ${docusaurusTag} (${documents.length} documents)`
             );
 
-            const index = lunr(function () {
-              if (language !== "en") {
-                if (Array.isArray(language)) {
-                  // @ts-expect-error
-                  this.use(lunr.multiLanguage(...language));
-                } else {
-                  // @ts-expect-error
-                  this.use(lunr[language]);
-                }
-              }
-
-              this.k1(k1);
-              this.b(b);
-
-              this.ref("id");
-              this.field("title");
-              this.field("content");
-              this.field("tags");
-
-              if (indexDocSidebarParentCategories > 0) {
-                this.field("sidebarParentCategories");
-              }
-              const that = this;
+            if (searchEngine === "sqlite") {
               documents.forEach(
                 ({
                   id,
+                  pageTitle,
                   sectionTitle,
+                  sectionRoute,
                   sectionContent,
                   sectionTags,
                   docSidebarParentCategories,
+                  type,
                 }) => {
                   let sidebarParentCategories;
                   if (
@@ -589,46 +570,132 @@ export const tokenize = (input) => lunr.tokenizer(input)
                       .slice(0, indexDocSidebarParentCategories)
                       .join(" ");
                   }
-
-                  that.add({
-                    id: id.toString(), // the ref must be a string
-                    title: sectionTitle,
-                    content: sectionContent,
-                    tags: sectionTags,
-                    sidebarParentCategories,
-                  });
+                  db.run(
+                    `
+                    INSERT INTO sections (documentId, sectionTitle, sectionContent, sectionTags, sidebarParentCategories) VALUES (?, ?, ?, ?, ?);
+                    `,
+                    [
+                      // section
+                      id.toString(),
+                      sectionTitle,
+                      sectionContent,
+                      sectionTags,
+                      sidebarParentCategories || null,
+                    ]
+                  );
+                  db.run(
+                    `
+                    INSERT INTO documents (documentId, pageTitle, sectionTitle, sectionRoute, type) VALUES (?, ?, ?, ?, ?);
+                    `,
+                    [
+                      // document
+                      id.toString(),
+                      pageTitle,
+                      sectionTitle,
+                      sectionRoute || "",
+                      type,
+                    ]
+                  );
                 }
               );
-            });
+            } else {
+              const index = lunr(function () {
+                if (language !== "en") {
+                  if (Array.isArray(language)) {
+                    // @ts-expect-error
+                    this.use(lunr.multiLanguage(...language));
+                  } else {
+                    // @ts-expect-error
+                    this.use(lunr[language]);
+                  }
+                }
 
-            await writeFileAsync(
-              path.join(outDir, `search-index-${docusaurusTag}.json`),
-              JSON.stringify({
-                documents: documents.map(
+                this.k1(k1);
+                this.b(b);
+
+                this.ref("id");
+                this.field("title");
+                this.field("content");
+                this.field("tags");
+
+                if (indexDocSidebarParentCategories > 0) {
+                  this.field("sidebarParentCategories");
+                }
+                const that = this;
+                documents.forEach(
                   ({
                     id,
-                    pageTitle,
                     sectionTitle,
-                    sectionRoute,
-                    type,
-                  }): MyDocument => ({
-                    id,
-                    pageTitle,
-                    sectionTitle,
-                    sectionRoute,
-                    type,
-                  })
-                ),
-                index,
-              }),
-              { encoding: "utf8" }
-            );
+                    sectionContent,
+                    sectionTags,
+                    docSidebarParentCategories,
+                  }) => {
+                    let sidebarParentCategories;
+                    if (
+                      indexDocSidebarParentCategories > 0 &&
+                      docSidebarParentCategories
+                    ) {
+                      sidebarParentCategories = docSidebarParentCategories
+                        .reverse()
+                        .slice(0, indexDocSidebarParentCategories)
+                        .join(" ");
+                    }
 
-            logger.info(`Index ${docusaurusTag} written to disk`);
+                    that.add({
+                      id: id.toString(), // the ref must be a string
+                      title: sectionTitle,
+                      content: sectionContent,
+                      tags: sectionTags,
+                      sidebarParentCategories,
+                    });
+                  }
+                );
+              });
+
+              await writeFileAsync(
+                path.join(outDir, `search-index-${docusaurusTag}.json`),
+                JSON.stringify({
+                  documents: documents.map(
+                    ({
+                      id,
+                      pageTitle,
+                      sectionTitle,
+                      sectionRoute,
+                      type,
+                    }): MyDocument => ({
+                      id,
+                      pageTitle,
+                      sectionTitle,
+                      sectionRoute,
+                      type,
+                    })
+                  ),
+                  index,
+                }),
+                { encoding: "utf8" }
+              );
+
+              logger.info(`Index ${docusaurusTag} written to disk`);
+            }
           }
         )
       );
 
+      // optimize db layout as recommended by https://github.com/phiresky/sql.js-httpvfs#usage
+      db.run(
+        `
+        -- first, add whatever indices you need. Note that here having many and correct indices is even more important than for a normal database.
+        pragma journal_mode = delete; -- to be able to actually set page size
+        pragma page_size = 1024; -- trade off of number of requests that need to be made vs overhead. 
+
+        -- optimize for every FTS table you have (if you have any)
+        insert into sections(sections) values ('optimize');
+
+        vacuum; -- reorganize database and apply changed page size
+        `
+      );
+
+      // Save SQLite DB
       const buffer = Buffer.from(db.export());
       const dbFilename = path.join(outDir, "search-index.sqlite");
       await writeFileAsync(dbFilename, buffer);

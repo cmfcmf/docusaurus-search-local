@@ -5,6 +5,7 @@ export type DSLAPluginData = {
   tagsBoost: number;
   parentCategoriesBoost: number;
   maxSearchResults: number;
+  searchEngine?: "lunr" | "sqlite";
 };
 
 export type MyDocument = {

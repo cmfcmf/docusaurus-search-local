@@ -126,7 +126,8 @@ module.exports = {
   ],
   plugins: [
     [require("path").join(__dirname, "..", "..", "node_modules", "@cmfcmf", "docusaurus-search-local"), {
-      indexPages: true
+      indexPages: true,
+      searchEngine: "sqlite"
     }],
   ]
 };
