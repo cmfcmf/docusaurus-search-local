@@ -133,7 +133,7 @@ You can now use the search bar to search your documentation.
 
 **Important: Search only works for the statically built documentation (i.e., after you ran `yarn build` in your documentation folder).**
 
-**Search does **not** work in development (i.e., when running `yarn start`).**
+**Search does **not** work in development (i.e., when running `yarn start`). It can be served locally with e.g. `yarn start` after being built (with e.g. `yarn build)`.**
 
 ### Non-English Documentation
 
