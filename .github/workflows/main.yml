@@ -11,9 +11,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16.x, 17.x, 18.x]
+        node-version: [16.x, 18.x]
         docusaurus-version:
-          - "v2.0.0-beta.21"
+          - "v2.2.0"
           - "canary"
 
     steps:

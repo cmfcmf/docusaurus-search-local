@@ -13,7 +13,7 @@ test("basic search works", async ({ page }) => {
   await page.goto("http://localhost:3000/");
   await search(page, "3");
 
-  await expect(page.url()).toBe("http://localhost:3000/docs/doc3");
+  await page.waitForURL("http://localhost:3000/docs/doc3");
   await expect(page.locator('mark[data-markjs="true"]')).toHaveText("3");
 });
 
@@ -67,13 +67,13 @@ test("language-based search index is used", async ({ page }) => {
   await page.goto("http://localhost:3000/docs/next/d-s-l-test");
 
   await search(page, "english");
-  await expect(page).toHaveURL("http://localhost:3000/docs/next/translated");
+  await page.waitForURL("http://localhost:3000/docs/next/translated");
 
   // Go to a random German doc
   await page.goto("http://localhost:3000/de/docs/next/d-s-l-test");
 
   await search(page, "german");
-  await expect(page).toHaveURL("http://localhost:3000/de/docs/next/translated");
+  await page.waitForURL("http://localhost:3000/de/docs/next/translated");
 });
 
 test("dark mode is copied from <html> to <body> correctly", async ({
