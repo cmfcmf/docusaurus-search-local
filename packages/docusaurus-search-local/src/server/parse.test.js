@@ -116,6 +116,82 @@ describe("parser", () => {
       });
     });
 
+    it("parses page without title in frontmatter and with h1 in Markdown", async () => {
+      const htmlPath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "example-docs/build/docs/next/d-s-l-test-no-title-h1/index.html"
+      );
+      const html = await readFileAsync(htmlPath, "utf-8");
+      expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["Docusaurus"],
+        pageTitle: "Page title from markdown",
+        sections: [
+          {
+            content: "bla bla",
+            hash: "",
+            title: "Page title from markdown",
+            tags: [],
+          },
+        ],
+      });
+    });
+
+    it("parses page without title in frontmatter and with h2 in Markdown", async () => {
+      const htmlPath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "example-docs/build/docs/next/d-s-l-test-no-title-h2/index.html"
+      );
+      const html = await readFileAsync(htmlPath, "utf-8");
+      expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["Docusaurus"],
+        pageTitle: "d-s-l-test-no-title-h2",
+        sections: [
+          { content: "", hash: "", title: "d-s-l-test-no-title-h2", tags: [] },
+          {
+            content: "bla bla",
+            hash: "#page-title-from-markdown",
+            title: "Page title from markdown",
+            tags: [],
+          },
+        ],
+      });
+    });
+
+    it("parses page without title in frontmatter and with h1 in Markdown but with pre text", async () => {
+      const htmlPath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "example-docs/build/docs/next/d-s-l-test-no-title-h1-pre-text/index.html"
+      );
+      const html = await readFileAsync(htmlPath, "utf-8");
+      expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: ["Docusaurus"],
+        pageTitle: "d-s-l-test-no-title-h1-pre-text",
+        sections: [
+          {
+            content: "some pre text before the actual page title",
+            hash: "",
+            title: "d-s-l-test-no-title-h1-pre-text",
+            tags: [],
+          },
+          {
+            content: "bla bla",
+            hash: "",
+            title: "Page title from markdown",
+            tags: [],
+          },
+        ],
+      });
+    });
+
     it("parses nested sidebar categories", async () => {
       const htmlPath = path.join(
         __dirname,

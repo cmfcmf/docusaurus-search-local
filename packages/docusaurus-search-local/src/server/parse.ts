@@ -97,8 +97,7 @@ export function html2text(
 
   if (type === "docs" || type === "blog") {
     const HEADINGS = "h1, h2, h3";
-    const pageTitle = $("article header h1").first().text();
-
+    const pageTitle = $("article h1").first().text();
     const sections: Array<{
       title: string;
       hash: string;
