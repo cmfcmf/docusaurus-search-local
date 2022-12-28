@@ -75,6 +75,7 @@ type MyOptions = {
   indexDocSidebarParentCategories: number;
   indexBlog: boolean;
   indexPages: boolean;
+  ignore: string[];
   language: string | string[];
   style?: "none";
   maxSearchResults: number;
@@ -125,6 +126,8 @@ const optionsSchema = Joi.object({
 
   indexPages: Joi.boolean().default(false),
 
+  ignore: Joi.array().items(Joi.string()).default([]),
+
   language: Joi.alternatives(
     languageSchema,
     Joi.array().items(languageSchema)
@@ -154,6 +157,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     indexBlog,
     indexDocs,
     indexPages,
+    ignore,
     language,
     style,
     maxSearchResults,
@@ -171,6 +175,17 @@ export default function cmfcmfDocusaurusSearchLocal(
   if (lunrTokenizerSeparator) {
     // @ts-expect-error
     lunr.tokenizer.separator = lunrTokenizerSeparator;
+  }
+
+  // Check ignore paths
+  for (const route of ignore) {
+    if (route === "/") {
+      continue;
+    } else if (route.endsWith("/")) {
+      throw new Error(`Ignore route '${route}' ends with a trailing slash`);
+    } else if (!route.startsWith("/")) {
+      throw new Error(`Ignore route '${route}' does not start with a slash`);
+    }
   }
 
   if (Array.isArray(language) && language.length === 1) {
@@ -355,6 +370,10 @@ export const tokenize = (input) => lunr.tokenizer(input)
         );
       }
 
+      // To keep track if there are ignored pages that are not used
+      const initialIgnore = new Set(ignore);
+      const actuallyIgnored = new Set();
+
       const data = routesPaths
         .flatMap((url) => {
           // baseUrl includes the language prefix, thus `route` will be language-agnostic.
@@ -366,6 +385,13 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
           if (route === "404.html") {
             // Do not index error page.
+            return [];
+          }
+          const path = `/${route}`;
+          if (ignore.includes(path)) {
+            // Do not index pages in 'ignore' config.
+            actuallyIgnored.add(path);
+            initialIgnore.delete(path);
             return [];
           }
           if (indexDocs) {
@@ -465,6 +491,15 @@ export const tokenize = (input) => lunr.tokenizer(input)
             type,
           };
         });
+
+      logger.info(`Ignored pages: ${[...actuallyIgnored].join(", ")}`);
+      if (initialIgnore.size) {
+        logger.warn(
+          `The following pages in the "ignore" config option were not encountered: ${[
+            ...initialIgnore,
+          ].join(", ")}`
+        );
+      }
 
       logger.info("Parsing documents");
 

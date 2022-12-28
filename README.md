@@ -81,6 +81,13 @@ The following options are available (defaults are shown below):
   // /404.html is never indexed
   indexPages: false,
 
+  // Add pages to be excluded from the search index. A given page will be ignored for all
+  // documentation versions. If a baseUrl is set in docusaurus.config.js, it will be prepended.
+  // Similarly, language prefixes will be prepended.
+  ignore: [
+    // e.g.: '/docs/reference/changelog'
+  ]
+
   // language of your documentation, see next section
   language: "en",
 
@@ -125,6 +132,7 @@ The following options are available (defaults are shown below):
     contentBoost: 1,
     tagsBoost: 3,
     parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
+
   }
 }
 ```
