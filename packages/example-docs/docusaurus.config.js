@@ -10,7 +10,7 @@ module.exports = {
   organizationName: 'facebook', // Usually your GitHub org/user name.
   projectName: 'docusaurus', // Usually your repo name.
   i18n: {
-    defaultLocale: 'en',
+    defaultLocale: 'de',
     locales: ['en', 'de'],
     localeConfigs: {
       en: {
@@ -126,7 +126,8 @@ module.exports = {
   ],
   plugins: [
     [require("path").join(__dirname, "..", "..", "node_modules", "@cmfcmf", "docusaurus-search-local"), {
-      indexPages: true
+      indexPages: true,
+      searchEngine: "sqlite"
     }],
   ]
 };

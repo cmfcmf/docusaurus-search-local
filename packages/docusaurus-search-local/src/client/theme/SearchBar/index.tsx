@@ -114,7 +114,49 @@ const SearchBar = () => {
     parentCategoriesBoost,
     indexDocSidebarParentCategories,
     maxSearchResults,
+    searchEngine,
   } = usePluginData("@cmfcmf/docusaurus-search-local") as DSLAPluginData;
+
+  const workerRef: any = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      if (!SEARCH_INDEX_AVAILABLE || searchEngine !== "sqlite") {
+        return;
+      }
+
+      // sadly there's no good way to package workers and wasm directly so you need
+      // a way to get these two URLs from your bundler. This is the webpack5 way to
+      // create a asset bundle of the worker and wasm:
+      const workerUrl = new URL(
+        "sql.js-httpvfs/dist/sqlite.worker.js",
+        import.meta.url
+      );
+      const wasmUrl = new URL(
+        "sql.js-httpvfs/dist/sql-wasm.wasm",
+        import.meta.url
+      );
+      const dbPath = `${baseUrl}search-index.sqlite`;
+
+      const { createDbWorker } = require("sql.js-httpvfs");
+      workerRef.current = await createDbWorker(
+        [
+          {
+            from: "inline",
+            config: {
+              serverMode: "full", // file is just a plain old full sqlite database
+              url: dbPath, // url to the database (relative or full)
+              requestChunkSize: 4096,
+            },
+          },
+        ],
+        workerUrl.toString(),
+        wasmUrl.toString()
+      );
+
+      return () => workerRef.current.terminate();
+    })();
+  }, []);
 
   const history = useHistory<DSLALocationState>();
 
@@ -304,68 +346,114 @@ const SearchBar = () => {
               return getItemUrl(item);
             },
             async getItems() {
-              const tags = tagsRef.current;
-              const indexes = await Promise.all(
-                tags.map((tag) => getIndex(tag))
-              );
-
               const terms = tokenize(input);
 
-              return indexes
-                .flatMap(({ index, documents }) =>
-                  index
-                    .query((query) => {
-                      query.term(terms, {
-                        fields: ["title"],
-                        boost: titleBoost,
-                      });
-                      query.term(terms, {
-                        fields: ["title"],
-                        boost: titleBoost,
-                        wildcard: mylunr.Query.wildcard.TRAILING,
-                      });
-                      query.term(terms, {
-                        fields: ["content"],
-                        boost: contentBoost,
-                      });
-                      query.term(terms, {
-                        fields: ["content"],
-                        boost: contentBoost,
-                        wildcard: mylunr.Query.wildcard.TRAILING,
-                      });
-                      query.term(terms, {
-                        fields: ["tags"],
-                        boost: tagsBoost,
-                      });
-                      query.term(terms, {
-                        fields: ["tags"],
-                        boost: tagsBoost,
-                        wildcard: mylunr.Query.wildcard.TRAILING,
-                      });
+              if (searchEngine === "sqlite") {
+                // workerRef.current is a SQL.js instance except that all
+                // functions return Promises.
+                const results = await workerRef.current.db.exec(
+                  `
+                    SELECT
+                      documents.documentId,
+                      documents.pageTitle,
+                      documents.sectionTitle,
+                      documents.sectionRoute,
+                      documents.type
+                    FROM
+                      sections
+                      LEFT JOIN documents ON documents.documentId = sections.documentId
+                    WHERE
+                      sections MATCH '${input}'
+                    LIMIT ${maxSearchResults} OFFSET 0
+                  `
+                );
+                return (
+                  (results.length > 0 &&
+                    results[0].values.map(
+                      ([
+                        documentId,
+                        pageTitle,
+                        sectionTitle,
+                        sectionRoute,
+                        type,
+                      ]: any) => {
+                        return {
+                          document: {
+                            id: documentId,
+                            pageTitle,
+                            sectionTitle,
+                            sectionRoute,
+                            type,
+                          },
+                          score: 1,
+                          terms,
+                        };
+                      }
+                    )) ||
+                  []
+                );
+              } else {
+                const tags = tagsRef.current;
+                const indexes = await Promise.all(
+                  tags.map((tag) => getIndex(tag))
+                );
 
-                      if (indexDocSidebarParentCategories) {
+                return indexes
+                  .flatMap(({ index, documents }) =>
+                    index
+                      .query((query) => {
                         query.term(terms, {
-                          fields: ["sidebarParentCategories"],
-                          boost: parentCategoriesBoost,
+                          fields: ["title"],
+                          boost: titleBoost,
                         });
                         query.term(terms, {
-                          fields: ["sidebarParentCategories"],
-                          boost: parentCategoriesBoost,
+                          fields: ["title"],
+                          boost: titleBoost,
                           wildcard: mylunr.Query.wildcard.TRAILING,
                         });
-                      }
-                    })
-                    .slice(0, maxSearchResults)
-                    .map((result) => ({
-                      document: documents.find(
-                        (document) => document.id.toString() === result.ref
-                      )!,
-                      score: result.score,
-                      terms,
-                    }))
-                )
-                .sort((a, b) => b.score - a.score)
-                .slice(0, maxSearchResults);
+                        query.term(terms, {
+                          fields: ["content"],
+                          boost: contentBoost,
+                        });
+                        query.term(terms, {
+                          fields: ["content"],
+                          boost: contentBoost,
+                          wildcard: mylunr.Query.wildcard.TRAILING,
+                        });
+                        query.term(terms, {
+                          fields: ["tags"],
+                          boost: tagsBoost,
+                        });
+                        query.term(terms, {
+                          fields: ["tags"],
+                          boost: tagsBoost,
+                          wildcard: mylunr.Query.wildcard.TRAILING,
+                        });
+
+                        if (indexDocSidebarParentCategories) {
+                          query.term(terms, {
+                            fields: ["sidebarParentCategories"],
+                            boost: parentCategoriesBoost,
+                          });
+                          query.term(terms, {
+                            fields: ["sidebarParentCategories"],
+                            boost: parentCategoriesBoost,
+                            wildcard: mylunr.Query.wildcard.TRAILING,
+                          });
+                        }
+                      })
+                      .slice(0, maxSearchResults)
+                      .map((result) => ({
+                        document: documents.find(
+                          (document) => document.id.toString() === result.ref
+                        )!,
+                        score: result.score,
+                        terms,
+                      }))
+                  )
+                  .sort((a, b) => b.score - a.score)
+                  .slice(0, maxSearchResults);
+              }
             },
           },
         ];
