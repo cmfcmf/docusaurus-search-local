@@ -129,7 +129,11 @@ The following options are available (defaults are shown below):
 }
 ```
 
-You can now use the search bar to search your documentation.
+You can now use the search bar to search your documentation:
+
+```console
+npm run swizzle @cmfcmf/docusaurus-search-local SearchBar -- --eject --danger
+```
 
 **Important: Search only works for the statically built documentation (i.e., after you ran `yarn build` in your documentation folder).**
 

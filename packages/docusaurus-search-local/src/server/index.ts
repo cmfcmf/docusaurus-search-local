@@ -18,7 +18,7 @@ import type { DSLAPluginData, MyDocument } from "../types";
 import { html2text, getDocusaurusTag } from "./parse";
 import logger from "./logger";
 
-const lunr = require("../lunr.js") as (
+const lunr = require("lunr") as (
   config: import("lunr").ConfigFunction
 ) => import("lunr").Index;
 
@@ -185,7 +185,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     generated += 'import "./index.css";\n';
   }
 
-  generated += 'const lunr = require("../../../lunr.js");\n';
+  generated += 'const lunr = require("lunr");\n';
 
   function handleLangCode(code: string) {
     let generated = "";

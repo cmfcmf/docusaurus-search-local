@@ -1,4 +1,4 @@
-const lunr = require("../../../lunr.js") as ((
+const lunr = require("lunr") as ((
   config: import("lunr").ConfigFunction
 ) => import("lunr").Index) & {
   Index: { load: (index: object) => import("lunr").Index };
