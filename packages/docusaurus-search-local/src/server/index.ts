@@ -185,7 +185,7 @@ export default function cmfcmfDocusaurusSearchLocal(
     generated += 'import "./index.css";\n';
   }
 
-  generated += 'const lunr = require("../../../lunr.js");\n';
+  generated += 'import * as lunr from "../../../lunr.js";\n';
 
   function handleLangCode(code: string) {
     let generated = "";
