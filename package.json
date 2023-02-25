@@ -5,7 +5,10 @@
     "packages/*"
   ],
   "dependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
     "@types/node": "^16.18.12",
+    "git-branch-is": "^4.0.0",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.2",
