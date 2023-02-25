@@ -26,13 +26,13 @@ Feature Highlights:
 ## Installation
 
 ```bash
-yarn add @cmfcmf/docusaurus-search-local
+npm install @cmfcmf/docusaurus-search-local
 ```
 
 or
 
 ```bash
-npm install @cmfcmf/docusaurus-search-local
+yarn add @cmfcmf/docusaurus-search-local
 ```
 
 ## Usage
@@ -131,10 +131,10 @@ The following options are available (defaults are shown below):
 
 You can now use the search bar to search your documentation.
 
-**Important: Search only works for the statically built documentation (i.e., after you ran `yarn build` in your documentation folder).**
+**Important: Search only works for the statically built documentation (i.e., after you ran `npm run docusaurus build` in your documentation folder).**
 
-**Search does **not** work in development (i.e., when running `yarn start`).**
-If you want to test search locally, first build the documentation with `yarn build`, and then serve it via `yarn serve`.
+**Search does **not** work in development (i.e., when running `npm run docusaurus start`).**
+If you want to test search locally, first build the documentation with `npm run docusaurus build`, and then serve it via `npm run docusaurus serve`.
 
 ### Non-English Documentation
 
@@ -164,7 +164,7 @@ Read more at: https://docusaurus.io/docs/i18n/tutorial#translate-json-files
 
 If building your documentation produces an error, you can build it in debug mode to figure out
 which page is causing it. To do so, simply set the `DEBUG` environment variable when building
-your documentation: `DEBUG=1 yarn build`.
+your documentation: `DEBUG=1 npm run docusaurus build`.
 
 ## CONTRIBUTING
 

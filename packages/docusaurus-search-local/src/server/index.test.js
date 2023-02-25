@@ -30,11 +30,11 @@ const DEFAULT_OPTIONS = {
 it("validates options correctly", () => {
   expect(() =>
     validateOptions({ options: { foo: 123 }, validate })
-  ).toThrowErrorMatchingInlineSnapshot(`"\\"foo\\" is not allowed"`);
+  ).toThrowErrorMatchingInlineSnapshot(`""foo" is not allowed"`);
 
   expect(() =>
     validateOptions({ options: { style: "modern" }, validate })
-  ).toThrowErrorMatchingInlineSnapshot(`"\\"style\\" must be [none]"`);
+  ).toThrowErrorMatchingInlineSnapshot(`""style" must be [none]"`);
 
   expect(validateOptions({ options: {}, validate })).toEqual(DEFAULT_OPTIONS);
 

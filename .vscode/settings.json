@@ -3,5 +3,5 @@
     "lib/**": true,
     "example-docs/**": true
   },
-  "jest.jestCommandLine": "yarn test"
+  "jest.jestCommandLine": "npx turbo test --",
 }

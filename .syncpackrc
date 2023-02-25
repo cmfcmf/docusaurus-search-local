@@ -1,0 +1,30 @@
+{
+  "versionGroups": [
+    {
+      "label": "Example Docs must always use the local version of the search plugin",
+      "packages": ["example-docs"],
+      "dependencies": ["@cmfcmf/docusaurus-search-local"],
+      "pinVersion": "*"
+    },
+    {
+      "label": "The Docusaurus dev dependencies must all have the highest version supported by the plugin.",
+      "packages": ["**"],
+      "dependencies": ["@docusaurus/**"],
+      "dependencyTypes": ["dev"],
+      "pinVersion": "^2.3.1"
+    },
+    {
+      "label": "The Docusaurus peer dependencies must all have the lowest version supported by the plugin.",
+      "packages": ["**"],
+      "dependencies": ["@docusaurus/**"],
+      "dependencyTypes": ["peer"],
+      "pinVersion": "^2.0.0"
+    },
+    {
+      "label": "All dependencies should follow the versions of the search plugin",
+      "packages": ["**"],
+      "dependencies": ["**"],
+      "snapTo": ["@cmfcmf/docusaurus-search-local"]
+    }
+  ]
+}

@@ -4,25 +4,28 @@
   "workspaces": [
     "packages/*"
   ],
-  "devDependencies": {
-    "@docusaurus/core": "^2.2.0",
-    "@docusaurus/preset-classic": "^2.2.0",
-    "@playwright/test": "^1.17.1",
+  "dependencies": {
+    "@types/node": "^16.18.12",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.2",
-    "playwright": "^1.17.1",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "prettier": "^2.8.4",
+    "syncpack": "^9.8.4",
+    "turbo": "^1.8.2"
   },
   "scripts": {
-    "build": "yarn --cwd packages/docusaurus-search-local build && yarn --cwd packages/example-docs build",
-    "build-and-serve": "yarn build && yarn --cwd packages/example-docs serve",
     "prepare": "husky install",
-    "lint": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "format": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "test": "jest packages/docusaurus-search-local/src",
-    "test:e2e": "playwright test e2e-tests"
+    "lint": "turbo lint:all",
+    "format": "turbo format:all",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "serve": "turbo serve",
+    "test": "turbo test",
+    "test:e2e": "turbo test:e2e",
+    "lint:style": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "lint:dependencies": "syncpack list-mismatches",
+    "format:style": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "format:dependencies": "syncpack fix-mismatches"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
@@ -31,6 +34,7 @@
   },
   "engines": {
     "node": ">=16.14",
-    "yarn": "<2"
-  }
+    "npm": ">=8"
+  },
+  "packageManager": "npm@8.11.0"
 }
