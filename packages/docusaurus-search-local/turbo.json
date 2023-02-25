@@ -1,0 +1,18 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "test": {
+      "dependsOn": ["example-docs#build"]
+    },
+    "test:e2e": {
+      "dependsOn": ["example-docs#build"]
+    },
+    "build": {
+      "dependsOn": ["^build", "build:client", "build:server"],
+      "outputs": ["lib/**"]
+    },
+    "build:client": {},
+    "build:server": {}
+  }
+}

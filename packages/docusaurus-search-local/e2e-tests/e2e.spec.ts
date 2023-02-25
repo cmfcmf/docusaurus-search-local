@@ -1,6 +1,6 @@
 import { test, expect, Page } from "@playwright/test";
 
-async function search(page, text: string) {
+async function search(page: Page, text: string) {
   const searchFieldButton = page.locator(".dsla-search-field button");
   searchFieldButton.click();
 
@@ -10,10 +10,10 @@ async function search(page, text: string) {
 }
 
 test("basic search works", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
+  await page.goto("/");
   await search(page, "3");
 
-  await page.waitForURL("http://localhost:3000/docs/doc3");
+  await page.waitForURL("/docs/doc3");
   await expect(page.locator('mark[data-markjs="true"]')).toHaveText("3");
 });
 
@@ -28,7 +28,7 @@ async function expectDocVersion(page: Page, version: string) {
 test("version matches version in version selector navbar item", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000/");
+  await page.goto("/");
   const searchFieldButton = page.locator(".dsla-search-field button");
 
   await expect(searchFieldButton).toHaveText("Search...");
@@ -47,7 +47,7 @@ test("version matches version in version selector navbar item", async ({
   await expectDocVersion(page, "current");
 
   // Go back to the homepage, which does not indicate in its url which version is active
-  await page.goto("http://localhost:3000/");
+  await page.goto("/");
   await expect(currentVersionButton).toHaveText("Next");
   await expectDocVersion(page, "current");
 
@@ -57,23 +57,23 @@ test("version matches version in version selector navbar item", async ({
   await expectDocVersion(page, "current");
 
   // Go to a doc of version 1.0.0, it should change the version back to 1.0.0.
-  await page.goto("http://localhost:3000/docs/d-s-l-test");
+  await page.goto("/docs/d-s-l-test");
   await expect(currentVersionButton).toHaveText("1.0.0");
   await expectDocVersion(page, "1.0.0");
 });
 
 test("language-based search index is used", async ({ page }) => {
   // Go to a random English doc
-  await page.goto("http://localhost:3000/docs/next/d-s-l-test");
+  await page.goto("/docs/next/d-s-l-test");
 
   await search(page, "english");
-  await page.waitForURL("http://localhost:3000/docs/next/translated");
+  await page.waitForURL("/docs/next/translated");
 
   // Go to a random German doc
-  await page.goto("http://localhost:3000/de/docs/next/d-s-l-test");
+  await page.goto("/de/docs/next/d-s-l-test");
 
   await search(page, "german");
-  await page.waitForURL("http://localhost:3000/de/docs/next/translated");
+  await page.waitForURL("/de/docs/next/translated");
 });
 
 test("dark mode is copied from <html> to <body> correctly", async ({
@@ -83,7 +83,7 @@ test("dark mode is copied from <html> to <body> correctly", async ({
     await page.locator(`html[data-theme=${theme}]`);
     await page.locator(`body[data-theme=${theme}]`);
   }
-  await page.goto("http://localhost:3000/");
+  await page.goto("/");
   await check("light");
   await page.locator("svg[class^='lightToggleIcon']").click();
   await check("dark");

@@ -1,6 +1,7 @@
 /packages/docusaurus-search-local/src/client/theme/SearchBar/generated.js
 /packages/docusaurus-search-local/lib
 /scripts/preview.webm
+.turbo
 
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node
