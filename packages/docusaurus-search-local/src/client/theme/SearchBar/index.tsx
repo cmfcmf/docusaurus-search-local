@@ -178,10 +178,7 @@ const SearchBar = () => {
       container: autocompleteRef.current,
       placeholder,
       // Use React instead of Preact
-      renderer: { createElement, Fragment },
-      render({ children }, root) {
-        render(children as any, root);
-      },
+      renderer: { createElement, Fragment, render: render as any },
       // Use react-router for navigation
       navigator: {
         navigate({ item, itemUrl }) {
