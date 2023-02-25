@@ -4,7 +4,8 @@
     "module": "CommonJS",
     "lib": ["ESNext", "DOM"],
 
-    "declaration": true,
+    // Declarations break Docusaurus' 'write-translations' command (#163, #129, #145)
+    "declaration": false,
     "declarationMap": false,
     "jsx": "react",
 

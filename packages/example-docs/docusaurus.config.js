@@ -125,7 +125,7 @@ module.exports = {
     ],
   ],
   plugins: [
-    [require("path").join(__dirname, "..", "..", "node_modules", "@cmfcmf", "docusaurus-search-local"), {
+    [require.resolve("@cmfcmf/docusaurus-search-local"), {
       indexPages: true
     }],
   ]
