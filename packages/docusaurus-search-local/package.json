@@ -80,7 +80,7 @@
   },
   "scripts": {
     "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/client/**/*.css lib",
-    "build:server": "tsc --project tsconfig.server.json && copyfiles --up 1 src/lunr.js lib",
+    "build:server": "tsc --project tsconfig.server.json && copyfiles --up 1 src/lunr.js src/server/lunr-generator.js lib",
     "dev": "concurrently --names client,server --prefix-colors blue,green npm:dev:client npm:dev:server",
     "dev:client": "concurrently --names tsc,cp npm:dev:client:tsc npm:dev:client:cp",
     "dev:client:tsc": "tsc --project tsconfig.client.json --watch",

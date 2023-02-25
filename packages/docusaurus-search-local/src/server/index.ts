@@ -256,20 +256,6 @@ export const tokenize = (input) => lunr.tokenizer(input)
   }
   generated += `export const mylunr = lunr;\n`;
 
-  ["src", "lib"].forEach((folder) => {
-    const generatedPath = path.join(
-      __dirname,
-      "..",
-      "..",
-      folder,
-      "client",
-      "theme",
-      "SearchBar",
-      "generated.js"
-    );
-    fs.writeFileSync(generatedPath, generated);
-  });
-
   return {
     name: "@cmfcmf/docusaurus-search-local",
     getThemePath() {
@@ -594,6 +580,26 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
         )
       );
+    },
+    configureWebpack: (_config, isServer, utils) => {
+      const { getJSLoader } = utils;
+      return {
+        mergeStrategy: { "module.rules": "prepend" },
+        module: {
+          rules: [
+            {
+              test: /client\/theme\/SearchBar\/d-s-l-a-generated\.js$/,
+              use: [
+                getJSLoader({ isServer }),
+                {
+                  loader: path.join(__dirname, "lunr-generator.js"),
+                  options: { generated },
+                },
+              ],
+            },
+          ],
+        },
+      };
     },
   };
 }

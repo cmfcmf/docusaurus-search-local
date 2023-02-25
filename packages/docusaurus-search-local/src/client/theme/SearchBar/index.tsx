@@ -12,7 +12,7 @@ import Head from "@docusaurus/Head";
 import { translate } from "@docusaurus/Translate";
 import { useHistory } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { mylunr, tokenize } from "./generatedWrapper";
+import { mylunr, tokenize } from "./d-s-l-a-generated";
 import {
   DSLALocationState,
   HighlightSearchResults,
