@@ -25,13 +25,16 @@ const lunr = require("../lunr.js") as (
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 
-// FIXME: Duplicated in src/theme/SearchBar/util.js
 function urlMatchesPrefix(url: string, prefix: string) {
   if (prefix.startsWith("/")) {
-    throw new Error(`prefix must not start with a /. This is a bug.`);
+    throw new Error(
+      `prefix must not start with a /. This is a bug (url: "${url}", prefix: ${prefix}).`
+    );
   }
   if (prefix.endsWith("/")) {
-    throw new Error(`prefix must not end with a /. This is a bug.`);
+    throw new Error(
+      `prefix must not end with a /. This is a bug (url: "${url}", prefix: ${prefix}).`
+    );
   }
   return prefix === "" || url === prefix || url.startsWith(`${prefix}/`);
 }
@@ -356,10 +359,12 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
           if (indexDocs) {
             for (const docsPlugin of docsPlugins.values()) {
-              const docsBasePath = trimTrailingSlash(
-                docsPlugin.options.routeBasePath
+              const docsBasePath = trimLeadingSlash(
+                trimTrailingSlash(docsPlugin.options.routeBasePath)
               );
-              const docsTagsPath = docsPlugin.options.tagsBasePath;
+              const docsTagsPath = trimLeadingSlash(
+                trimTrailingSlash(docsPlugin.options.tagsBasePath)
+              );
 
               if (urlMatchesPrefix(route, docsBasePath)) {
                 if (
@@ -385,10 +390,12 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
           if (indexBlog) {
             for (const blogPlugin of blogPlugins.values()) {
-              const blogBasePath = trimTrailingSlash(
-                blogPlugin.options.routeBasePath
+              const blogBasePath = trimLeadingSlash(
+                trimTrailingSlash(blogPlugin.options.routeBasePath)
               );
-              const blogTagsPath = blogPlugin.options.tagsBasePath;
+              const blogTagsPath = trimLeadingSlash(
+                trimTrailingSlash(blogPlugin.options.tagsBasePath)
+              );
 
               if (urlMatchesPrefix(route, blogBasePath)) {
                 if (
@@ -415,8 +422,8 @@ export const tokenize = (input) => lunr.tokenizer(input)
           }
           if (indexPages) {
             for (const pagesPlugin of pagesPlugins.values()) {
-              const pagesBasePath = trimTrailingSlash(
-                pagesPlugin.options.routeBasePath
+              const pagesBasePath = trimLeadingSlash(
+                trimTrailingSlash(pagesPlugin.options.routeBasePath)
               );
 
               if (urlMatchesPrefix(route, pagesBasePath)) {
