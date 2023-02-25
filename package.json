@@ -10,7 +10,7 @@
     "@types/node": "^16.18.12",
     "git-branch-is": "^4.0.0",
     "husky": "^7.0.4",
-    "lerna": "^4.0.0",
+    "lerna": "^6.5.1",
     "lint-staged": "^12.1.2",
     "prettier": "^2.8.4",
     "syncpack": "^9.8.4",
