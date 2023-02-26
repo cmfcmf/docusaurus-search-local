@@ -1,7 +1,35 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+This change log is automatically generated based on commit messags. See
+[Commit Message Guidelines](CONTRIBUTING.md#commit-message-guidelines)
+for more information.
+
+## [1.0.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.11.0...v1.0.0) (2023-02-26)
+
+### ⚠ BREAKING CHANGES
+
+- The minimum supported Docusaurus version is now v2.0.0.
+
+### Features
+
+- Add Danish translations ([deb44b7](https://github.com/cmfcmf/docusaurus-search-local/commit/deb44b7e20e08747b4e7a744e7d21a88e338903b))
+- Create Norwegian translation ([f1833f3](https://github.com/cmfcmf/docusaurus-search-local/commit/f1833f3da543b7f723e04bd0ff9f5d0fd511f686))
+- Create Russion translation, closes [#158](https://github.com/cmfcmf/docusaurus-search-local/issues/158) ([9917a13](https://github.com/cmfcmf/docusaurus-search-local/commit/9917a135651f1ab292a8f27e6e3b57af12d94265))
+- Create Taiwanese translation ([4437359](https://github.com/cmfcmf/docusaurus-search-local/commit/4437359eca9396603f574396bd6609587222ee25))
+- Create Thai translation ([#164](https://github.com/cmfcmf/docusaurus-search-local/issues/164)) ([ba2d41e](https://github.com/cmfcmf/docusaurus-search-local/commit/ba2d41ebf45f10e2810a44d6800daca18d03f17a))
+
+### Bug Fixes
+
+- Correctly extract page titles when not specified in frontmatter, closes [#146](https://github.com/cmfcmf/docusaurus-search-local/issues/146) ([1f33151](https://github.com/cmfcmf/docusaurus-search-local/commit/1f33151bbef355a82361734f434e65af624b5ac2))
+- Do not generate .d.ts files, which break `docusaurus write-translations`, closes [#145](https://github.com/cmfcmf/docusaurus-search-local/issues/145), [#129](https://github.com/cmfcmf/docusaurus-search-local/issues/129), [#163](https://github.com/cmfcmf/docusaurus-search-local/issues/163), [#167](https://github.com/cmfcmf/docusaurus-search-local/issues/167) ([c09cc94](https://github.com/cmfcmf/docusaurus-search-local/commit/c09cc942bd2e4078fcd517b965f63848079f5007))
+- Fix potential error when calculating paths, closes [#136](https://github.com/cmfcmf/docusaurus-search-local/issues/136) ([26f1b71](https://github.com/cmfcmf/docusaurus-search-local/commit/26f1b7132087211ef4211f60f55dbe3d9ab4b2fe))
+- Resolve warning regarding `render` parameter in autocomplete, closes [#148](https://github.com/cmfcmf/docusaurus-search-local/issues/148) ([66d41e4](https://github.com/cmfcmf/docusaurus-search-local/commit/66d41e479f8fab7be13047d1761b1e4f6be562c9))
+- Support Yarn pnp, closes [#139](https://github.com/cmfcmf/docusaurus-search-local/issues/139) ([045d534](https://github.com/cmfcmf/docusaurus-search-local/commit/045d5346470eea2a5a30dd944e138ef0c5400032))
+
+### Other
+
+- Update to Docusaurus v2 ([f8619b7](https://github.com/cmfcmf/docusaurus-search-local/commit/f8619b72ec748ac084b53cf7c88157419a27863a))
 
 # [0.11.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.10.0...v0.11.0) (2022-06-12)
 
