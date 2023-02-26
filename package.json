@@ -8,6 +8,7 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@types/node": "^16.18.12",
+    "commit-and-tag-version": "^11.1.0",
     "git-branch-is": "^4.0.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
@@ -27,7 +28,8 @@
     "lint:style": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
     "lint:dependencies": "syncpack list-mismatches",
     "format:style": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
-    "format:dependencies": "syncpack fix-mismatches"
+    "format:dependencies": "syncpack fix-mismatches",
+    "release": "bash scripts/release.sh"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
