@@ -73,8 +73,8 @@ The following options are available (defaults are shown below):
   //
   // Do _not_ use Infinity, the value must be a JSON-serializable integer.
   indexDocSidebarParentCategories: 0,
-  
-  // Includes parent categories path in search result       
+
+  // Includes parent categories path in search result
   includeParentCategoriesInPageTitle: true,
 
   // whether to index blog pages

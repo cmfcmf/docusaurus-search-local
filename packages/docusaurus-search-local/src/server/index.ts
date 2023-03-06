@@ -547,7 +547,9 @@ export const tokenize = (input) => lunr.tokenizer(input)
                     indexDocSidebarParentCategories > 0 &&
                     docSidebarParentCategories
                   ) {
-                    const clonedDocSidebarParentCategories = [... docSidebarParentCategories];
+                    const clonedDocSidebarParentCategories = [
+                      ...docSidebarParentCategories,
+                    ];
                     sidebarParentCategories = clonedDocSidebarParentCategories
                       .reverse()
                       .slice(0, indexDocSidebarParentCategories)
@@ -577,16 +579,17 @@ export const tokenize = (input) => lunr.tokenizer(input)
                     type,
                     docSidebarParentCategories,
                   }): MyDocument => {
-
                     let fullTitle = pageTitle;
 
                     if (
-                        includeParentCategoriesInPageTitle &&
-                        docSidebarParentCategories &&
-                        docSidebarParentCategories.length > 0
+                      includeParentCategoriesInPageTitle &&
+                      docSidebarParentCategories &&
+                      docSidebarParentCategories.length > 0
                     ) {
-                      fullTitle = docSidebarParentCategories
-                          .join(' > ') + ' > ' + pageTitle;
+                      fullTitle =
+                        docSidebarParentCategories.join(" > ") +
+                        " > " +
+                        pageTitle;
                     }
 
                     return {
@@ -595,7 +598,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
                       sectionTitle,
                       sectionRoute,
                       type,
-                    }
+                    };
                   }
                 ),
                 index,
