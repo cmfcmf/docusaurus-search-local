@@ -7,12 +7,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     # Prevent duplicates runs for PRs from non-forks.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+    defaults:
+      run:
+        # TODO: Our package.json scripts currently assume that they are run
+        # from bash, even on Windows.
+        # We should probably make them OS-agnostic instead.
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         node-version: [16.x, 18.x]
         docusaurus-version:
           - "v2.4.0"
@@ -23,12 +30,17 @@ jobs:
           - "canary"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    # Uninstall nodejieba for the moment, as it's not compatible with Node 18 on Windows.
+    # TODO: Remove this once a new version of nodejieba is released (the fix is already on its master branch).
+    - run: npm uninstall --ignore-scripts --save -w packages/docusaurus-search-local nodejieba
+      if: runner.os == 'Windows' && matrix.node-version == '18.x'
 
     - run: npm ci
     - run: npm run lint
@@ -42,7 +54,9 @@ jobs:
 
     # Install OS dependencies
     # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
-    - run: sudo apt update && npx playwright install-deps
+    - run: sudo apt update
+      if: runner.os == 'Linux'
+    - run: npx playwright install-deps
     # Install Browsers
     - run: npx playwright install
     - run: npm run test:e2e -- -- --browser=all --forbid-only
