@@ -5,6 +5,16 @@ This change log is automatically generated based on commit messags. See
 [Commit Message Guidelines](CONTRIBUTING.md#commit-message-guidelines)
 for more information.
 
+## [1.1.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v1.0.0...v1.1.0) (2023-04-10)
+
+### Features
+
+- Add Dutch translations ([#178](https://github.com/cmfcmf/docusaurus-search-local/issues/178)) ([0c3b492](https://github.com/cmfcmf/docusaurus-search-local/commit/0c3b492ecaeb8969f69cd27de98576b5e20c26a8))
+
+### Bug Fixes
+
+- Re-add support for using this plugin on Windows ([0337ada](https://github.com/cmfcmf/docusaurus-search-local/commit/0337ada1ecf3e188eac636dfbc47a363a72008e6)), closes [#175](https://github.com/cmfcmf/docusaurus-search-local/issues/175) [#179](https://github.com/cmfcmf/docusaurus-search-local/issues/179)
+
 ## [1.0.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v0.11.0...v1.0.0) (2023-02-26)
 
 ### ⚠ BREAKING CHANGES
