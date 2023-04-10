@@ -595,7 +595,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
         module: {
           rules: [
             {
-              test: /client\/theme\/SearchBar\/d-s-l-a-generated\.js$/,
+              test: /client[\\\/]theme[\\\/]SearchBar[\\\/]d-s-l-a-generated\.js$/,
               use: [
                 getJSLoader({ isServer }),
                 {
