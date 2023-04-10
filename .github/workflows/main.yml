@@ -13,6 +13,7 @@ jobs:
       matrix:
         node-version: [16.x, 18.x]
         docusaurus-version:
+          - "v2.4.0"
           - "v2.3.1"
           - "v2.2.0"
           - "v2.1.0"
