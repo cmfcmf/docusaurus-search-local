@@ -1,6 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-if npx git-branch-is main; then
+if npx git-branch-is -q main; then
   npx --no -- commitlint --edit
 fi
