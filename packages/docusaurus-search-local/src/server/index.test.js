@@ -11,6 +11,7 @@ const validate = (schema, options) => {
 const DEFAULT_OPTIONS = {
   indexDocs: true,
   indexDocSidebarParentCategories: 0,
+  includeParentCategoriesInPageTitle: false,
   indexBlog: true,
   indexPages: false,
   language: "en",
@@ -57,6 +58,7 @@ it("validates options correctly", () => {
   const options = {
     indexDocs: false,
     indexDocSidebarParentCategories: 3,
+    includeParentCategoriesInPageTitle: false,
     indexBlog: false,
     indexPages: true,
     language: "hi",
