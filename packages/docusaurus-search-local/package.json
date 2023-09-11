@@ -32,7 +32,8 @@
     "cheerio": "^1.0.0-rc.9",
     "clsx": "^1.1.1",
     "lunr-languages": "^1.4.0",
-    "mark.js": "^8.11.1"
+    "mark.js": "^8.11.1",
+    "tslib": "^2.6.0"
   },
   "peerDependencies": {
     "@docusaurus/core": "^2.0.0",
