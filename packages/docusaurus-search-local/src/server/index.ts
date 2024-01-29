@@ -98,6 +98,7 @@ const languageSchema = Joi.string().valid(
   "de",
   "en",
   "es",
+  "fa",
   "fi",
   "fr",
   "hi",
