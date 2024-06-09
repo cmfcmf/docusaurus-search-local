@@ -21,8 +21,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [16.x, 18.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
         docusaurus-version:
+          - "v2.4.3"
+          - "v2.4.1"
           - "v2.4.0"
           - "v2.3.1"
           - "v2.2.0"
@@ -31,9 +33,9 @@ jobs:
           - "canary"
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -41,7 +43,7 @@ jobs:
     # Uninstall nodejieba for the moment, as it's not compatible with Node 18 on Windows.
     # TODO: Remove this once a new version of nodejieba is released (the fix is already on its master branch).
     - run: npm uninstall --ignore-scripts --save -w packages/docusaurus-search-local nodejieba
-      if: runner.os == 'Windows' && matrix.node-version == '18.x'
+      if: runner.os == 'Windows' && (matrix.node-version == '18.x' || matrix.node-version == '20.x' || matrix.node-version == '22.x')
 
     - run: npm ci
     - run: npm run lint
