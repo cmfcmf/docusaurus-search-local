@@ -16,6 +16,7 @@ jobs:
         # from bash, even on Windows.
         # We should probably make them OS-agnostic instead.
         shell: bash
+    continue-on-error: ${{ matrix.docusaurus-version == 'canary' }}
     strategy:
       fail-fast: false
       matrix:
