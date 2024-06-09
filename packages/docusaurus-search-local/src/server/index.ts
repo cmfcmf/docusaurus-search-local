@@ -76,6 +76,7 @@ function codeTranslationLocalesToTry(locale: string): string[] {
 type MyOptions = {
   indexDocs: boolean;
   indexDocSidebarParentCategories: number;
+  includeParentCategoriesInPageTitle: boolean;
   indexBlog: boolean;
   indexPages: boolean;
   language: string | string[];
@@ -124,6 +125,8 @@ const optionsSchema = Joi.object({
     .max(Number.MAX_SAFE_INTEGER)
     .default(0),
 
+  includeParentCategoriesInPageTitle: Joi.boolean().default(false),
+
   indexBlog: Joi.boolean().default(true),
 
   indexPages: Joi.boolean().default(false),
@@ -154,6 +157,7 @@ export default function cmfcmfDocusaurusSearchLocal(
 ): Plugin<unknown> {
   let {
     indexDocSidebarParentCategories,
+    includeParentCategoriesInPageTitle,
     indexBlog,
     indexDocs,
     indexPages,
@@ -543,7 +547,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
                     indexDocSidebarParentCategories > 0 &&
                     docSidebarParentCategories
                   ) {
-                    sidebarParentCategories = docSidebarParentCategories
+                    sidebarParentCategories = [...docSidebarParentCategories]
                       .reverse()
                       .slice(0, indexDocSidebarParentCategories)
                       .join(" ");
@@ -570,13 +574,29 @@ export const tokenize = (input) => lunr.tokenizer(input)
                     sectionTitle,
                     sectionRoute,
                     type,
-                  }): MyDocument => ({
-                    id,
-                    pageTitle,
-                    sectionTitle,
-                    sectionRoute,
-                    type,
-                  })
+                    docSidebarParentCategories,
+                  }): MyDocument => {
+                    let fullTitle = pageTitle;
+
+                    if (
+                      includeParentCategoriesInPageTitle &&
+                      docSidebarParentCategories &&
+                      docSidebarParentCategories.length > 0
+                    ) {
+                      fullTitle = [
+                        ...docSidebarParentCategories,
+                        pageTitle,
+                      ].join(" > ");
+                    }
+
+                    return {
+                      id,
+                      pageTitle: fullTitle,
+                      sectionTitle,
+                      sectionRoute,
+                      type,
+                    };
+                  }
                 ),
                 index,
               }),
