@@ -547,10 +547,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
                     indexDocSidebarParentCategories > 0 &&
                     docSidebarParentCategories
                   ) {
-                    const clonedDocSidebarParentCategories = [
-                      ...docSidebarParentCategories,
-                    ];
-                    sidebarParentCategories = clonedDocSidebarParentCategories
+                    sidebarParentCategories = [...docSidebarParentCategories]
                       .reverse()
                       .slice(0, indexDocSidebarParentCategories)
                       .join(" ");
@@ -586,10 +583,10 @@ export const tokenize = (input) => lunr.tokenizer(input)
                       docSidebarParentCategories &&
                       docSidebarParentCategories.length > 0
                     ) {
-                      fullTitle =
-                        docSidebarParentCategories.join(" > ") +
-                        " > " +
-                        pageTitle;
+                      fullTitle = [
+                        ...docSidebarParentCategories,
+                        pageTitle,
+                      ].join(" > ");
                     }
 
                     return {

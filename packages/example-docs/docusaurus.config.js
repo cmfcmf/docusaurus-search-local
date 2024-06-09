@@ -126,7 +126,8 @@ module.exports = {
   ],
   plugins: [
     [require.resolve("@cmfcmf/docusaurus-search-local"), {
-      indexPages: true
+      indexPages: true,
+      includeParentCategoriesInPageTitle: true,
     }],
   ]
 };
