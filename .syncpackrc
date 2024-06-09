@@ -18,7 +18,7 @@
       "packages": ["**"],
       "dependencies": ["@docusaurus/**"],
       "dependencyTypes": ["peer"],
-      "pinVersion": "^2.0.0"
+      "pinVersion": "^2.0.0 || ~3.1"
     },
     {
       "label": "All dependencies should follow the versions of the search plugin",
