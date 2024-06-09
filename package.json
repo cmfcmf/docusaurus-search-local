@@ -5,13 +5,13 @@
     "packages/*"
   ],
   "dependencies": {
-    "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
     "@types/node": "^16.18.12",
     "commit-and-tag-version": "^11.1.0",
     "git-branch-is": "^4.0.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.1.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
     "prettier": "^2.8.4",
     "syncpack": "^9.8.4",
     "turbo": "^1.8.2"
