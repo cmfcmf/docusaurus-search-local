@@ -13,7 +13,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^2.8.4",
-    "syncpack": "^9.8.4",
+    "syncpack": "^12.3.2",
     "turbo": "^1.8.2"
   },
   "scripts": {
