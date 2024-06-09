@@ -5,6 +5,18 @@ This change log is automatically generated based on commit messags. See
 [Commit Message Guidelines](CONTRIBUTING.md#commit-message-guidelines)
 for more information.
 
+## [1.2.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v1.1.0...v1.2.0) (2024-06-09)
+
+### Features
+
+- Add Basque translations ([74f139b](https://github.com/cmfcmf/docusaurus-search-local/commit/74f139b19ac8fa69d3a81368b5563b982a82c8af)), closes [#188](https://github.com/cmfcmf/docusaurus-search-local/issues/188)
+- Add Hungarian translation ([c9ba620](https://github.com/cmfcmf/docusaurus-search-local/commit/c9ba62063d7bae4b4507b5abe62c52abd7399595))
+- Add option to show parent categories path in search result ([#173](https://github.com/cmfcmf/docusaurus-search-local/issues/173)) ([8822f78](https://github.com/cmfcmf/docusaurus-search-local/commit/8822f78172d9124021e1e3d49deb3a8fb2a75da5))
+- Create Farsi translation ([#201](https://github.com/cmfcmf/docusaurus-search-local/issues/201)) ([c94de72](https://github.com/cmfcmf/docusaurus-search-local/commit/c94de727dd4edcf9aeb365e644b943f24028280f))
+- Create Turkish translation ([#202](https://github.com/cmfcmf/docusaurus-search-local/issues/202)) ([6e36782](https://github.com/cmfcmf/docusaurus-search-local/commit/6e36782663c29d4e6f7a7a94a888bf855ca572e7))
+- Estonian translation ([4597150](https://github.com/cmfcmf/docusaurus-search-local/commit/4597150d364d7899c67b10ce121fa87d90df4f24))
+- Ukrainian translation ([#186](https://github.com/cmfcmf/docusaurus-search-local/issues/186)) ([d6724e3](https://github.com/cmfcmf/docusaurus-search-local/commit/d6724e3509959b4e280431fa5b6076d308460611))
+
 ## [1.1.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v1.0.0...v1.1.0) (2023-04-10)
 
 ### Features
