@@ -124,8 +124,9 @@ export function html2text(
           // <a class="hash-link" href="#first-header" title="Direct link to heading">#</a>
           .not("a[aria-hidden=true], a.hash-link")
           .text();
-        const hash = $(heading).find("a.hash-link").attr("href") || "";
-
+        const linkHash = $(heading).find("a.hash-link").attr("href") || "";
+        const [, hashPart] = linkHash.split("#");
+        const hash = hashPart ? `#${hashPart}` : "";
         let $sectionElements;
         if ($(heading).parents(".markdown").length === 0) {
           // $(heading) is the page title
