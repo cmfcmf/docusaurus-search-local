@@ -125,8 +125,8 @@ export function html2text(
           .not("a[aria-hidden=true], a.hash-link")
           .text();
         const linkHash = $(heading).find("a.hash-link").attr("href") || "";
-        const [, hashPart] = linkHash.split("#");
-        const hash = hashPart ? `#${hashPart}` : "";
+        const [, ...hashParts] = linkHash.split("#");
+        const hash = hashParts.length ? `#${hashParts.join("#")}` : "";
         let $sectionElements;
         if ($(heading).parents(".markdown").length === 0) {
           // $(heading) is the page title
