@@ -81,6 +81,14 @@ export function html2text(
   url: string = "?"
 ) {
   const $ = cheerio.load(html);
+  if (!$) {
+    logger.warn("Failed to load HTML content", { url });
+    return {
+      pageTitle: "",
+      sections: [],
+      docSidebarParentCategories: undefined,
+    };
+  }
   // Remove copy buttons from code boxes
   $("div[class^=codeBlockContent_] button").remove();
 
