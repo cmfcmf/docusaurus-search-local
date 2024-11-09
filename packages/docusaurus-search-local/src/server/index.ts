@@ -19,7 +19,7 @@ import { html2text, getDocusaurusTag } from "./parse";
 import logger from "./logger";
 
 const lunr = require("../lunr.js") as (
-  config: import("lunr").ConfigFunction
+  config: import("lunr").ConfigFunction,
 ) => import("lunr").Index;
 
 const readFileAsync = util.promisify(fs.readFile);
@@ -28,12 +28,12 @@ const writeFileAsync = util.promisify(fs.writeFile);
 function urlMatchesPrefix(url: string, prefix: string) {
   if (prefix.startsWith("/")) {
     throw new Error(
-      `prefix must not start with a /. This is a bug (url: "${url}", prefix: ${prefix}).`
+      `prefix must not start with a /. This is a bug (url: "${url}", prefix: ${prefix}).`,
     );
   }
   if (prefix.endsWith("/")) {
     throw new Error(
-      `prefix must not end with a /. This is a bug (url: "${url}", prefix: ${prefix}).`
+      `prefix must not end with a /. This is a bug (url: "${url}", prefix: ${prefix}).`,
     );
   }
   return prefix === "" || url === prefix || url.startsWith(`${prefix}/`);
@@ -114,7 +114,7 @@ const languageSchema = Joi.string().valid(
   "th",
   "tr",
   "vi",
-  "zh"
+  "zh",
 );
 
 const optionsSchema = Joi.object({
@@ -133,7 +133,7 @@ const optionsSchema = Joi.object({
 
   language: Joi.alternatives(
     languageSchema,
-    Joi.array().items(languageSchema)
+    Joi.array().items(languageSchema),
   ).default("en"),
 
   style: Joi.string().valid("none"),
@@ -153,7 +153,7 @@ const optionsSchema = Joi.object({
 
 export default function cmfcmfDocusaurusSearchLocal(
   context: LoadContext,
-  options: MyOptions
+  options: MyOptions,
 ): Plugin<unknown> {
   let {
     indexDocSidebarParentCategories,
@@ -244,12 +244,12 @@ export const tokenize = (input) => input.trim().toLowerCase()
   } else if (language === "ja" || language === "th") {
     if (lunrTokenizerSeparator) {
       throw new Error(
-        "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th'"
+        "The lunr.tokenizerSeparator option is not supported for 'ja' and 'th'",
       );
     }
     generated += `\
 export const tokenize = (input) => lunr[${JSON.stringify(
-      language
+      language,
     )}].tokenizer(input)
   .map(token => token${language === "th" ? "" : ".str"});\n`;
   } else {
@@ -276,16 +276,16 @@ export const tokenize = (input) => lunr.tokenizer(input)
         __dirname,
         "..",
         "..",
-        "codeTranslations"
+        "codeTranslations",
       );
       const localesToTry = codeTranslationLocalesToTry(
-        context.i18n.currentLocale
+        context.i18n.currentLocale,
       );
       for (const locale of localesToTry) {
         const translationPath = path.join(translationsDir, `${locale}.json`);
         if (fs.existsSync(translationPath)) {
           return JSON.parse(
-            await fs.promises.readFile(translationPath, "utf8")
+            await fs.promises.readFile(translationPath, "utf8"),
           );
         }
       }
@@ -318,33 +318,33 @@ export const tokenize = (input) => lunr.tokenizer(input)
             .filter((plugin) => plugin.name === name)
             .map((plugin) => [plugin.options.id, plugin]) as Array<
             [string, LoadedPlugin & { content: Content; options: Options }]
-          >
+          >,
         );
       }
 
       const docsPlugins = buildPluginMap<DocsOptions, DocsLoadedContent>(
-        "docusaurus-plugin-content-docs"
+        "docusaurus-plugin-content-docs",
       );
       const blogPlugins = buildPluginMap<BlogOptions, BlogLoadedContent>(
-        "docusaurus-plugin-content-blog"
+        "docusaurus-plugin-content-blog",
       );
       const pagesPlugins = buildPluginMap<PagesOptions, PagesLoadedContent>(
-        "docusaurus-plugin-content-pages"
+        "docusaurus-plugin-content-pages",
       );
 
       if (indexDocs && docsPlugins.size === 0) {
         throw new Error(
-          'The "indexDocs" option is enabled but no docs plugin has been found.'
+          'The "indexDocs" option is enabled but no docs plugin has been found.',
         );
       }
       if (indexBlog && blogPlugins.size === 0) {
         throw new Error(
-          'The "indexBlog" option is enabled but no blog plugin has been found.'
+          'The "indexBlog" option is enabled but no blog plugin has been found.',
         );
       }
       if (indexPages && pagesPlugins.size === 0) {
         throw new Error(
-          'The "indexPages" option is enabled but no pages plugin has been found.'
+          'The "indexPages" option is enabled but no pages plugin has been found.',
         );
       }
 
@@ -354,7 +354,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
           const route = url.substring(baseUrl.length);
           if (!url.startsWith(baseUrl)) {
             throw new Error(
-              `The route must start with the baseUrl ${baseUrl}, but was ${route}. This is a bug, please report it.`
+              `The route must start with the baseUrl ${baseUrl}, but was ${route}. This is a bug, please report it.`,
             );
           }
           if (route === "404.html") {
@@ -364,21 +364,21 @@ export const tokenize = (input) => lunr.tokenizer(input)
           if (indexDocs) {
             for (const docsPlugin of docsPlugins.values()) {
               const docsBasePath = trimLeadingSlash(
-                trimTrailingSlash(docsPlugin.options.routeBasePath)
+                trimTrailingSlash(docsPlugin.options.routeBasePath),
               );
               const docsTagsPath = trimLeadingSlash(
-                trimTrailingSlash(docsPlugin.options.tagsBasePath)
+                trimTrailingSlash(docsPlugin.options.tagsBasePath),
               );
 
               if (urlMatchesPrefix(route, docsBasePath)) {
                 if (
                   urlMatchesPrefix(
                     route,
-                    trimLeadingSlash(`${docsBasePath}/${docsTagsPath}`)
+                    trimLeadingSlash(`${docsBasePath}/${docsTagsPath}`),
                   ) ||
                   urlMatchesPrefix(
                     route,
-                    trimLeadingSlash(`${docsBasePath}/__docusaurus`)
+                    trimLeadingSlash(`${docsBasePath}/__docusaurus`),
                   )
                 ) {
                   // Do not index tags filter pages and pages generated by the debug plugin
@@ -395,10 +395,10 @@ export const tokenize = (input) => lunr.tokenizer(input)
           if (indexBlog) {
             for (const blogPlugin of blogPlugins.values()) {
               const blogBasePath = trimLeadingSlash(
-                trimTrailingSlash(blogPlugin.options.routeBasePath)
+                trimTrailingSlash(blogPlugin.options.routeBasePath),
               );
               const blogTagsPath = trimLeadingSlash(
-                trimTrailingSlash(blogPlugin.options.tagsBasePath)
+                trimTrailingSlash(blogPlugin.options.tagsBasePath),
               );
 
               if (urlMatchesPrefix(route, blogBasePath)) {
@@ -406,11 +406,11 @@ export const tokenize = (input) => lunr.tokenizer(input)
                   route === blogBasePath ||
                   urlMatchesPrefix(
                     route,
-                    trimLeadingSlash(`${blogBasePath}/${blogTagsPath}`)
+                    trimLeadingSlash(`${blogBasePath}/${blogTagsPath}`),
                   ) ||
                   urlMatchesPrefix(
                     route,
-                    trimLeadingSlash(`${blogBasePath}/__docusaurus`)
+                    trimLeadingSlash(`${blogBasePath}/__docusaurus`),
                   )
                 ) {
                   // Do not index list of blog posts, tags filter pages, and pages generated by the debug plugin
@@ -427,14 +427,14 @@ export const tokenize = (input) => lunr.tokenizer(input)
           if (indexPages) {
             for (const pagesPlugin of pagesPlugins.values()) {
               const pagesBasePath = trimLeadingSlash(
-                trimTrailingSlash(pagesPlugin.options.routeBasePath)
+                trimTrailingSlash(pagesPlugin.options.routeBasePath),
               );
 
               if (urlMatchesPrefix(route, pagesBasePath)) {
                 if (
                   urlMatchesPrefix(
                     route,
-                    trimLeadingSlash(`${pagesBasePath}/__docusaurus`)
+                    trimLeadingSlash(`${pagesBasePath}/__docusaurus`),
                   )
                 ) {
                   // Do not index pages generated by the debug plugin
@@ -488,27 +488,30 @@ export const tokenize = (input) => lunr.tokenizer(input)
               docSidebarParentCategories,
               type,
             }));
-          })
+          }),
         )
       ).flat();
 
-      const documentsByDocusaurusTag = documents.reduce((acc, doc) => {
-        acc[doc.docusaurusTag] = acc[doc.docusaurusTag] ?? [];
-        acc[doc.docusaurusTag]!.push(doc);
-        return acc;
-      }, {} as Record<string, typeof documents>);
+      const documentsByDocusaurusTag = documents.reduce(
+        (acc, doc) => {
+          acc[doc.docusaurusTag] = acc[doc.docusaurusTag] ?? [];
+          acc[doc.docusaurusTag]!.push(doc);
+          return acc;
+        },
+        {} as Record<string, typeof documents>,
+      );
 
       logger.info(
         `${
           Object.keys(documentsByDocusaurusTag).length
-        } indexes will be created.`
+        } indexes will be created.`,
       );
 
       await Promise.all(
         Object.entries(documentsByDocusaurusTag).map(
           async ([docusaurusTag, documents]) => {
             logger.info(
-              `Building index ${docusaurusTag} (${documents.length} documents)`
+              `Building index ${docusaurusTag} (${documents.length} documents)`,
             );
 
             const index = lunr(function () {
@@ -560,7 +563,7 @@ export const tokenize = (input) => lunr.tokenizer(input)
                     tags: sectionTags,
                     sidebarParentCategories,
                   });
-                }
+                },
               );
             });
 
@@ -596,16 +599,16 @@ export const tokenize = (input) => lunr.tokenizer(input)
                       sectionRoute,
                       type,
                     };
-                  }
+                  },
                 ),
                 index,
               }),
-              { encoding: "utf8" }
+              { encoding: "utf8" },
             );
 
             logger.info(`Index ${docusaurusTag} written to disk`);
-          }
-        )
+          },
+        ),
       );
     },
     configureWebpack: (_config, isServer, utils) => {
