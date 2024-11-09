@@ -310,5 +310,43 @@ describe("parser", () => {
         ],
       });
     });
+
+    it("parses hashes correctly from URLs", () => {
+      const html = `<html>
+        <head><title>TITLE</title></head>
+        <body>
+          <article>
+            <h1>a<a href="lala.com#first#second" class="hash-link"></a></h1>
+            <h1>b<a href="#first#second" class="hash-link"></a></h1>
+            <h1>c<a href="/foo#first#second" class="hash-link"></a></h1>
+          </article>
+        </body>
+        </html>
+      `;
+      expect(html2text(html, "docs")).toEqual({
+        docSidebarParentCategories: [],
+        pageTitle: "a",
+        sections: [
+          {
+            title: "a",
+            hash: "#first#second",
+            content: "",
+            tags: [],
+          },
+          {
+            title: "b",
+            hash: "#first#second",
+            content: "",
+            tags: [],
+          },
+          {
+            title: "c",
+            hash: "#first#second",
+            content: "",
+            tags: [],
+          },
+        ],
+      });
+    });
   });
 });
