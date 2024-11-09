@@ -16,7 +16,7 @@ describe("parser", () => {
       "..",
       "..",
       "..",
-      "example-docs/build/blog/d-s-l-test/index.html"
+      "example-docs/build/blog/d-s-l-test/index.html",
     );
     const html = await readFileAsync(htmlPath, "utf-8");
     expect(html2text(html, "blog")).toEqual({
@@ -53,7 +53,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/d-s-l-test/index.html"
+        "example-docs/build/docs/d-s-l-test/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -106,7 +106,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/d-s-l-test2/index.html"
+        "example-docs/build/docs/d-s-l-test2/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -122,7 +122,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/next/d-s-l-test-no-title-h1/index.html"
+        "example-docs/build/docs/next/d-s-l-test-no-title-h1/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -145,7 +145,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/next/d-s-l-test-no-title-h2/index.html"
+        "example-docs/build/docs/next/d-s-l-test-no-title-h2/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -169,7 +169,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/next/d-s-l-test-no-title-h1-pre-text/index.html"
+        "example-docs/build/docs/next/d-s-l-test-no-title-h1-pre-text/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -198,7 +198,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/next/nested_sidebar_doc/index.html"
+        "example-docs/build/docs/next/nested_sidebar_doc/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -221,7 +221,7 @@ describe("parser", () => {
         "..",
         "..",
         "..",
-        "example-docs/build/docs/d-s-l-test3/index.html"
+        "example-docs/build/docs/d-s-l-test3/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({

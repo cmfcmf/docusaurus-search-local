@@ -30,17 +30,17 @@ const DEFAULT_OPTIONS = {
 
 it("validates options correctly", () => {
   expect(() =>
-    validateOptions({ options: { foo: 123 }, validate })
+    validateOptions({ options: { foo: 123 }, validate }),
   ).toThrowErrorMatchingInlineSnapshot(`""foo" is not allowed"`);
 
   expect(() =>
-    validateOptions({ options: { style: "modern" }, validate })
+    validateOptions({ options: { style: "modern" }, validate }),
   ).toThrowErrorMatchingInlineSnapshot(`""style" must be [none]"`);
 
   expect(validateOptions({ options: {}, validate })).toEqual(DEFAULT_OPTIONS);
 
   expect(
-    validateOptions({ options: { language: ["en", "de"] }, validate })
+    validateOptions({ options: { language: ["en", "de"] }, validate }),
   ).toEqual({
     ...DEFAULT_OPTIONS,
     language: ["en", "de"],
@@ -51,8 +51,8 @@ it("validates options correctly", () => {
       validateOptions({
         options: { indexDocSidebarParentCategories: value },
         validate,
-      })
-    ).toThrowError()
+      }),
+    ).toThrowError(),
   );
 
   const options = {

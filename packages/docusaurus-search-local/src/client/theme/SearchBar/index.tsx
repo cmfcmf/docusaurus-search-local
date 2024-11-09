@@ -50,7 +50,7 @@ const EMPTY_INDEX = {
 
 async function fetchIndex(
   baseUrl: string,
-  tag: string
+  tag: string,
 ): Promise<IndexWithDocuments> {
   if (SEARCH_INDEX_AVAILABLE) {
     let json;
@@ -88,12 +88,12 @@ const SearchBar = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(() =>
     isBrowser
       ? document.documentElement.getAttribute("data-theme") === "dark"
-      : false
+      : false,
   );
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkTheme(
-        document.documentElement.getAttribute("data-theme") === "dark"
+        document.documentElement.getAttribute("data-theme") === "dark",
       );
     });
 
@@ -303,7 +303,7 @@ const SearchBar = () => {
             async getItems() {
               const tags = tagsRef.current;
               const indexes = await Promise.all(
-                tags.map((tag) => getIndex(tag))
+                tags.map((tag) => getIndex(tag)),
               );
 
               const terms = tokenize(input);
@@ -355,11 +355,11 @@ const SearchBar = () => {
                     .slice(0, maxSearchResults)
                     .map((result) => ({
                       document: documents.find(
-                        (document) => document.id.toString() === result.ref
+                        (document) => document.id.toString() === result.ref,
                       )!,
                       score: result.score,
                       terms,
-                    }))
+                    })),
                 )
                 .sort((a, b) => b.score - a.score)
                 .slice(0, maxSearchResults);

@@ -1,6 +1,11 @@
 {
   "versionGroups": [
     {
+      "label": "All dependencies should use the same Node.js types.",
+      "dependencies": ["@types/node"],
+      "pinVersion": "^18"
+    },
+    {
       "label": "Example Docs must always use the local version of the search plugin",
       "packages": ["example-docs"],
       "dependencies": ["@cmfcmf/docusaurus-search-local"],
@@ -19,12 +24,6 @@
       "dependencies": ["@docusaurus/**"],
       "dependencyTypes": ["peer"],
       "pinVersion": "^2.0.0"
-    },
-    {
-      "label": "All dependencies should follow the versions of the search plugin",
-      "packages": ["**"],
-      "dependencies": ["**"],
-      "snapTo": ["@cmfcmf/docusaurus-search-local"]
     }
   ]
 }

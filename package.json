@@ -7,13 +7,13 @@
   "dependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "@types/node": "^16.18.12",
-    "commit-and-tag-version": "^11.1.0",
+    "@types/node": "^18",
+    "commit-and-tag-version": "^12.5.0",
     "git-branch-is": "^4.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "prettier": "^2.8.4",
-    "syncpack": "^9.8.4",
+    "prettier": "^3.3.3",
+    "syncpack": "^13.0.0",
     "turbo": "^1.8.2"
   },
   "scripts": {
@@ -37,8 +37,8 @@
     ]
   },
   "engines": {
-    "node": ">=16.14",
-    "npm": ">=8"
+    "node": ">=18.18",
+    "npm": ">=10"
   },
-  "packageManager": "npm@8.11.0"
+  "packageManager": "npm@10.9.0"
 }

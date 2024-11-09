@@ -20,8 +20,8 @@ test("basic search works", async ({ page }) => {
 async function expectDocVersion(page: Page, version: string) {
   await expect(
     page.locator(
-      `.dsla-search-field[data-tags="default,docs-default-${version}"]`
-    )
+      `.dsla-search-field[data-tags="default,docs-default-${version}"]`,
+    ),
   ).toHaveCount(1);
 }
 

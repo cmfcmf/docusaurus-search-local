@@ -65,7 +65,7 @@ function _getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
     return "";
   } else {
     logger.warn(
-      `Received an unknown element while extracting content from HTML files. This should never happen. Please open an issue at https://github.com/cmfcmf/docusaurus-search-local/issues if you see this message (debug: got type ${el.type}).`
+      `Received an unknown element while extracting content from HTML files. This should never happen. Please open an issue at https://github.com/cmfcmf/docusaurus-search-local/issues if you see this message (debug: got type ${el.type}).`,
     );
     return "";
   }
@@ -78,7 +78,7 @@ function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
 export function html2text(
   html: string,
   type: "docs" | "blog" | "page",
-  url: string = "?"
+  url: string = "?",
 ) {
   const $ = cheerio.load(html);
   // Remove copy buttons from code boxes
@@ -90,7 +90,7 @@ export function html2text(
       .filter(
         (_, element) =>
           $(element).hasClass("badge") &&
-          $(element).text().startsWith("Version:")
+          $(element).text().startsWith("Version:"),
       )
       .remove();
   }
@@ -194,7 +194,7 @@ export function html2text(
     if (!$main.length) {
       logger.warn(
         "Page has no <main>, therefore no content was indexed for this page.",
-        { url }
+        { url },
       );
     }
     return {
@@ -218,7 +218,7 @@ export function getDocusaurusTag(html: string) {
   const tag = $('meta[name="docusaurus_tag"]').attr("content");
   if (!tag || tag.length === 0) {
     throw new Error(
-      "The `docusaurus_tag` meta tag could not be found. Please make sure that your page is wrapped in the `<Layout>` component (from `@theme/Layout`). If it is, then this is a bug, please report it."
+      "The `docusaurus_tag` meta tag could not be found. Please make sure that your page is wrapped in the `<Layout>` component (from `@theme/Layout`). If it is, then this is a bug, please report it.",
     );
   }
   return tag;
