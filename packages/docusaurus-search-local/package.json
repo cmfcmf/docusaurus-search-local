@@ -37,7 +37,7 @@
   },
   "peerDependencies": {
     "@docusaurus/core": "^2.0.0",
-    "nodejieba": "^2.5.0"
+    "nodejieba": "^2.5.0 || ^3.0.0"
   },
   "peerDependenciesMeta": {
     "nodejieba": {
@@ -74,7 +74,7 @@
     "concurrently": "^7.0.0",
     "copyfiles": "^2.4.1",
     "jest": "^29.4.3",
-    "nodejieba": "^2.5.0",
+    "nodejieba": "^2.5.0 || ^3.0.0",
     "nodemon": "^2.0.15",
     "playwright": "^1.31.1",
     "react": "^17.0.0",

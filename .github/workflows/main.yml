@@ -40,11 +40,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    # Uninstall nodejieba for the moment, as it's not compatible with Node 18 on Windows.
-    # TODO: Remove this once a new version of nodejieba is released (the fix is already on its master branch).
-    - run: npm uninstall --ignore-scripts --save -w packages/docusaurus-search-local nodejieba
-      if: runner.os == 'Windows' && (matrix.node-version == '18.x' || matrix.node-version == '20.x' || matrix.node-version == '22.x')
-
     - run: npm ci
     - run: npm run lint
 
