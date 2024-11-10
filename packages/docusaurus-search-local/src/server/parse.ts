@@ -97,7 +97,7 @@ export function html2text(
 
   if (type === "docs" || type === "blog") {
     const HEADINGS = "h1, h2, h3";
-    const pageTitle = $("article h1").first().text();
+    const pageTitle = getText($, $("article h1").first().get());
     const sections: Array<{
       title: string;
       hash: string;
@@ -106,7 +106,7 @@ export function html2text(
     }> = [];
     // Parse tags, and add them to the first section.
     const tags = $("article footer ul[class^=tags_] li")
-      .map((_, element) => $(element).text())
+      .map((_, element) => getText($, element))
       .toArray();
 
     // Make sure to also adjust the highlighting functionality in the client
@@ -114,7 +114,7 @@ export function html2text(
     $("article")
       .find(HEADINGS)
       .each((i, heading) => {
-        const title = $(heading)
+        const title = getText($, $(heading)
           .contents()
           // Remove elements that are marked as aria-hidden and the hash-link.
           // This is mainly done to remove anchors like these:
@@ -122,8 +122,7 @@ export function html2text(
           // <a aria-hidden="true" tabindex="-1" class="hash-link" href="#first-subheader" title="Direct link to heading">#</a>
           // <a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_prK2" id="first-header"></a>
           // <a class="hash-link" href="#first-header" title="Direct link to heading">#</a>
-          .not("a[aria-hidden=true], a.hash-link")
-          .text();
+          .not("a[aria-hidden=true], a.hash-link").get());
         const linkHash = $(heading).find("a.hash-link").attr("href") || "";
         const [, ...hashParts] = linkHash.split("#");
         const hash = hashParts.length ? `#${hashParts.join("#")}` : "";
@@ -188,7 +187,7 @@ export function html2text(
       $pageTitle = $("title");
     }
 
-    const pageTitle = $pageTitle.text();
+    const pageTitle = getText($, $pageTitle.get());
     // Make sure to also adjust the highlighting functionality in the client
     // if you change the top element here.
     const $main = $("main").first();
