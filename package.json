@@ -1,20 +1,17 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "@types/node": "^18",
+    "@types/node": "^18.19.64",
     "commit-and-tag-version": "^12.5.0",
     "git-branch-is": "^4.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "syncpack": "^13.0.0",
-    "turbo": "^1.8.2"
+    "turbo": "^2.2.3"
   },
   "scripts": {
     "prepare": "husky install",
@@ -25,20 +22,20 @@
     "serve": "turbo serve",
     "test": "turbo test",
     "test:e2e": "turbo test:e2e",
-    "lint:style": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "lint:style": "prettier --check .",
     "lint:dependencies": "syncpack list-mismatches",
-    "format:style": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "format:style": "prettier --write .",
     "format:dependencies": "syncpack fix-mismatches",
     "release": "bash scripts/release.sh"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+    ".": [
       "prettier --write"
     ]
   },
   "engines": {
     "node": ">=18.18",
-    "npm": ">=10"
+    "pnpm": ">=9"
   },
-  "packageManager": "npm@10.9.0"
+  "packageManager": "pnpm@9.12.3"
 }

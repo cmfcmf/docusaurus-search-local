@@ -1,0 +1,20 @@
+packages:
+  - "packages/docusaurus-search-local"
+  - "packages/example-docs-v3"
+
+catalog:
+  react: ^18
+  react-dom: ^18
+  "@types/react": ^18
+  "@types/react-dom": ^18
+
+  "@docusaurus/core": 3.6.1
+  "@docusaurus/preset-classic": 3.6.1
+  "@docusaurus/module-type-aliases": 3.6.1
+  "@docusaurus/plugin-content-blog": 3.6.1
+  "@docusaurus/plugin-content-docs": 3.6.1
+  "@docusaurus/plugin-content-pages": 3.6.1
+  "@docusaurus/theme-classic": 3.6.1
+  "@docusaurus/theme-common": 3.6.1
+  "@docusaurus/types": 3.6.1
+  "@docusaurus/utils-validation": 3.6.1

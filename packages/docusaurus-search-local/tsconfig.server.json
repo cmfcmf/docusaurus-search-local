@@ -2,8 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
-    "lib": ["ESNext", "DOM"]
+    "lib": ["ESNext", "DOM"],
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "noEmit": true
   },
   "include": ["src/server/**/*"]
 }
