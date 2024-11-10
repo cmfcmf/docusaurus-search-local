@@ -9,15 +9,18 @@ beforeEach(() => {
   jest.spyOn(console, "warn").mockImplementation(() => {});
 });
 
+const BUILD_PATH = path.join(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "example-docs-v2",
+  "build",
+);
+
 describe("parser", () => {
   it("parses blog pages", async () => {
-    const htmlPath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      "example-docs/build/blog/d-s-l-test/index.html",
-    );
+    const htmlPath = path.join(BUILD_PATH, "blog/d-s-l-test/index.html");
     const html = await readFileAsync(htmlPath, "utf-8");
     expect(html2text(html, "blog")).toEqual({
       docSidebarParentCategories: undefined,
@@ -48,13 +51,7 @@ describe("parser", () => {
 
   describe("docs", () => {
     it("parses normal pages", async () => {
-      const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/d-s-l-test/index.html",
-      );
+      const htmlPath = path.join(BUILD_PATH, "docs/d-s-l-test/index.html");
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
         docSidebarParentCategories: ["Docusaurus"],
@@ -101,13 +98,7 @@ describe("parser", () => {
     });
 
     it("parses empty page", async () => {
-      const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/d-s-l-test2/index.html",
-      );
+      const htmlPath = path.join(BUILD_PATH, "docs/d-s-l-test2/index.html");
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
         docSidebarParentCategories: ["Docusaurus"],
@@ -118,11 +109,8 @@ describe("parser", () => {
 
     it("parses page without title in frontmatter and with h1 in Markdown", async () => {
       const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/next/d-s-l-test-no-title-h1/index.html",
+        BUILD_PATH,
+        "docs/next/d-s-l-test-no-title-h1/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -141,11 +129,8 @@ describe("parser", () => {
 
     it("parses page without title in frontmatter and with h2 in Markdown", async () => {
       const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/next/d-s-l-test-no-title-h2/index.html",
+        BUILD_PATH,
+        "docs/next/d-s-l-test-no-title-h2/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -165,11 +150,8 @@ describe("parser", () => {
 
     it("parses page without title in frontmatter and with h1 in Markdown but with pre text", async () => {
       const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/next/d-s-l-test-no-title-h1-pre-text/index.html",
+        BUILD_PATH,
+        "docs/next/d-s-l-test-no-title-h1-pre-text/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -194,11 +176,8 @@ describe("parser", () => {
 
     it("parses nested sidebar categories", async () => {
       const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/next/nested_sidebar_doc/index.html",
+        BUILD_PATH,
+        "docs/next/nested_sidebar_doc/index.html",
       );
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
@@ -216,13 +195,7 @@ describe("parser", () => {
     });
 
     it("parses page with first header directly after title", async () => {
-      const htmlPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "example-docs/build/docs/d-s-l-test3/index.html",
-      );
+      const htmlPath = path.join(BUILD_PATH, "docs/d-s-l-test3/index.html");
       const html = await readFileAsync(htmlPath, "utf-8");
       expect(html2text(html, "docs")).toEqual({
         docSidebarParentCategories: ["Docusaurus"],

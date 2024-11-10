@@ -2,5 +2,5 @@ lunr.js
 lib
 .husky
 .vscode
-example-docs
+example-docs*
 pnpm-lock.yaml
