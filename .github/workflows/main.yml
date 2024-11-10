@@ -39,33 +39,37 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: "pnpm"
 
-      - run: npm ci
-      - run: npm run lint
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
 
       - name: Installing Docusaurus ${{ matrix.docusaurus-version }} and dependencies
-        run: npm install --workspaces --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
-      - run: npm dedupe
+        run: pnpm -r add --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
+      - run: pnpm dedupe
 
-      - run: npm run build
+      - run: pnpm run build
 
-      - run: npm run test
+      - run: pnpm run test
 
       # Install OS dependencies
       # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
       - run: sudo apt update
         if: runner.os == 'Linux'
-      - run: npx playwright install-deps
+      - run: pnpm --filter docusaurus-search-local --fail-if-no-match exec playwright install-deps
       # Install Browsers
-      - run: npx playwright install
-      - run: npm run test:e2e -- -- --browser=all --forbid-only
+      - run: pnpm --filter docusaurus-search-local --fail-if-no-match exec playwright install
+      - run: pnpm run test:e2e -- --browser=all --forbid-only
 
       # TODO: Cannot run browser tests for these for now.
-      - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlash.js
-      - run: npm run build -w example-docs -- --config docusaurus.config.subDirectory.js
-      - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlashSubdirectory.js
+      - run: pnpm --filter example-docs --fail-if-no-match run build --config docusaurus.config.noTrailingSlash.js
+      - run: pnpm --filter example-docs --fail-if-no-match run build --config docusaurus.config.subDirectory.js
+      - run: pnpm --filter example-docs --fail-if-no-match run build --config docusaurus.config.noTrailingSlashSubdirectory.js
