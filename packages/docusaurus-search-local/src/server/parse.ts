@@ -1,4 +1,4 @@
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import logger from "./logger";
 
 // We insert whitespace after text from any of these tags
@@ -42,7 +42,7 @@ const BLOCK_TAGS = [
   "th",
 ];
 
-function _getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
+function _getText($: cheerio.CheerioAPI, el: any | any[]): string {
   if (Array.isArray(el)) {
     let content = "";
     el.forEach((el) => {
@@ -71,7 +71,7 @@ function _getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
   }
 }
 
-function getText($: ReturnType<typeof cheerio.load>, el: any | any[]): string {
+function getText($: cheerio.CheerioAPI, el: any | any[]): string {
   return _getText($, el).replace(/\s+/g, " ").trim();
 }
 

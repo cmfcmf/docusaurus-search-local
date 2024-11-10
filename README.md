@@ -146,7 +146,7 @@ The following languages are available:
 
     ar, da, de, en, es, fi, fr, hi, hu, it, ja, nl, no, pt, ro, ru, sv, th, tr, vi, zh
 
-**Important: For Chinese language support (`zh`), you also have to install the `nodejieba` npm package at `^2.5.0`.**
+**Important: For Chinese language support (`zh`), you also have to install the `nodejieba` npm package at `^2.5.0 || ^3.0.0`.**
 
 ### Documentation Versions
 

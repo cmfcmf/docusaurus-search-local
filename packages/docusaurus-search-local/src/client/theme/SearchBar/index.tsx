@@ -149,10 +149,11 @@ const SearchBar = () => {
         const index = await fetchIndex(baseUrl, tag);
         callbacks.forEach((cb) => cb(index));
 
-        return (indexes.current[tag] = {
+        indexes.current[tag] = {
           state: "ready",
           ...index,
-        });
+        };
+        return index;
       }
       case "loading":
         return new Promise<IndexWithDocuments>((resolve) => {
