@@ -36,7 +36,7 @@
     "tslib": "^2.6.3"
   },
   "peerDependencies": {
-    "@docusaurus/core": "^2.0.0",
+    "@docusaurus/core": "^2.0.0 || ^3.0.0",
     "nodejieba": "^2.5.0 || ^3.0.0"
   },
   "peerDependenciesMeta": {
