@@ -3,7 +3,7 @@
   "extends": ["//"],
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "@cmfcmf/docusaurus-search-local#build"],
       "outputs": ["build/**", ".docusaurus/**"],
       "cache": false
     }
