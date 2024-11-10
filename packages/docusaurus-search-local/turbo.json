@@ -9,8 +9,7 @@
       "dependsOn": ["example-docs#build"]
     },
     "build": {
-      "dependsOn": ["^build", "build:client", "build:server"],
-      "outputs": ["lib/**"]
+      "dependsOn": ["^build", "build:client", "build:server"]
     },
     "build:client": {},
     "build:server": {}
