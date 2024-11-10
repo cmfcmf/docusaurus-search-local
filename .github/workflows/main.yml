@@ -33,33 +33,33 @@ jobs:
           - "canary"
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-    - run: npm ci
-    - run: npm run lint
+      - run: npm ci
+      - run: npm run lint
 
-    - run: npm install --workspaces --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
-    - run: npm dedupe
+      - run: npm install --workspaces --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
+      - run: npm dedupe
 
-    - run: npm run build
+      - run: npm run build
 
-    - run: npm run test
+      - run: npm run test
 
-    # Install OS dependencies
-    # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
-    - run: sudo apt update
-      if: runner.os == 'Linux'
-    - run: npx playwright install-deps
-    # Install Browsers
-    - run: npx playwright install
-    - run: npm run test:e2e -- -- --browser=all --forbid-only
+      # Install OS dependencies
+      # Run `apt update` beforehand to avoid 404 Not Found errors during apt install.
+      - run: sudo apt update
+        if: runner.os == 'Linux'
+      - run: npx playwright install-deps
+      # Install Browsers
+      - run: npx playwright install
+      - run: npm run test:e2e -- -- --browser=all --forbid-only
 
-    # TODO: Cannot run browser tests for these for now.
-    - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlash.js
-    - run: npm run build -w example-docs -- --config docusaurus.config.subDirectory.js
-    - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlashSubdirectory.js
+      # TODO: Cannot run browser tests for these for now.
+      - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlash.js
+      - run: npm run build -w example-docs -- --config docusaurus.config.subDirectory.js
+      - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlashSubdirectory.js
