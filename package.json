@@ -1,9 +1,6 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
@@ -38,7 +35,7 @@
   },
   "engines": {
     "node": ">=18.18",
-    "npm": ">=10"
+    "pnpm": ">=9"
   },
-  "packageManager": "npm@10.9.0"
+  "packageManager": "pnpm@9.12.3"
 }

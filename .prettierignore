@@ -3,3 +3,4 @@ lib
 .husky
 .vscode
 example-docs
+pnpm-lock.yaml

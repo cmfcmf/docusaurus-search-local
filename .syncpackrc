@@ -9,14 +9,14 @@
       "label": "Example Docs must always use the local version of the search plugin",
       "packages": ["example-docs"],
       "dependencies": ["@cmfcmf/docusaurus-search-local"],
-      "pinVersion": "*"
+      "pinVersion": "workspace:*"
     },
     {
       "label": "The Docusaurus dev dependencies must all have the highest version supported by the plugin.",
       "packages": ["**"],
       "dependencies": ["@docusaurus/**"],
       "dependencyTypes": ["dev"],
-      "pinVersion": "^2.4.3"
+      "pinVersion": "catalog:"
     },
     {
       "label": "The Docusaurus peer dependencies must all have the lowest version supported by the plugin.",
