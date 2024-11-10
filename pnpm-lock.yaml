@@ -204,6 +204,9 @@ importers:
 
   packages/example-docs:
     dependencies:
+      '@algolia/client-search':
+        specifier: ^4.12.0
+        version: 4.23.3
       '@cmfcmf/docusaurus-search-local':
         specifier: workspace:*
         version: link:../docusaurus-search-local
