@@ -25,14 +25,14 @@
     "serve": "turbo serve",
     "test": "turbo test",
     "test:e2e": "turbo test:e2e",
-    "lint:style": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "lint:style": "prettier --check .",
     "lint:dependencies": "syncpack list-mismatches",
-    "format:style": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md,html}",
+    "format:style": "prettier --write .",
     "format:dependencies": "syncpack fix-mismatches",
     "release": "bash scripts/release.sh"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+    ".": [
       "prettier --write"
     ]
   },
