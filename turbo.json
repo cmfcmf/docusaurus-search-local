@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "globalEnv": ["CI"],
+  "tasks": {
     "//#lint:dependencies": {
       "dependsOn": []
     },
