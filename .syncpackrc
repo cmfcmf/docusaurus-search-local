@@ -3,7 +3,7 @@
     {
       "label": "All dependencies should use the same Node.js types.",
       "dependencies": ["@types/node"],
-      "pinVersion": "^18"
+      "pinVersion": "^18.19.64"
     },
     {
       "label": "Example Docs must always use the local version of the search plugin",
@@ -15,15 +15,13 @@
       "label": "The Docusaurus dev dependencies must all have the highest version supported by the plugin.",
       "packages": ["**"],
       "dependencies": ["@docusaurus/**"],
-      "dependencyTypes": ["dev"],
+      "dependencyTypes": ["dev", "prod"],
       "pinVersion": "catalog:"
     },
     {
-      "label": "The Docusaurus peer dependencies must all have the lowest version supported by the plugin.",
-      "packages": ["**"],
-      "dependencies": ["@docusaurus/**"],
-      "dependencyTypes": ["peer"],
-      "pinVersion": "^2.0.0"
+      "dependencies": ["clsx"],
+      "dependencyTypes": ["prod"],
+      "isIgnored": true
     }
   ]
 }
