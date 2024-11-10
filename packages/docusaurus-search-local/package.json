@@ -30,14 +30,16 @@
     "@algolia/client-search": "^4.12.0",
     "algoliasearch": "^4.12.0",
     "cheerio": "^1.0.0",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "lunr-languages": "^1.4.0",
     "mark.js": "^8.11.1",
     "tslib": "^2.6.3"
   },
   "peerDependencies": {
-    "@docusaurus/core": "^2.0.0",
-    "nodejieba": "^2.5.0 || ^3.0.0"
+    "@docusaurus/core": "^3.0.0",
+    "nodejieba": "^2.5.0 || ^3.0.0",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "peerDependenciesMeta": {
     "nodejieba": {

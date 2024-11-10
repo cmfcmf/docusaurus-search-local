@@ -5,7 +5,7 @@ import React, {
   Fragment,
   useState,
 } from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { autocomplete, AutocompleteApi } from "@algolia/autocomplete-js";
 import type lunr from "lunr";
 import Head from "@docusaurus/Head";
@@ -179,7 +179,12 @@ const SearchBar = () => {
       container: autocompleteRef.current,
       placeholder,
       // Use React instead of Preact
-      renderer: { createElement, Fragment, render: render as any },
+      renderer: {
+        createElement,
+        Fragment,
+        render: (component, container) =>
+          createRoot(container as any).render(component),
+      },
       // Use react-router for navigation
       navigator: {
         navigate({ item, itemUrl }) {

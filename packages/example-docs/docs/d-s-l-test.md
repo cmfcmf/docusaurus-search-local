@@ -14,9 +14,9 @@ A link [to a video](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
 
 <style>
   /* This style tag should be ignored and not break the build */
-  .foo {
+  .foo \{
 
-  }
+  \}
 </style>
 <script>
   /* This script tag should be ignored and not break the build */
