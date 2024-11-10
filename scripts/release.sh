@@ -1,18 +1,18 @@
 #!/bin/bash
 set -e
 
-npm install
-npm run lint
-npm run build
-npm run test
-npm run test:e2e -- -- --browser=all
+pnpm install --frozen-lockfile
+pnpm run lint
+pnpm run build
+pnpm run test
+pnpm run test:e2e -- -- --browser=all
 
-npm run build -w example-docs -- --config docusaurus.config.noTrailingSlash.js
-npm run build -w example-docs -- --config docusaurus.config.subDirectory.js
-npm run build -w example-docs -- --config docusaurus.config.noTrailingSlashSubdirectory.js
+pnpm run build -w example-docs -- --config docusaurus.config.noTrailingSlash.js
+pnpm run build -w example-docs -- --config docusaurus.config.subDirectory.js
+pnpm run build -w example-docs -- --config docusaurus.config.noTrailingSlashSubdirectory.js
 
-npx commit-and-tag-version "$@"
-npm -w @cmfcmf/docusaurus-search-local pack
+pnpm exec commit-and-tag-version "$@"
+pnpm -w @cmfcmf/docusaurus-search-local pack
 npm login
-npm -w @cmfcmf/docusaurus-search-local publish
+pnpm -w @cmfcmf/docusaurus-search-local publish
 git push --follow-tags origin main
