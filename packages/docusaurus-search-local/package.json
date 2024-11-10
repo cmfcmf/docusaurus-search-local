@@ -49,6 +49,7 @@
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.21.0",
+    "@docusaurus/core": "catalog:",
     "@docusaurus/module-type-aliases": "catalog:",
     "@docusaurus/plugin-content-blog": "catalog:",
     "@docusaurus/plugin-content-docs": "catalog:",
@@ -75,8 +76,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/client/**/*.css lib",
-    "build:server": "tsc --project tsconfig.server.json && copyfiles --up 1 src/lunr.js src/server/lunr-generator.js lib",
+    "build:client": "tsc --project tsconfig.client.json && copyfiles --up 1 src/lunr.js src/client/**/*.css lib",
+    "build:server": "tsc --project tsconfig.server.json && babel src/server --out-dir lib/server --extensions .ts,.js,.tsx,.jsx,.cjs,.mjs && copyfiles --up 1 src/lunr.js src/server/lunr-generator.js lib",
     "dev": "concurrently --names client,server --prefix-colors blue,green pnpm:dev:client pnpm:dev:server",
     "dev:client": "concurrently --names tsc,cp pnpm:dev:client:tsc pnpm:dev:client:cp",
     "dev:client:tsc": "tsc --project tsconfig.client.json --watch",

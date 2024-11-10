@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module":"ESNext",
+    "module": "ESNext",
     "lib": ["ESNext", "DOM"],
 
     // Declarations break Docusaurus' 'write-translations' command (#163, #129, #145)
