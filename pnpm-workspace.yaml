@@ -1,0 +1,19 @@
+packages:
+  - "packages/*"
+
+catalog:
+  react: ^17
+  react-dom: ^17
+  "@types/react": ^17
+  "@types/react-dom": ^17
+
+  "@docusaurus/core": 2.4.3
+  "@docusaurus/preset-classic": 2.4.3
+  "@docusaurus/module-type-aliases": 2.4.3
+  "@docusaurus/plugin-content-blog": 2.4.3
+  "@docusaurus/plugin-content-docs": 2.4.3
+  "@docusaurus/plugin-content-pages": 2.4.3
+  "@docusaurus/theme-classic": 2.4.3
+  "@docusaurus/theme-common": 2.4.3
+  "@docusaurus/types": 2.4.3
+  "@docusaurus/utils-validation": 2.4.3
