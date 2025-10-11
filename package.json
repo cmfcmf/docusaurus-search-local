@@ -7,14 +7,14 @@
   "dependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
-    "@types/node": "^18",
-    "commit-and-tag-version": "^12.5.0",
+    "@types/node": "^20.19.21",
+    "commit-and-tag-version": "^12.6.0",
     "git-branch-is": "^4.0.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
-    "syncpack": "^13.0.0",
-    "turbo": "^2.2.3"
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.6.2",
+    "syncpack": "^13.0.4",
+    "turbo": "^2.5.8"
   },
   "scripts": {
     "prepare": "husky install",
@@ -37,8 +37,8 @@
     ]
   },
   "engines": {
-    "node": ">=18.18",
+    "node": ">=20",
     "npm": ">=10"
   },
-  "packageManager": "npm@10.9.0"
+  "packageManager": "npm@10.9.4"
 }
