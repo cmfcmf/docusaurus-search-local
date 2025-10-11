@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x, 24.x]
         docusaurus-version:
           - "v2.4.3"
           - "v2.3.1"
@@ -40,7 +40,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
-      - run: npm install --workspaces --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
+      - name: Installing Docusaurus ${{ matrix.docusaurus-version }} and dependencies
+        run: npm install --workspaces --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
       - run: npm dedupe
 
       - run: npm run build

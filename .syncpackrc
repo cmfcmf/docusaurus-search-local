@@ -3,7 +3,7 @@
     {
       "label": "All dependencies should use the same Node.js types.",
       "dependencies": ["@types/node"],
-      "pinVersion": "^18"
+      "pinVersion": "^20.19.21"
     },
     {
       "label": "Example Docs must always use the local version of the search plugin",
