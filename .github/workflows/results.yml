@@ -1,7 +1,7 @@
 name: Results
 on:
   workflow_run:
-    workflows: [build]
+    workflows: [CI]
     types:
       - completed
 
