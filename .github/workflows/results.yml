@@ -1,0 +1,33 @@
+name: Results
+on:
+  workflow_run:
+    workflows: [build]
+    types:
+      - completed
+
+permissions:
+  checks: write
+
+jobs:
+  results:
+    name: Test Results
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion != 'skipped' }}
+    steps:
+      - name: Report test results
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.checks.create({
+              name: 'results',
+              head_sha: '${{ github.event.workflow_run.head_sha }}',
+              status: 'completed',
+              conclusion: '${{ github.event.workflow_run.conclusion == 'success' && 'success' || 'failure' }}',
+              output: {
+                title: 'Test Results',
+                summary: 'Results: ${{ github.event.workflow_run.conclusion }}'
+              },
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            })
