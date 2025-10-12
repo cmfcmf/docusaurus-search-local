@@ -1,4 +1,6 @@
 name: CI
+permissions:
+  contents: read
 
 # Automatically cancel outdated runs for the same PR/branch:
 # https://stackoverflow.com/a/72408109
