@@ -67,3 +67,17 @@ jobs:
       - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlash.js
       - run: npm run build -w example-docs -- --config docusaurus.config.subDirectory.js
       - run: npm run build -w example-docs -- --config docusaurus.config.noTrailingSlashSubdirectory.js
+
+  # Final job to summarize results of all previous jobs.
+  # This is needed so that we can easily mark this as a required status check.
+  #
+  # https://github.com/orgs/community/discussions/26822#discussioncomment-8285141
+  results:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    name: Final Results
+    needs: [build]
+    steps:
+      - run: exit 1
+        # see https://stackoverflow.com/a/67532120/4907315
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
