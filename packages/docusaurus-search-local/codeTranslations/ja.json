@@ -1,7 +1,7 @@
 {
   "cmfcmf/d-s-l.searchBar.placeholder": "検索...",
   "cmfcmf/d-s-l.searchBar.noResults": "該当する結果はありません。",
-  "cmfcmf/d-s-l.searchBar.clearButtonTitle": "Clear",
-  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "Cancel",
-  "cmfcmf/d-s-l.searchBar.submitButtonTitle": "Submit"
+  "cmfcmf/d-s-l.searchBar.clearButtonTitle": "クリア",
+  "cmfcmf/d-s-l.searchBar.detachedCancelButtonText": "キャンセル",
+  "cmfcmf/d-s-l.searchBar.submitButtonTitle": "検索"
 }
