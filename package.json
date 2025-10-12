@@ -5,8 +5,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "@commitlint/cli": "^17.8.1",
-    "@commitlint/config-conventional": "^17.8.1",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@types/node": "^20.19.21",
     "commit-and-tag-version": "^12.6.0",
     "git-branch-is": "^4.0.0",
