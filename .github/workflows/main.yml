@@ -1,5 +1,11 @@
 name: CI
 
+# Automatically cancel outdated runs for the same PR/branch:
+# https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref || github.run_id }}
+  cancel-in-progress: true
+
 on:
   push:
   pull_request:
