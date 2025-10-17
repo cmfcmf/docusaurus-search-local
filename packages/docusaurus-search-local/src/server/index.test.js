@@ -17,6 +17,8 @@ const DEFAULT_OPTIONS = {
   language: "en",
   style: undefined,
   maxSearchResults: 8,
+  filterByPathName: false,
+  subPath: -1,
   lunr: {
     tokenizerSeparator: undefined,
     b: 0.75,
@@ -64,6 +66,8 @@ it("validates options correctly", () => {
     language: "hi",
     style: "none",
     maxSearchResults: 123,
+    filterByPathName: false,
+    subPath: -1,
     lunr: {
       tokenizerSeparator: /-+/,
       b: 0.6,
