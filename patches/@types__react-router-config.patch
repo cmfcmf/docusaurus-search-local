@@ -1,0 +1,10 @@
+diff --git a/index.d.ts b/index.d.ts
+index babf652dddf4ef47f3ae018704581cac1cf82ac0..0adb8f473d88d1138ab0363ac4b83423769841f6 100755
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -43,4 +43,4 @@ export function renderRoutes(
+     routes: RouteConfig[] | undefined,
+     extraProps?: any,
+     switchProps?: SwitchProps,
+-): JSX.Element;
++): React.JSX.Element;

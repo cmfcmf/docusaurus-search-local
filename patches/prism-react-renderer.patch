@@ -1,0 +1,11 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 9aa7ee82156501f162ba2e03c9f0a77744c0262a..1bf7408fe7a862ff28b8016fe6260e9208b78ab5 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -1,5 +1,5 @@
+ import * as react from 'react';
+-import { CSSProperties } from 'react';
++import { CSSProperties, JSX } from 'react';
+ import Prism__default, { Grammar, Token as Token$1 } from 'prismjs';
+ import * as Prism from 'prismjs';
+ export { Prism };
