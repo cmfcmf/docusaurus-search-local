@@ -30,10 +30,17 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [20.x, 22.x, 24.x]
+        react-version:
+          - "v19.2.0"
+          - "v18.3.1"
         docusaurus-version:
           - "v3.9.2"
           - "v3.8.1"
           - "v3.7.0"
+        exclude:
+          # React 19 only compiles with Docusaurus 3.8.0+ due to one of its dependencies.
+          - react-version: "v19.2.0"
+            docusaurus-version: "v3.7.0"
 
     steps:
       - uses: actions/checkout@v4
@@ -50,8 +57,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
 
-      - name: Installing Docusaurus ${{ matrix.docusaurus-version }} and dependencies
-        run: pnpm -r add --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}'
+      - name: Installing Docusaurus ${{ matrix.docusaurus-version }}, React ${{ matrix.react-version }} and dependencies
+        run: pnpm -r add --save-dev '@docusaurus/core@${{ matrix.docusaurus-version }}' '@docusaurus/preset-classic@${{ matrix.docusaurus-version }}' '@docusaurus/module-type-aliases@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-blog@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-docs@${{ matrix.docusaurus-version }}' '@docusaurus/plugin-content-pages@${{ matrix.docusaurus-version }}' '@docusaurus/theme-common@${{ matrix.docusaurus-version }}' '@docusaurus/theme-classic@${{ matrix.docusaurus-version }}' '@docusaurus/types@${{ matrix.docusaurus-version }}' 'react@${{ matrix.react-version }}' 'react-dom@${{ matrix.react-version }}' '@types/react@${{ matrix.react-version }}' '@types/react-dom@${{ matrix.react-version }}'
       - run: pnpm dedupe
 
       - run: pnpm run build

@@ -3,10 +3,10 @@ packages:
   - "packages/*"
 
 catalog:
-  react: ^18
-  react-dom: ^18
-  "@types/react": ^18
-  "@types/react-dom": ^18
+  react: ^19
+  react-dom: ^19
+  "@types/react": ^19
+  "@types/react-dom": ^19
 
   "@docusaurus/core": 3.9.2
   "@docusaurus/preset-classic": 3.9.2
@@ -18,3 +18,10 @@ catalog:
   "@docusaurus/theme-common": 3.9.2
   "@docusaurus/types": 3.9.2
   "@docusaurus/utils-validation": 3.9.2
+
+patchedDependencies:
+  "@algolia/autocomplete-js": patches/@algolia__autocomplete-js.patch
+  "@slorber/react-helmet-async": patches/@slorber__react-helmet-async.patch
+  "@types/mdx": patches/@types__mdx.patch
+  "@types/react-router-config": patches/@types__react-router-config.patch
+  prism-react-renderer: patches/prism-react-renderer.patch

@@ -1,0 +1,107 @@
+diff --git a/dist/esm/components/Highlight.d.ts b/dist/esm/components/Highlight.d.ts
+index 214dbddacc8d343a7eea42f91b4c18a20369bbf5..1b367d17bab5cf0bcf4fbf5d66e40bfc94dcb124 100644
+--- a/dist/esm/components/Highlight.d.ts
++++ b/dist/esm/components/Highlight.d.ts
+@@ -1,6 +1,7 @@
+ /// <reference types="react" />
++import React from 'react';
+ import { AutocompleteRenderer, HighlightHitParams } from '../types';
+ export declare function createHighlightComponent({ createElement, Fragment, }: AutocompleteRenderer): {
+-    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): JSX.Element;
++    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): React.JSX.Element;
+     __autocomplete_componentName: string;
+ };
+diff --git a/dist/esm/components/ReverseHighlight.d.ts b/dist/esm/components/ReverseHighlight.d.ts
+index bb5937f5e56734cf4b18764a9376046239b467e5..c39c4f30073f988528dfa67cb930b5ae3a75d74b 100644
+--- a/dist/esm/components/ReverseHighlight.d.ts
++++ b/dist/esm/components/ReverseHighlight.d.ts
+@@ -1,6 +1,7 @@
+ /// <reference types="react" />
++import React from 'react';
+ import { AutocompleteRenderer, HighlightHitParams } from '../types';
+ export declare function createReverseHighlightComponent({ createElement, Fragment, }: AutocompleteRenderer): {
+-    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): JSX.Element;
++    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): React.JSX.Element;
+     __autocomplete_componentName: string;
+ };
+diff --git a/dist/esm/components/ReverseSnippet.d.ts b/dist/esm/components/ReverseSnippet.d.ts
+index c4bbd50996a9dfb285019a957b381922cf97622b..13c9b2825f7ea7cac78ee897908120e9dbab2c71 100644
+--- a/dist/esm/components/ReverseSnippet.d.ts
++++ b/dist/esm/components/ReverseSnippet.d.ts
+@@ -1,6 +1,7 @@
+ /// <reference types="react" />
++import React from 'react';
+ import { AutocompleteRenderer, HighlightHitParams } from '../types';
+ export declare function createReverseSnippetComponent({ createElement, Fragment, }: AutocompleteRenderer): {
+-    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): JSX.Element;
++    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): React.JSX.Element;
+     __autocomplete_componentName: string;
+ };
+diff --git a/dist/esm/components/Snippet.d.ts b/dist/esm/components/Snippet.d.ts
+index 7b4785836d848abd3415ad489404760c4a3ad529..11f3665497eee4025875005da91e274fa9ebca4c 100644
+--- a/dist/esm/components/Snippet.d.ts
++++ b/dist/esm/components/Snippet.d.ts
+@@ -1,6 +1,7 @@
+ /// <reference types="react" />
++import React from 'react';
+ import { AutocompleteRenderer, HighlightHitParams } from '../types';
+ export declare function createSnippetComponent({ createElement, Fragment, }: AutocompleteRenderer): {
+-    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): JSX.Element;
++    <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>): React.JSX.Element;
+     __autocomplete_componentName: string;
+ };
+diff --git a/dist/esm/getDefaultOptions.d.ts b/dist/esm/getDefaultOptions.d.ts
+index 6691997c7b0e62605ea6a1fd9b379aab3a33eb5f..1173dfd1a084e847dec8075b9f346c8d2e92a27b 100644
+--- a/dist/esm/getDefaultOptions.d.ts
++++ b/dist/esm/getDefaultOptions.d.ts
+@@ -1,4 +1,5 @@
+ /// <reference types="react" />
++import React from "react";
+ import { BaseItem } from '@algolia/autocomplete-core';
+ import { AutocompleteClassNames, AutocompleteOptions, AutocompleteRender } from './types';
+ export declare function getDefaultOptions<TItem extends BaseItem>(options: AutocompleteOptions<TItem>): {
+@@ -165,11 +166,11 @@ export declare function getDefaultOptions<TItem extends BaseItem>(options: Autoc
+         };
+         detachedMediaQuery: string;
+         components: {
+-            [x: string]: (props: any) => JSX.Element;
+-            Highlight: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => JSX.Element;
+-            ReverseHighlight: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => JSX.Element;
+-            ReverseSnippet: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => JSX.Element;
+-            Snippet: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => JSX.Element;
++            [x: string]: (props: any) => React.JSX.Element;
++            Highlight: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => React.JSX.Element;
++            ReverseHighlight: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => React.JSX.Element;
++            ReverseSnippet: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => React.JSX.Element;
++            Snippet: <THit>({ hit, attribute, tagName, }: import("./types").HighlightHitParams<THit>) => React.JSX.Element;
+         };
+         translations: {
+             detachedCancelButtonText: string;
+diff --git a/dist/esm/types/AutocompleteComponents.d.ts b/dist/esm/types/AutocompleteComponents.d.ts
+index cc1272833b8876769dc85b095beda01b123377ec..6e458f35a5ad85af219bcfa288dd47fbd1917ee8 100644
+--- a/dist/esm/types/AutocompleteComponents.d.ts
++++ b/dist/esm/types/AutocompleteComponents.d.ts
+@@ -1,7 +1,8 @@
+ /// <reference types="react" />
++import React from "react";
+ import { HighlightHitParams } from '.';
+-declare type AutocompleteHighlightComponent = <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>) => JSX.Element;
+-export declare type PublicAutocompleteComponents = Record<string, (props: any) => JSX.Element>;
++declare type AutocompleteHighlightComponent = <THit>({ hit, attribute, tagName, }: HighlightHitParams<THit>) => React.JSX.Element;
++export declare type PublicAutocompleteComponents = Record<string, (props: any) => React.JSX.Element>;
+ export interface AutocompleteComponents extends PublicAutocompleteComponents {
+     /**
+      * Highlight matches in an Algolia hit.
+diff --git a/dist/esm/types/AutocompleteRenderer.d.ts b/dist/esm/types/AutocompleteRenderer.d.ts
+index 3ca05d5a52c06d4a23c3227e91af4c5e22853945..58f33910e086f8d3facf2fd611ec27194969d5dd 100644
+--- a/dist/esm/types/AutocompleteRenderer.d.ts
++++ b/dist/esm/types/AutocompleteRenderer.d.ts
+@@ -1,5 +1,7 @@
+ /// <reference types="react" />
+-export declare type Pragma = (type: any, props: Record<string, any> | null, ...children: ComponentChildren[]) => JSX.Element;
++import React from 'react';
++
++export declare type Pragma = (type: any, props: Record<string, any> | null, ...children: ComponentChildren[]) => React.JSX.Element;
+ export declare type PragmaFrag = any;
+ declare type ComponentChild = VNode<any> | string | number | boolean | null | undefined;
+ declare type ComponentChildren = ComponentChild[] | ComponentChild;
