@@ -5,6 +5,29 @@ This change log is automatically generated based on commit messags. See
 [Commit Message Guidelines](CONTRIBUTING.md#commit-message-guidelines)
 for more information.
 
+## [2.0.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v1.2.0...v2.0.0) (2025-10-18)
+
+### ⚠ BREAKING CHANGES
+
+- Update to Docusaurus v3 and support React v19
+- Update minimum supported Node.js version to ^20
+- The lowest supported Node.js version is now 18.18.
+
+### Features
+
+- Add many more (AI-generated) translations ([621f02c](https://github.com/cmfcmf/docusaurus-search-local/commit/621f02c815583ec4ccf7cbbddae1a36d5c932847))
+- Update to Docusaurus v3 and support React v19 ([b8d4351](https://github.com/cmfcmf/docusaurus-search-local/commit/b8d43517af76137df6251abdeac3d77df1027519))
+
+### Bug Fixes
+
+- Minor updates to existing translations for CS, ES, IT, JA, SK ([6bba3e7](https://github.com/cmfcmf/docusaurus-search-local/commit/6bba3e79b828f1f596627d04067d837b1f18c9fa))
+- Support hash parsing of URLs (fixes Docusaurus 3 compat) ([#216](https://github.com/cmfcmf/docusaurus-search-local/issues/216)) ([96c7803](https://github.com/cmfcmf/docusaurus-search-local/commit/96c7803e63fbfdb5c5dd2b2285928fffdaeed577))
+
+### Other
+
+- Update dependencies ([a9188ca](https://github.com/cmfcmf/docusaurus-search-local/commit/a9188cadf8365c0f91c970ff361c07831b6ebf97))
+- Update minimum supported Node.js version to ^20 ([4e52d33](https://github.com/cmfcmf/docusaurus-search-local/commit/4e52d33bab46eafdd2f9010688182fc23814db71))
+
 ## [1.2.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v1.1.0...v1.2.0) (2024-06-09)
 
 ### Features
