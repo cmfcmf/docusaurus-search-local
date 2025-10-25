@@ -10,6 +10,9 @@ module.exports = {
     // Format the generated changelog.
     postchangelog: "pnpm run format",
   },
+  skip: {
+    tag: true,
+  },
   header: `\
 # Change Log
 
