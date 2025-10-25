@@ -29,4 +29,4 @@ jobs:
       - run: pnpm run build
       - run: pnpm run test
       - run: pnpm -F @cmfcmf/docusaurus-search-local pack
-      - run: pnpm -F @cmfcmf/docusaurus-search-local publish
+      - run: pnpm -F @cmfcmf/docusaurus-search-local publish --no-git-checks
