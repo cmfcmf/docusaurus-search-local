@@ -5,6 +5,12 @@ This change log is automatically generated based on commit messags. See
 [Commit Message Guidelines](CONTRIBUTING.md#commit-message-guidelines)
 for more information.
 
+## [2.0.1](https://github.com/cmfcmf/docusaurus-search-local/compare/v2.0.0...v2.0.1) (2025-10-25)
+
+### Bug Fixes
+
+- Do not flicker Docusaurus logo on load ([9ebd7fa](https://github.com/cmfcmf/docusaurus-search-local/commit/9ebd7fa1a7cab484b1c5011ac51b8b1d7d292b0b))
+
 ## [2.0.0](https://github.com/cmfcmf/docusaurus-search-local/compare/v1.2.0...v2.0.0) (2025-10-18)
 
 ### ⚠ BREAKING CHANGES
