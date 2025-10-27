@@ -5,6 +5,8 @@ export type DSLAPluginData = {
   tagsBoost: number;
   parentCategoriesBoost: number;
   maxSearchResults: number;
+  filterByPathName: boolean;
+  subPath: number;
 };
 
 export type MyDocument = {

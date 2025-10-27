@@ -101,6 +101,16 @@ The following options are available (defaults are shown below):
   // searches, but simply does not display additional search results that have been found.
   maxSearchResults: 8,
 
+  // This option allows restricting search context to the current URL.
+  filterByPathName: false,
+
+  // This option only works if filterByPathName is set to true. It allows further filtering of the search context.
+  // Example: Suppose this is our endpoint: "/help/page1/subpage1/topic". If I set subPath: 2, then the search context
+  // will be limited to everything that can be found under	help/page1/*. Anything that's under /help/page3 or similar
+  // will be filtered out. subPath: 3 => then only help/page1/subpage1/* not help/page1/subpage2/*, etc.
+  // The default value is set to -1, which always allows searching the current page only as search context.
+  subPath: -1,
+
   // lunr.js-specific settings
   lunr: {
     // When indexing your documents, their content is split into "tokens".
