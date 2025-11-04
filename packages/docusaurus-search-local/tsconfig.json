@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "Node16",
+    "module": "ESNext",
     "lib": ["ESNext", "DOM"],
 
     // Declarations break Docusaurus' 'write-translations' command (#163, #129, #145)
@@ -26,7 +26,7 @@
     "noUnusedParameters": true,
 
     /* Module Resolution Options */
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
 

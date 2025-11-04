@@ -6,9 +6,12 @@ module.exports = {
   sign: true,
   scripts: {
     // Make sure that there is nothing to format before generating the changelog.
-    prechangelog: "npm run lint",
+    prechangelog: "pnpm run lint",
     // Format the generated changelog.
-    postchangelog: "npm run format",
+    postchangelog: "pnpm run format",
+  },
+  skip: {
+    tag: true,
   },
   header: `\
 # Change Log

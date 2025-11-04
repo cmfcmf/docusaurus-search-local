@@ -1,9 +1,6 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
@@ -29,7 +26,7 @@
     "lint:dependencies": "syncpack list-mismatches",
     "format:style": "prettier --write .",
     "format:dependencies": "syncpack fix-mismatches",
-    "release": "bash scripts/release.sh"
+    "bump-version": "commit-and-tag-version"
   },
   "lint-staged": {
     ".": [
@@ -38,7 +35,7 @@
   },
   "engines": {
     "node": ">=20",
-    "npm": ">=10"
+    "pnpm": ">=10"
   },
-  "packageManager": "npm@10.9.4"
+  "packageManager": "pnpm@10.18.3"
 }

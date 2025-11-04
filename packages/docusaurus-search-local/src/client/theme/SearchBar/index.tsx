@@ -1,14 +1,7 @@
-import React, {
-  useRef,
-  useEffect,
-  createElement,
-  Fragment,
-  useState,
-} from "react";
-import { render } from "react-dom";
+import React, { useRef, useEffect, createElement, Fragment } from "react";
+import { createRoot } from "react-dom/client";
 import { autocomplete, AutocompleteApi } from "@algolia/autocomplete-js";
 import type lunr from "lunr";
-import Head from "@docusaurus/Head";
 import { translate } from "@docusaurus/Translate";
 import { useHistory } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -19,7 +12,6 @@ import {
 } from "./HighlightSearchResults";
 import { usePluginData } from "@docusaurus/useGlobalData";
 import type { DSLAPluginData, MyDocument } from "../../../types";
-import useIsBrowser from "@docusaurus/useIsBrowser";
 import { useContextualSearchFilters } from "@docusaurus/theme-common";
 
 const SEARCH_INDEX_AVAILABLE = process.env.NODE_ENV === "production";
@@ -83,24 +75,38 @@ type IndexWithDocuments = {
 
 const SearchBar = () => {
   // A bit of a hack that makes sure data-theme is not only set on <html>, but also on <body>.
-  // We would like to useThemeContext, but that is specific to docusaurus-theme-classic.
-  const isBrowser = useIsBrowser();
-  const [isDarkTheme, setIsDarkTheme] = useState(() =>
-    isBrowser
-      ? document.documentElement.getAttribute("data-theme") === "dark"
-      : false,
-  );
+  // This is needed by the autocomplete for dark mode support
+  // https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-theme-classic/#dark-mode
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDarkTheme(
-        document.documentElement.getAttribute("data-theme") === "dark",
-      );
-    });
+    // If we are running SSR, then don't do anything. This deliberately does not use Docusaurus'
+    // `useIsBrowser()`, because that returns `false` during hydration, which would lead to flickering.
+    // Instead, we directly check for `document` to be defined. This is normally bad practice in Docusaurus,
+    // because it might lead to hydration mismatches. However, in this case it is fine, because the effect
+    // only sets an attribute on body through JavaScript (not through React!), which does not affect the
+    // rendered HTML of this component.
+    if (!document) {
+      return;
+    }
 
+    // Manually sync the attribute.
+    // See https://docusaurus.io/docs/api/themes/configuration#use-color-mode for why we do not use `useColorMode()`.
+    function syncAttribute() {
+      document.body.setAttribute(
+        "data-theme",
+        document.documentElement.getAttribute("data-theme") ?? "",
+      );
+    }
+
+    const observer = new MutationObserver(() => {
+      syncAttribute();
+    });
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["data-theme"],
     });
+
+    syncAttribute();
+
     return () => observer.disconnect();
   }, []);
 
@@ -181,7 +187,12 @@ const SearchBar = () => {
       container: autocompleteRef.current,
       placeholder,
       // Use React instead of Preact
-      renderer: { createElement, Fragment, render: render as any },
+      renderer: {
+        createElement,
+        Fragment,
+        render: (component, container) =>
+          createRoot(container as any).render(component),
+      },
       // Use react-router for navigation
       navigator: {
         navigate({ item, itemUrl }) {
@@ -390,13 +401,6 @@ const SearchBar = () => {
 
   return (
     <>
-      <Head>
-        {/*
-          Needed by the autocomplete for dark mode support
-          https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-theme-classic/#dark-mode
-        */}
-        <body data-theme={isDarkTheme ? "dark" : "light"} />
-      </Head>
       <HighlightSearchResults />
       <div className="dsla-search-wrapper">
         <div

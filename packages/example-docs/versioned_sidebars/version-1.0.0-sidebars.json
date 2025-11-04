@@ -1,20 +1,20 @@
 {
-  "version-1.0.0/someSidebar": [
+  "someSidebar": [
     {
       "type": "category",
       "label": "Docusaurus",
       "items": [
         {
           "type": "doc",
-          "id": "version-1.0.0/d-s-l-test"
+          "id": "d-s-l-test"
         },
         {
           "type": "doc",
-          "id": "version-1.0.0/d-s-l-test2"
+          "id": "d-s-l-test2"
         },
         {
           "type": "doc",
-          "id": "version-1.0.0/d-s-l-test3"
+          "id": "d-s-l-test3"
         }
       ]
     },
@@ -24,7 +24,7 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-1.0.0/mdx"
+          "id": "mdx"
         }
       ]
     }

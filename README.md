@@ -1,4 +1,4 @@
-# Offline / Local Search for Docusaurus v2+
+# Offline / Local Search for Docusaurus v3+
 
 [![Version](https://img.shields.io/npm/v/@cmfcmf/docusaurus-search-local?style=flat-square)](https://www.npmjs.com/package/@cmfcmf/docusaurus-search-local)
 [![License](https://img.shields.io/npm/l/@cmfcmf/docusaurus-search-local?style=flat-square)](https://github.com/cmfcmf/docusaurus-search-local/blob/main/LICENSE)
@@ -6,7 +6,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/cmfcmf/docusaurus-search-local?style=flat-square)](https://github.com/cmfcmf/docusaurus-search-local/issues)
 [![GitHub last commit](https://img.shields.io/github/last-commit/cmfcmf/docusaurus-search-local?style=flat-square)](https://github.com/cmfcmf/docusaurus-search-local/commits)
 
-Offline / local search for Docusaurus **v2+** that works behind your firewall.
+Offline / local search for Docusaurus **v3+** that works behind your firewall.
 
 Feature Highlights:
 
@@ -40,22 +40,24 @@ yarn add @cmfcmf/docusaurus-search-local
 Add this plugin to the `plugins` array in `docusaurus.config.js`.
 
 ```js
-module.exports = {
+const config = {
   // ...
-  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
+  plugins: ["@cmfcmf/docusaurus-search-local"],
 
   // or, if you want to specify options:
 
   // ...
   plugins: [
     [
-      require.resolve("@cmfcmf/docusaurus-search-local"),
+      "@cmfcmf/docusaurus-search-local",
       {
         // Options here
       },
     ],
   ],
 };
+
+export default config;
 ```
 
 The following options are available (defaults are shown below):

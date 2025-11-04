@@ -85,8 +85,8 @@ test("dark mode is copied from <html> to <body> correctly", async ({
   }
   await page.goto("/");
   await check("light");
-  await page.locator("svg[class^='lightToggleIcon']").click();
+  await page.locator("svg[class*='lightToggleIcon']").click();
   await check("dark");
-  await page.locator("svg[class^='darkToggleIcon']").click();
+  await page.locator("svg[class*='darkToggleIcon']").click();
   await check("light");
 });
