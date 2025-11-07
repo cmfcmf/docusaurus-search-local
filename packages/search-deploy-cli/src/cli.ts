@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Docusaurus Search Deploy CLI
+ * Search Deploy CLI
  *
- * Deploys search indexes to Cloudflare Workers KV as part of your build process
+ * Deploys Lunr search indexes to Cloudflare Workers KV as part of your build process
  */
 
 import { Command } from 'commander';
@@ -15,8 +15,8 @@ import { version } from '../package.json';
 const program = new Command();
 
 program
-  .name('docusaurus-search-deploy')
-  .description('Deploy Docusaurus search indexes to Cloudflare Workers')
+  .name('search-deploy')
+  .description('Deploy Lunr search indexes to Cloudflare Workers')
   .version(version);
 
 // Deploy command (default)

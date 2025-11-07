@@ -7,7 +7,7 @@ import * as path from 'path';
 import chalk from 'chalk';
 
 export async function init(options: any): Promise<void> {
-  console.log(chalk.bold('\n🎯 Docusaurus Search Deploy - Setup\n'));
+  console.log(chalk.bold('\n🎯 Search Deploy - Setup\n'));
 
   console.log('This will create a configuration file for deploying your search indexes.\n');
 
@@ -54,7 +54,7 @@ CLOUDFLARE_KV_NAMESPACE_ID=your-kv-namespace-id
       accountId: process.env.CLOUDFLARE_ACCOUNT_ID || '',
       apiToken: process.env.CLOUDFLARE_API_TOKEN || '',
       kvNamespaceId: process.env.CLOUDFLARE_KV_NAMESPACE_ID || '',
-      workerName: 'docusaurus-search-worker',
+      workerName: 'search-worker',
     },
     worker: {
       enabled: true,
@@ -69,15 +69,15 @@ CLOUDFLARE_KV_NAMESPACE_ID=your-kv-namespace-id
   console.log(chalk.gray(`
 {
   "scripts": {
-    "build": "docusaurus build",
-    "deploy": "docusaurus-search-deploy"
+    "build": "your-build-command",
+    "postbuild": "search-deploy"
   }
 }
 `));
 
-  console.log(chalk.cyan('Step 4: Deploy!'));
+  console.log(chalk.cyan('Step 4: Build and deploy!'));
   console.log(chalk.dim('  npm run build'));
-  console.log(chalk.dim('  npm run deploy\n'));
+  console.log(chalk.dim('  # Indexes automatically deployed after build\n'));
 
   console.log(chalk.green('✨ Setup complete!\n'));
 }

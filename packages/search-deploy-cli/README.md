@@ -1,6 +1,8 @@
-# Docusaurus Search Deploy CLI
+# Search Deploy CLI
 
-A CLI tool to seamlessly deploy Docusaurus Search Local indexes to Cloudflare Workers as part of your build process.
+A CLI tool to deploy Lunr.js search indexes to Cloudflare Workers KV as part of your build process.
+
+Works with any static site that generates Lunr search indexes (Docusaurus, Jekyll, Hugo with search plugins, etc.).
 
 ## Installation
 
@@ -8,12 +10,18 @@ A CLI tool to seamlessly deploy Docusaurus Search Local indexes to Cloudflare Wo
 npm install --save-dev @cmfcmf/docusaurus-search-deploy
 ```
 
+Or use directly with npx:
+
+```bash
+npx @cmfcmf/docusaurus-search-deploy
+```
+
 ## Quick Start
 
 ### 1. Initialize
 
 ```bash
-npx docusaurus-search-deploy init
+npx search-deploy init
 ```
 
 This creates a `.searchdeployrc.json` config file and `.env.example`.
@@ -34,8 +42,8 @@ CLOUDFLARE_KV_NAMESPACE_ID=your-kv-namespace-id
 ```json
 {
   "scripts": {
-    "build": "docusaurus build",
-    "postbuild": "docusaurus-search-deploy"
+    "build": "your-build-command",
+    "postbuild": "search-deploy"
   }
 }
 ```
@@ -52,41 +60,69 @@ npm run build
 ### Deploy Command
 
 ```bash
-# Deploy with default config
-docusaurus-search-deploy
+# Deploy with default config (looks for search-index-*.json in ./build)
+search-deploy
 
 # Deploy with custom config
-docusaurus-search-deploy --config ./my-config.json
+search-deploy --config ./my-config.json
 
 # Deploy with custom build directory
-docusaurus-search-deploy --dir ./dist
+search-deploy --dir ./dist
 
 # Dry run (show what would be deployed)
-docusaurus-search-deploy --dry-run
+search-deploy --dry-run
 
 # Deploy indexes AND worker
-docusaurus-search-deploy --worker
+search-deploy --worker
 ```
 
 ### Worker Commands
 
 ```bash
 # Deploy the Cloudflare Worker
-docusaurus-search-deploy worker --deploy
+search-deploy worker --deploy
 
 # View worker logs
-docusaurus-search-deploy worker --logs
+search-deploy worker --logs
 ```
 
 ### Init Command
 
 ```bash
 # Interactive setup
-docusaurus-search-deploy init
+search-deploy init
 
 # With custom worker directory
-docusaurus-search-deploy init --worker-dir ./custom/path
+search-deploy init --worker-dir ./custom/path
 ```
+
+## Requirements
+
+The CLI expects search index files in this format:
+
+**Filename:** `search-index-{tag}.json` (e.g., `search-index-default.json`)
+
+**Content:**
+```json
+{
+  "documents": [
+    {
+      "id": 1,
+      "pageTitle": "Getting Started",
+      "sectionTitle": "Introduction",
+      "sectionRoute": "/docs/intro#introduction",
+      "type": "docs"
+    }
+  ],
+  "index": {
+    // Serialized Lunr.js index
+  }
+}
+```
+
+This format is used by:
+- @cmfcmf/docusaurus-search-local
+- Other Lunr-based search implementations
 
 ## Configuration
 
@@ -111,11 +147,11 @@ The CLI looks for configuration in these locations (in order):
     "accountId": "${CLOUDFLARE_ACCOUNT_ID}",
     "apiToken": "${CLOUDFLARE_API_TOKEN}",
     "kvNamespaceId": "${CLOUDFLARE_KV_NAMESPACE_ID}",
-    "workerName": "docusaurus-search-worker"
+    "workerName": "search-worker"
   },
   "worker": {
     "enabled": true,
-    "dir": "./packages/cloudflare-worker"
+    "dir": "./cloudflare-worker"
   }
 }
 ```
@@ -129,11 +165,11 @@ module.exports = {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
     apiToken: process.env.CLOUDFLARE_API_TOKEN,
     kvNamespaceId: process.env.CLOUDFLARE_KV_NAMESPACE_ID,
-    workerName: 'docusaurus-search-worker',
+    workerName: 'search-worker',
   },
   worker: {
     enabled: true,
-    dir: './packages/cloudflare-worker',
+    dir: './cloudflare-worker',
   },
 };
 ```
@@ -160,10 +196,9 @@ module.exports = {
 ```json
 {
   "scripts": {
-    "build": "docusaurus build",
-    "postbuild": "docusaurus-search-deploy",
-    "deploy": "npm run build",
-    "deploy:worker": "docusaurus-search-deploy worker --deploy"
+    "build": "your-site-generator build",
+    "postbuild": "search-deploy",
+    "deploy": "npm run build"
   }
 }
 ```
@@ -171,7 +206,7 @@ module.exports = {
 ### With GitHub Actions
 
 ```yaml
-name: Deploy Documentation
+name: Deploy Site
 
 on:
   push:
@@ -199,34 +234,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
-        run: npx docusaurus-search-deploy
+        run: npx search-deploy
 ```
-
-### With Docusaurus Plugin (Automatic)
-
-Add to your `docusaurus.config.js`:
-
-```javascript
-module.exports = {
-  plugins: [
-    [
-      '@cmfcmf/docusaurus-search-local',
-      {
-        indexDocs: true,
-        indexBlog: true,
-        // Enable automatic deployment
-        deploy: {
-          enabled: process.env.NODE_ENV === 'production',
-          type: 'cloudflare',
-          // Config will be loaded from .searchdeployrc.json
-        },
-      },
-    ],
-  ],
-};
-```
-
-Now indexes are automatically deployed when you run `docusaurus build`!
 
 ### Programmatic Usage
 
@@ -262,7 +271,7 @@ The CLI automatically detects:
 ## Output
 
 ```bash
-🚀 Docusaurus Search Deploy
+🚀 Search Index Deploy
 
 ✓ Found 2 index file(s)
 
@@ -270,8 +279,8 @@ The CLI automatically detects:
      Tag: default
      Size: 245.67 KB
 
-  📄 search-index-docs-v2.0.json
-     Tag: docs-v2.0
+  📄 search-index-v2.json
+     Tag: v2
      Size: 180.34 KB
 
 ⠋ Uploading to Cloudflare KV...
@@ -280,11 +289,44 @@ The CLI automatically detects:
 ✅ Deployment complete!
 ```
 
+## Cloudflare Setup
+
+### 1. Create KV Namespace
+
+```bash
+npx wrangler kv:namespace create SEARCH_INDEXES
+```
+
+Copy the namespace ID from the output.
+
+### 2. Get Credentials
+
+- **Account ID**: Cloudflare Dashboard → Workers & Pages → Overview
+- **API Token**: Cloudflare Dashboard → My Profile → API Tokens
+  - Use "Edit Cloudflare Workers" template
+  - Or create custom token with "Workers KV Storage:Edit" permission
+
+### 3. Deploy Worker (Optional)
+
+If you want the search API endpoint:
+
+```bash
+# Get the worker package
+npx search-deploy init
+
+# Deploy worker
+cd cloudflare-worker
+npm install
+npm run deploy
+```
+
+See [cloudflare-worker package](../cloudflare-worker/README.md) for details.
+
 ## Troubleshooting
 
 ### "Build directory not found"
 
-Make sure you've built your Docusaurus site first:
+Make sure your site is built first:
 
 ```bash
 npm run build
@@ -293,19 +335,19 @@ npm run build
 Or specify the directory:
 
 ```bash
-docusaurus-search-deploy --dir ./dist
+search-deploy --dir ./dist
 ```
 
 ### "No search index files found"
 
-Ensure the `@cmfcmf/docusaurus-search-local` plugin is installed and configured in your Docusaurus site.
+Ensure your static site generator produces `search-index-*.json` files in the expected format.
 
 ### "Configuration errors"
 
 Run `init` to set up configuration:
 
 ```bash
-docusaurus-search-deploy init
+search-deploy init
 ```
 
 ### "Authentication error"
@@ -316,50 +358,30 @@ Verify your Cloudflare credentials:
 2. Verify API token has "Workers KV Storage:Edit" permission
 3. Confirm account ID is correct
 
-## Advanced Usage
+## How It Works
 
-### Custom Deployment Logic
-
-Create a custom deployment script:
-
-```javascript
-// deploy-search.js
-const { deploy, loadConfig } = require('@cmfcmf/docusaurus-search-deploy');
-
-async function customDeploy() {
-  const config = await loadConfig();
-
-  // Add custom logic before deployment
-  console.log('Running pre-deployment checks...');
-
-  await deploy(config);
-
-  // Add custom logic after deployment
-  console.log('Sending deployment notification...');
-}
-
-customDeploy();
 ```
-
-### Multiple Environments
-
-Use different configs for different environments:
-
-```bash
-# Development
-docusaurus-search-deploy --config .searchdeployrc.dev.json
-
-# Staging
-docusaurus-search-deploy --config .searchdeployrc.staging.json
-
-# Production
-docusaurus-search-deploy --config .searchdeployrc.prod.json
+┌─────────────────────────────────────────────────────────┐
+│ 1. Build your site (generates search-index-*.json)     │
+└─────────────────────┬───────────────────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────────────────┐
+│ 2. CLI finds and reads index files                      │
+└─────────────────────┬───────────────────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────────────────┐
+│ 3. Uploads to Cloudflare KV                             │
+└─────────────────────┬───────────────────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────────────────┐
+│ 4. Worker serves search API from KV                     │
+│    GET/POST /search → Returns JSON results              │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ## Related Packages
 
-- [@cmfcmf/docusaurus-search-local](https://www.npmjs.com/package/@cmfcmf/docusaurus-search-local) - The main search plugin
-- [@cmfcmf/docusaurus-search-local-worker](https://www.npmjs.com/package/@cmfcmf/docusaurus-search-local-worker) - Cloudflare Worker implementation
+- [Cloudflare Worker](../cloudflare-worker/) - The search API implementation
 
 ## License
 

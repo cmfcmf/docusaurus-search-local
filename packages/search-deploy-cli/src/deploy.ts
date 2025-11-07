@@ -29,7 +29,7 @@ export async function deploy(
   config: DeployConfig,
   options: DeployOptions = {}
 ): Promise<void> {
-  console.log(chalk.bold('\n🚀 Docusaurus Search Deploy\n'));
+  console.log(chalk.bold('\n🚀 Search Index Deploy\n'));
 
   if (options.dryRun) {
     console.log(chalk.yellow('DRY RUN - No changes will be made\n'));
