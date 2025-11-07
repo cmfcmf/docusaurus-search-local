@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cmfcmf/docusaurus-search-local/main/packages/search-deploy-cli/schema.json",
+  "buildDir": "./build",
+  "cloudflare": {
+    "accountId": "${CLOUDFLARE_ACCOUNT_ID}",
+    "apiToken": "${CLOUDFLARE_API_TOKEN}",
+    "kvNamespaceId": "${CLOUDFLARE_KV_NAMESPACE_ID}",
+    "workerName": "docusaurus-search-worker"
+  },
+  "worker": {
+    "enabled": true,
+    "dir": "./packages/cloudflare-worker"
+  },
+  "options": {
+    "verbose": false,
+    "dryRun": false
+  }
+}
