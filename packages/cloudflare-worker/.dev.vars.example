@@ -1,0 +1,5 @@
+# Example environment variables for local development
+# Copy this file to .dev.vars and fill in your values
+
+# Optional: Comma-separated list of allowed CORS origins
+# ALLOWED_ORIGINS=https://localhost:3000,https://yourdomain.com

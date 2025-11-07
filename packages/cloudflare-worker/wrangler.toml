@@ -1,0 +1,31 @@
+name = "docusaurus-search-worker"
+main = "src/worker.ts"
+compatibility_date = "2024-01-01"
+
+# KV Namespace for storing search indexes
+[[kv_namespaces]]
+binding = "SEARCH_INDEXES"
+id = "YOUR_KV_NAMESPACE_ID" # Replace with your KV namespace ID
+
+# Environment variables (optional)
+[vars]
+# ALLOWED_ORIGINS = "https://yourdomain.com,https://www.yourdomain.com"
+
+# Development environment
+[env.development]
+[[env.development.kv_namespaces]]
+binding = "SEARCH_INDEXES"
+preview_id = "YOUR_DEV_KV_NAMESPACE_ID" # Replace with your dev KV namespace ID
+
+# Production environment
+[env.production]
+[[env.production.kv_namespaces]]
+binding = "SEARCH_INDEXES"
+id = "YOUR_PROD_KV_NAMESPACE_ID" # Replace with your production KV namespace ID
+
+# Build configuration
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "service-worker"
