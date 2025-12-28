@@ -120,6 +120,8 @@ const SearchBar = () => {
     parentCategoriesBoost,
     indexDocSidebarParentCategories,
     maxSearchResults,
+    filterByPathName,
+    subPath,
   } = usePluginData("@cmfcmf/docusaurus-search-local") as DSLAPluginData;
 
   const history = useHistory<DSLALocationState>();
@@ -321,8 +323,8 @@ const SearchBar = () => {
               const terms = tokenize(input);
 
               return indexes
-                .flatMap(({ index, documents }) =>
-                  index
+                .flatMap(({ index, documents }) => {
+                  const queriedIndex = index
                     .query((query) => {
                       query.term(terms, {
                         fields: ["title"],
@@ -371,8 +373,21 @@ const SearchBar = () => {
                       )!,
                       score: result.score,
                       terms,
-                    })),
-                )
+                    }));
+
+                  if (filterByPathName) {
+                    const pathNameArray = window.location.pathname.split("/");
+                    const pathNamePart =
+                      pathNameArray[
+                        subPath === -1 ? pathNameArray.length - 1 : subPath
+                      ];
+                    return queriedIndex.filter((item) =>
+                      item.document.sectionRoute.includes(pathNamePart),
+                    );
+                  }
+
+                  return queriedIndex;
+                })
                 .sort((a, b) => b.score - a.score)
                 .slice(0, maxSearchResults);
             },
