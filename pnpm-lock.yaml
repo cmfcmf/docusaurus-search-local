@@ -121,9 +121,6 @@ importers:
       cheerio:
         specifier: ^1.0.0
         version: 1.0.0
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
       lunr-languages:
         specifier: ^1.4.0
         version: 1.10.0
